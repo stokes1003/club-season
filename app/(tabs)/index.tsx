@@ -1,7 +1,7 @@
 import { YStack, ScrollView } from "tamagui";
-import { Leaderboard } from "../components/Leaderboard";
-import { OfficialRounds } from "../components/OfficialRounds";
-import { LeagueName } from "../components/LeagueName";
+import { Leaderboard } from "../../src/components/Home/Leaderboard";
+import { OfficialRounds } from "../../src/components/Home/OfficialRounds";
+import { LeagueName } from "../../src/components/Home/LeagueName";
 
 export default function TabOneScreen() {
   return (

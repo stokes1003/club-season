@@ -1,6 +1,6 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
-import { getPlayersByLeague } from "../../api/getPlayersByLeague";
+import { getPlayersByLeague } from "../../../api/getPlayersByLeague";
 import { useEffect, useState } from "react";
 
 type Player = {

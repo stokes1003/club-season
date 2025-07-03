@@ -1,7 +1,7 @@
 import { YStack, Text, ScrollView, XStack } from "tamagui";
 import { RoundCard } from "../RoundCard";
 import { useEffect, useState } from "react";
-import { getLeagueRounds } from "../../api/getLeagueRounds";
+import { getLeagueRounds } from "../../../api/getLeagueRounds";
 
 type Score = {
   player: string;

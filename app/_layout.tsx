@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { Provider } from "./Provider";
+import { Provider } from "../src/Provider";
 import { useTheme } from "tamagui";
 
 export {

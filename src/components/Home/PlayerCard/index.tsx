@@ -1,5 +1,5 @@
 import { Avatar, Card, Text, XStack, YStack, View } from "tamagui";
-import { Trophy, Medal, Award } from "@tamagui/lucide-icons";
+import { Medal } from "@tamagui/lucide-icons";
 
 type Player = {
   avatar_url: string;

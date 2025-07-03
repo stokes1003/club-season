@@ -1,10 +1,10 @@
 import { View } from "tamagui";
-import { AddScores } from "../../src/components/AddScores";
+import { Settings } from "../../src/components/Settings";
 
-export default function AddScoresScreen() {
+export default function SettingsScreen() {
   return (
     <View flex={1} items="center" bg="$background" pt="$10" px="$8">
-      <AddScores />
+      <Settings />
     </View>
   );
 }
