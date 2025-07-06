@@ -16,7 +16,7 @@ export function ScoresFormHeader({
 }) {
   return (
     <YStack>
-      {currentStep === "select-golf-course" && (
+      {currentStep === "select-league" && (
         <View
           style={{
             alignSelf: "flex-end",
@@ -26,7 +26,7 @@ export function ScoresFormHeader({
           <X />
         </View>
       )}
-      {currentStep !== "select-golf-course" && (
+      {currentStep !== "select-league" && (
         <XStack
           width="100%"
           style={{ alignItems: "center", justifyContent: "space-between" }}
@@ -34,12 +34,16 @@ export function ScoresFormHeader({
           <View
             style={{ alignItems: "center" }}
             onPress={() => {
-              if (currentStep === "enter-player-scores") {
-                if (currentPlayerIndex === 0) {
-                  setCurrentStep("select-golf-course");
-                } else setCurrentPlayerIndex(currentPlayerIndex - 1);
+              if (currentStep === "select-golf-course") {
+                setCurrentStep("select-league");
               } else {
-                setCurrentStep("enter-player-scores");
+                if (currentStep === "enter-player-scores") {
+                  if (currentPlayerIndex === 0) {
+                    setCurrentStep("select-golf-course");
+                  } else setCurrentPlayerIndex(currentPlayerIndex - 1);
+                } else {
+                  setCurrentStep("enter-player-scores");
+                }
               }
             }}
           >

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert } from "react-native";
-import { Button, Input, ScrollView, Text, YStack } from "tamagui";
+import { Button, Input, ScrollView, Text, YStack, Tabs, View } from "tamagui";
 
 type AddScoresData = {
   courses: {
@@ -14,11 +14,19 @@ export function SelectGolfCourse({
   addScoresData,
   setSelectedCourse,
   selectedCourse,
+  isMajor,
+  setIsMajor,
+  majorName,
+  setMajorName,
 }: {
   setCurrentStep: (step: string) => void;
   addScoresData: AddScoresData;
-  setSelectedCourse: (course: string) => void;
-  selectedCourse: string;
+  setSelectedCourse: (course: { id: string; course_name: string }) => void;
+  selectedCourse: { id: string; course_name: string } | null;
+  isMajor: string;
+  setIsMajor: (isMajor: string) => void;
+  majorName: string;
+  setMajorName: (majorName: string) => void;
 }) {
   const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -34,7 +42,7 @@ export function SelectGolfCourse({
           Select Golf Course
         </Text>
       </YStack>
-      <YStack gap="$4" style={{ alignItems: "center" }}>
+      <YStack gap="$6" style={{ alignItems: "center" }}>
         <Input
           width="$18"
           borderWidth={2}
@@ -61,7 +69,7 @@ export function SelectGolfCourse({
                   onPress={() => {
                     setSearch(course.course_name);
                     setIsSearching(false);
-                    setSelectedCourse(course.course_name);
+                    setSelectedCourse(course);
                   }}
                 >
                   {course.course_name}
@@ -70,15 +78,64 @@ export function SelectGolfCourse({
             </YStack>
           </ScrollView>
         )}
+        <YStack gap="$4" style={{ alignItems: "center" }}>
+          <Text fontSize="$7" fontWeight="bold">
+            Is this round a Major?
+          </Text>
+          <YStack>
+            <Tabs value={isMajor} onValueChange={setIsMajor}>
+              <Tabs.List>
+                <Tabs.Tab value="yes">
+                  <View
+                    width="$4"
+                    borderBottomWidth={4}
+                    borderColor={
+                      isMajor === "yes" ? "$green10" : "$borderColor"
+                    }
+                    style={{ alignItems: "center" }}
+                  >
+                    <Text fontSize="$7">Yes</Text>
+                  </View>
+                </Tabs.Tab>
+                <Tabs.Tab value="no">
+                  <View
+                    width="$4"
+                    borderBottomWidth={4}
+                    borderColor={isMajor === "no" ? "$blue10" : "$borderColor"}
+                    style={{ alignItems: "center" }}
+                  >
+                    <Text fontSize="$7">No</Text>
+                  </View>
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+          </YStack>
+        </YStack>
+        {isMajor === "yes" && (
+          <YStack>
+            <Input
+              width="$18"
+              borderWidth={2}
+              placeholder="Enter Major Name"
+              value={majorName}
+              onChangeText={setMajorName}
+              fontSize="$5"
+            />
+          </YStack>
+        )}
       </YStack>
 
       <Button
-        bg="$blue10"
+        bg={isMajor === "yes" ? "$green10" : "$blue10"}
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$14"
+        width="$18"
         onPress={() => {
+          if (isMajor === "yes" && majorName === "") {
+            Alert.alert("Please enter a major name");
+            return;
+          }
           if (selectedCourse) {
             setCurrentStep("enter-player-scores");
           } else {

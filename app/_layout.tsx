@@ -1,6 +1,6 @@
 import "../tamagui-web.css";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -12,6 +12,10 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { Provider } from "../src/Provider";
 import { useTheme } from "tamagui";
+import { supabase } from "../src/lib/supabase";
+import { Session } from "@supabase/supabase-js";
+import Auth from "../src/components/Auth";
+import { getUser } from "../src/api/getUser";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,6 +61,37 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const theme = useTheme();
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (session?.user) {
+      getUser().then(setUser);
+    } else {
+      setUser(null);
+    }
+  }, [session]);
+
+  if (loading) {
+    return null; // Or a loading screen
+  }
+
+  if (!session || !user) {
+    return <Auth />;
+  }
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />

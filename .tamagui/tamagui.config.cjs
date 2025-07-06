@@ -1443,10 +1443,13 @@ var isIos = process.env.TEST_NATIVE_PLATFORM === "ios";
 var React = __toESM(require("react"), 1);
 var import_jsx_runtime = require("react/jsx-runtime");
 var PresenceContext = React.createContext(null);
-var ResetPresence = /* @__PURE__ */ __name((props) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PresenceContext.Provider, {
-  value: null,
-  children: props.children
-}), "ResetPresence");
+var ResetPresence = /* @__PURE__ */ __name((props) => {
+  const parent = React.useContext(PresenceContext);
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PresenceContext.Provider, {
+    value: props.disable ? parent : null,
+    children: props.children
+  });
+}, "ResetPresence");
 
 // node_modules/@tamagui/use-presence/dist/esm/usePresence.mjs
 var React2 = __toESM(require("react"), 1);
@@ -1472,7 +1475,7 @@ function createAnimations(animations) {
     animations,
     usePresence,
     ResetPresence,
-    supportsCSSVars: true,
+    supportsCSS: true,
     useAnimatedNumber(initial) {
       const [val, setVal] = import_react3.default.useState(initial), [onFinish, setOnFinish] = (0, import_react3.useState)();
       return useIsomorphicLayoutEffect(() => {

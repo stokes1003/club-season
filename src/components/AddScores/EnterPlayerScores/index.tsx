@@ -81,14 +81,14 @@ export function EnterPlayerScores({
         <YStack gap="$4">
           <Input
             placeholder={`${addScoresData.players[currentPlayerIndex].name}'s HCP`}
-            width="$12"
+            width="$18"
             value={handicapInput}
             onChangeText={setHandicapInput}
             fontSize="$5"
           />
           <Input
             placeholder={`${addScoresData.players[currentPlayerIndex].name}'s Gross`}
-            width="$12"
+            width="$18"
             value={grossInput}
             onChangeText={setGrossInput}
             fontSize="$5"
@@ -101,7 +101,7 @@ export function EnterPlayerScores({
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$14"
+        width="$18"
         onPress={handleSubmitScores}
       >
         {currentPlayerIndex === addScoresData.players.length - 1

@@ -1,12 +1,13 @@
-import { YStack, Text, XStack, Button, View } from "tamagui";
+import { YStack } from "tamagui";
 import { SelectGolfCourse } from "./SelectGolfCourse";
-import { ArrowLeft, X } from "@tamagui/lucide-icons";
 import { EnterPlayerScores } from "./EnterPlayerScores";
 import { useEffect, useState } from "react";
 import { ConfirmRoundSubmit } from "./ConfirmRoundSubmit";
 import { useRouter } from "expo-router";
 import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
+
+import { SelectLeague } from "./SelectLeague";
 
 type AddScoresData = {
   courses: {
@@ -22,17 +23,23 @@ type AddScoresData = {
 
 export function AddScores() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState("select-golf-course");
+
+  const [currentStep, setCurrentStep] = useState("select-league");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const leagueId = "7d1b13c1-56cd-4dbf-80e5-f4362c4879de";
+  const [leagueId, setLeagueId] = useState<string>("");
   const [addScoresData, setAddScoresData] = useState<AddScoresData | null>(
     null
   );
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [isMajor, setIsMajor] = useState("no");
+  const [majorName, setMajorName] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState<{
+    id: string;
+    course_name: string;
+  } | null>(null);
   const handleHome = () => {
     router.push("/");
-    setCurrentStep("select-golf-course");
+    setCurrentStep("select-league");
     setCurrentPlayerIndex(0);
   };
   const [scoresByPlayer, setScoresByPlayer] = useState<{
@@ -44,12 +51,14 @@ export function AddScores() {
   }>({});
 
   useEffect(() => {
-    const fetchAddScoresData = async () => {
-      const data = await getAddScoresData(leagueId);
-      setAddScoresData(data);
-    };
-    fetchAddScoresData();
-  }, []);
+    if (leagueId) {
+      const fetchAddScoresData = async () => {
+        const data = await getAddScoresData(leagueId);
+        setAddScoresData(data);
+      };
+      fetchAddScoresData();
+    }
+  }, [leagueId]);
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
@@ -61,13 +70,24 @@ export function AddScores() {
           setCurrentStep={setCurrentStep}
           setCurrentPlayerIndex={setCurrentPlayerIndex}
         />
+        {currentStep === "select-league" && (
+          <SelectLeague
+            setLeagueId={setLeagueId}
+            leagueId={leagueId}
+            setCurrentStep={setCurrentStep}
+          />
+        )}
 
         {currentStep === "select-golf-course" && addScoresData && (
           <SelectGolfCourse
             setCurrentStep={setCurrentStep}
             addScoresData={addScoresData}
             setSelectedCourse={setSelectedCourse}
-            selectedCourse={selectedCourse || ""}
+            selectedCourse={selectedCourse}
+            isMajor={isMajor}
+            setIsMajor={setIsMajor}
+            majorName={majorName}
+            setMajorName={setMajorName}
           />
         )}
         {currentStep === "enter-player-scores" && addScoresData && (
@@ -88,7 +108,8 @@ export function AddScores() {
             setCurrentPlayerIndex={setCurrentPlayerIndex}
             handleHome={handleHome}
             scoresByPlayer={scoresByPlayer}
-            selectedCourse={selectedCourse || ""}
+            selectedCourse={selectedCourse}
+            leagueId={leagueId}
           />
         )}
       </YStack>

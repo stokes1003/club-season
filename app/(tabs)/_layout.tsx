@@ -1,9 +1,11 @@
 import { Link, Tabs } from "expo-router";
-import { Button, useTheme } from "tamagui";
-import { House, Plus, Settings, User } from "@tamagui/lucide-icons";
+import { Avatar, useTheme } from "tamagui";
+import { House, LandPlot, Plus, Settings, User } from "@tamagui/lucide-icons";
+import { useUser } from "app/hooks/useUser";
 
 export default function TabLayout() {
   const theme = useTheme();
+  const user = useUser();
 
   return (
     <Tabs
@@ -18,6 +20,19 @@ export default function TabLayout() {
           borderBottomColor: theme?.borderColor?.val || "#e0e0e0",
         },
         headerTintColor: theme?.color?.val || "#000000",
+
+        // ✅ Avatar in top-right corner on all screens
+        headerRight: () =>
+          user ? (
+            <Link href="/Profile" asChild>
+              <Avatar circular size="$3" mr="$4" mb="$2">
+                <Avatar.Image
+                  src={user.avatar_url ?? "https://via.placeholder.com/40"}
+                  accessibilityLabel="User avatar"
+                />
+              </Avatar>
+            </Link>
+          ) : null,
       }}
     >
       <Tabs.Screen
@@ -25,13 +40,13 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <House color={color as any} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Button mr="$4" bg="$green8" color="$green12">
-                Home
-              </Button>
-            </Link>
-          ),
+        }}
+      />
+      <Tabs.Screen
+        name="My Leagues"
+        options={{
+          title: "My Leagues",
+          tabBarIcon: ({ color }) => <LandPlot color={color as any} />,
         }}
       />
       <Tabs.Screen

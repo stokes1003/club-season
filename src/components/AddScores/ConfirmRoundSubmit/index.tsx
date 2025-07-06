@@ -1,14 +1,15 @@
 import { Text, YStack, XStack, Button, Avatar, View, Spinner } from "tamagui";
+import { submitScores } from "../../../api/submitScores";
 
 export function ConfirmRoundSubmit({
   setCurrentStep,
   isSubmitting,
   setIsSubmitting,
-
   setCurrentPlayerIndex,
   handleHome,
   scoresByPlayer,
   selectedCourse,
+  leagueId,
 }: {
   setCurrentStep: (step: string) => void;
   isSubmitting: boolean;
@@ -23,16 +24,39 @@ export function ConfirmRoundSubmit({
       avatar_url: string;
     };
   };
-  selectedCourse: string;
+  selectedCourse: { id: string; course_name: string } | null;
+  leagueId: string;
 }) {
   const submitRound = async () => {
+    if (!selectedCourse?.id) {
+      console.error("No course selected");
+      setIsSubmitting(false);
+      return;
+    }
+
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("submitRound");
+    const { success, error } = await submitScores({
+      league_id: leagueId,
+      course_id: selectedCourse.id,
+      date: new Date().toISOString(),
+      is_major: false,
+      major_name: null,
+      scores: Object.keys(scoresByPlayer).map((playerId) => ({
+        player_id: playerId,
+        gross: scoresByPlayer[playerId].gross,
+        hcp: scoresByPlayer[playerId].hcp,
+        net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
+      })),
+    });
+    if (success) {
+      console.log("Scores submitted successfully");
+      setCurrentStep("select-golf-course");
+      setCurrentPlayerIndex(0);
+      handleHome();
+    } else {
+      console.error("Failed to submit scores:", error);
+    }
     setIsSubmitting(false);
-    setCurrentStep("select-golf-course");
-    setCurrentPlayerIndex(0);
-    handleHome();
   };
 
   return (
@@ -43,7 +67,10 @@ export function ConfirmRoundSubmit({
             Confirm Round Details
           </Text>
           <Text fontWeight="bold" fontSize="$6">
-            {selectedCourse}
+            {selectedCourse?.course_name}
+          </Text>
+          <Text fontSize="$5" color="$black11">
+            {new Date().toLocaleDateString()}
           </Text>
         </YStack>
         <XStack gap="$4" style={{ alignItems: "center" }}>
@@ -98,9 +125,9 @@ export function ConfirmRoundSubmit({
           color="$white1"
           fontSize="$5"
           fontWeight="bold"
+          width="$14"
           onPress={submitRound}
           disabled={isSubmitting}
-          width="$14"
         >
           {isSubmitting ? (
             <Spinner size="small" color="$white1" />

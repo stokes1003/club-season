@@ -2,6 +2,7 @@ import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
 import { getPlayersByLeague } from "../../../api/getPlayersByLeague";
 import { useEffect, useState } from "react";
+import { useUser } from "app/hooks/useUser";
 
 type Player = {
   avatar_url: string;
@@ -17,15 +18,18 @@ type Player = {
 
 export function Leaderboard() {
   const [players, setPlayers] = useState<Player[]>([]);
-  const leagueId = "7d1b13c1-56cd-4dbf-80e5-f4362c4879de";
+
+  const user = useUser();
+
+  const leagueId = user?.leagues?.[0]?.id;
 
   useEffect(() => {
     const fetchPlayers = async () => {
-      const data = await getPlayersByLeague(leagueId);
+      const data = await getPlayersByLeague(leagueId ?? "");
       setPlayers(data || []);
     };
     fetchPlayers();
-  }, []);
+  }, [leagueId]);
 
   const netSortedPlayers = () => {
     return [...players].sort((a, b) => {
