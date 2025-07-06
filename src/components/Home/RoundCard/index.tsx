@@ -36,7 +36,7 @@ export function RoundCard({ roundData }: RoundCardProps) {
   };
 
   return (
-    <XStack pl="$4">
+    <XStack>
       <Card
         animation="bouncy"
         width={336}

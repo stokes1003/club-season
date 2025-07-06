@@ -46,7 +46,7 @@ export function OfficialRounds() {
         decelerationRate="fast"
         snapToAlignment="center"
       >
-        <XStack gap="$3">
+        <XStack>
           {rounds?.map((round) => (
             <RoundCard key={round._id} roundData={round} />
           ))}
