@@ -57,7 +57,7 @@ export function Leaderboard() {
         py="$5"
         px="$4"
       >
-        <XStack gap="$5">
+        <XStack gap="$3">
           {sortedPlayers?.map((player, index) => (
             <PlayerCard
               key={player.player_id}
