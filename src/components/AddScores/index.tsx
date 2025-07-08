@@ -6,8 +6,11 @@ import { ConfirmRoundSubmit } from "./ConfirmRoundSubmit";
 import { useRouter } from "expo-router";
 import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
-
 import { SelectLeague } from "./SelectLeague";
+import { submitScores } from "../../api/submitScores";
+import { calculateGrossNetPoints } from "../../../app/hooks/calculateGrossNetPoints";
+import { useLeaderboard } from "../../context/LeaderboardContext";
+import { useOfficalRounds } from "../../context/OfficalRoundsContext";
 
 type AddScoresData = {
   courses: {
@@ -23,7 +26,8 @@ type AddScoresData = {
 
 export function AddScores() {
   const router = useRouter();
-
+  const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
+  const { triggerRefresh: triggerOfficalRoundsRefresh } = useOfficalRounds();
   const [currentStep, setCurrentStep] = useState("select-league");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,11 +41,6 @@ export function AddScores() {
     id: string;
     course_name: string;
   } | null>(null);
-  const handleHome = () => {
-    router.push("/");
-    setCurrentStep("select-league");
-    setCurrentPlayerIndex(0);
-  };
   const [scoresByPlayer, setScoresByPlayer] = useState<{
     [key: string]: {
       hcp: number;
@@ -49,6 +48,69 @@ export function AddScores() {
       avatar_url: string;
     };
   }>({});
+  const handleHome = () => {
+    router.push("/");
+    setCurrentStep("select-league");
+    setCurrentPlayerIndex(0);
+    setIsMajor("no");
+    setMajorName("");
+  };
+
+  const submitRound = async () => {
+    if (!selectedCourse?.id) {
+      console.error("No course selected");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const scoreList = Object.entries(scoresByPlayer).map(
+      ([playerId, data]) => ({
+        player: playerId,
+        gross: data.gross,
+        net: data.gross - data.hcp,
+      })
+    );
+
+    const { gross: grossPoints, net: netPoints } = calculateGrossNetPoints(
+      scoreList,
+      isMajor === "yes"
+    );
+
+    setIsSubmitting(true);
+
+    const { success, error } = await submitScores({
+      league_id: leagueId,
+      course_id: selectedCourse.id,
+      date: new Date().toISOString(),
+      is_major: isMajor === "yes",
+      major_name: isMajor === "yes" ? majorName : null,
+      scores: Object.keys(scoresByPlayer).map((playerId) => ({
+        player_id: playerId,
+        gross: scoresByPlayer[playerId].gross,
+        hcp: scoresByPlayer[playerId].hcp,
+        net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
+        gross_points: grossPoints[playerId] || 0,
+        net_points: netPoints[playerId] || 0,
+      })),
+    });
+
+    if (success) {
+      console.log("Scores submitted successfully");
+      setCurrentStep("select-golf-course");
+      setCurrentPlayerIndex(0);
+      handleHome();
+      triggerLeaderboardRefresh();
+      triggerOfficalRoundsRefresh();
+    } else {
+      console.error("Failed to submit scores:", error);
+    }
+
+    setIsSubmitting(false);
+    setScoresByPlayer({});
+    setSelectedCourse(null);
+    setIsMajor("no");
+    setMajorName("");
+  };
 
   useEffect(() => {
     if (leagueId) {
@@ -98,18 +160,19 @@ export function AddScores() {
             addScoresData={addScoresData}
             setScoresByPlayer={setScoresByPlayer}
             scoresByPlayer={scoresByPlayer}
+            isMajor={isMajor}
           />
         )}
         {currentStep === "confirm-round-submit" && (
           <ConfirmRoundSubmit
-            setCurrentStep={setCurrentStep}
             isSubmitting={isSubmitting}
-            setIsSubmitting={setIsSubmitting}
-            setCurrentPlayerIndex={setCurrentPlayerIndex}
             handleHome={handleHome}
             scoresByPlayer={scoresByPlayer}
             selectedCourse={selectedCourse}
             leagueId={leagueId}
+            isMajor={isMajor}
+            majorName={majorName}
+            submitRound={submitRound}
           />
         )}
       </YStack>

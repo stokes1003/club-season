@@ -1,5 +1,5 @@
 import { View } from "tamagui";
-import { ChangeName } from "../../src/components/Profile/ChangeName";
+import { ChangeName } from "../../../src/components/Profile/ChangeName";
 
 export default function ChangeNameScreen() {
   return (

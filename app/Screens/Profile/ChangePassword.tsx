@@ -1,4 +1,4 @@
-import { ChangePassword } from "../../src/components/Profile/ChangePassword";
+import { ChangePassword } from "../../../src/components/Profile/ChangePassword";
 import { View } from "tamagui";
 
 export default function ChangePasswordScreen() {

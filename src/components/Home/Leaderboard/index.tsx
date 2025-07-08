@@ -1,35 +1,16 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
-import { getPlayersByLeague } from "../../../api/getPlayersByLeague";
-import { useEffect, useState } from "react";
-import { useUser } from "app/hooks/useUser";
-
-type Player = {
-  avatar_url: string;
-  avg_gross_score: number;
-  avg_net_score: number;
-  best_gross_score: number;
-  best_net_score: number;
-  gross_points: number;
-  name: string;
-  net_points: number;
-  player_id: string;
-};
+import { useUser } from "../../../context/UserContext";
+import { getPlayers } from "app/hooks/getPlayers";
+import { useLeaderboard } from "../../../context/LeaderboardContext";
 
 export function Leaderboard() {
-  const [players, setPlayers] = useState<Player[]>([]);
-
-  const user = useUser();
+  const { user } = useUser();
+  const { refreshTrigger } = useLeaderboard();
 
   const leagueId = user?.leagues?.[0]?.id;
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      const data = await getPlayersByLeague(leagueId ?? "");
-      setPlayers(data || []);
-    };
-    fetchPlayers();
-  }, [leagueId]);
+  const players = getPlayers(leagueId ?? "", refreshTrigger);
 
   const netSortedPlayers = () => {
     return [...players].sort((a, b) => {

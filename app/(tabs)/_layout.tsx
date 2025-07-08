@@ -1,11 +1,11 @@
 import { Link, Tabs } from "expo-router";
 import { Avatar, useTheme } from "tamagui";
 import { House, LandPlot, Plus, Settings, User } from "@tamagui/lucide-icons";
-import { useUser } from "app/hooks/useUser";
+import { useUser } from "../../src/context/UserContext";
 
 export default function TabLayout() {
   const theme = useTheme();
-  const user = useUser();
+  const { user } = useUser();
 
   return (
     <Tabs

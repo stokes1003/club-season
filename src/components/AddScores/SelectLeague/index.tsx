@@ -1,6 +1,6 @@
 import { YStack, Text, Button, Input, ScrollView } from "tamagui";
 import { Alert } from "react-native";
-import { useUser } from "app/hooks/useUser";
+import { useUser } from "../../../context/UserContext";
 import { useMemo, useState } from "react";
 
 export function SelectLeague({
@@ -12,7 +12,7 @@ export function SelectLeague({
   setCurrentStep: (step: string) => void;
   leagueId: string;
 }) {
-  const user = useUser();
+  const { user } = useUser();
   const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState("");
   const filteredLeagues = useMemo(

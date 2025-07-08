@@ -1,21 +1,19 @@
 import { Text, YStack, XStack, Button, Avatar, View, Spinner } from "tamagui";
-import { submitScores } from "../../../api/submitScores";
+import { Trophy } from "@tamagui/lucide-icons";
 
 export function ConfirmRoundSubmit({
-  setCurrentStep,
   isSubmitting,
-  setIsSubmitting,
-  setCurrentPlayerIndex,
+  submitRound,
   handleHome,
   scoresByPlayer,
   selectedCourse,
-  leagueId,
-}: {
-  setCurrentStep: (step: string) => void;
-  isSubmitting: boolean;
-  setIsSubmitting: (isSubmitting: boolean) => void;
 
-  setCurrentPlayerIndex: (currentPlayerIndex: number) => void;
+  isMajor,
+  majorName,
+}: {
+  isSubmitting: boolean;
+  submitRound: () => void;
+
   handleHome: () => void;
   scoresByPlayer: {
     [key: string]: {
@@ -26,49 +24,43 @@ export function ConfirmRoundSubmit({
   };
   selectedCourse: { id: string; course_name: string } | null;
   leagueId: string;
+  isMajor: string;
+  majorName: string;
 }) {
-  const submitRound = async () => {
-    if (!selectedCourse?.id) {
-      console.error("No course selected");
-      setIsSubmitting(false);
-      return;
-    }
-
-    setIsSubmitting(true);
-    const { success, error } = await submitScores({
-      league_id: leagueId,
-      course_id: selectedCourse.id,
-      date: new Date().toISOString(),
-      is_major: false,
-      major_name: null,
-      scores: Object.keys(scoresByPlayer).map((playerId) => ({
-        player_id: playerId,
-        gross: scoresByPlayer[playerId].gross,
-        hcp: scoresByPlayer[playerId].hcp,
-        net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
-      })),
-    });
-    if (success) {
-      console.log("Scores submitted successfully");
-      setCurrentStep("select-golf-course");
-      setCurrentPlayerIndex(0);
-      handleHome();
-    } else {
-      console.error("Failed to submit scores:", error);
-    }
-    setIsSubmitting(false);
-  };
-
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack gap="$4" style={{ alignItems: "center" }}>
-        <YStack gap="$4" style={{ alignItems: "center" }}>
+        <YStack gap="$3" style={{ alignItems: "center" }}>
           <Text fontWeight="bold" fontSize="$8">
             Confirm Round Details
           </Text>
+          {isMajor === "yes" && (
+            <View
+              width={300}
+              bg="$green10"
+              height="$3"
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <XStack gap="$2">
+                <Trophy size={20} color="$white1" />
+                <Text
+                  fontSize="$7"
+                  color="$white1"
+                  fontWeight="bold"
+                  style={{ textAlign: "center" }}
+                >
+                  {majorName}
+                </Text>
+              </XStack>
+            </View>
+          )}
           <Text fontWeight="bold" fontSize="$6">
             {selectedCourse?.course_name}
           </Text>
+
           <Text fontSize="$5" color="$black11">
             {new Date().toLocaleDateString()}
           </Text>
@@ -112,8 +104,8 @@ export function ConfirmRoundSubmit({
         <Button
           fontSize="$5"
           variant="outlined"
-          borderColor="$blue10"
-          color="$blue10"
+          borderColor={isMajor === "yes" ? "$green10" : "$blue10"}
+          color={isMajor === "yes" ? "$green10" : "$blue10"}
           fontWeight="bold"
           onPress={handleHome}
           disabled={isSubmitting}
@@ -121,7 +113,7 @@ export function ConfirmRoundSubmit({
           Cancel
         </Button>
         <Button
-          bg="$blue10"
+          bg={isMajor === "yes" ? "$green10" : "$blue10"}
           color="$white1"
           fontSize="$5"
           fontWeight="bold"

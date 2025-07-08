@@ -16,6 +16,7 @@ export function EnterPlayerScores({
   addScoresData,
   setScoresByPlayer,
   scoresByPlayer,
+  isMajor,
 }: {
   setCurrentStep: (step: string) => void;
   currentPlayerIndex: number;
@@ -35,6 +36,7 @@ export function EnterPlayerScores({
       avatar_url: string;
     };
   };
+  isMajor: string;
 }) {
   const [handicapInput, setHandicapInput] = useState("");
   const [grossInput, setGrossInput] = useState("");
@@ -97,7 +99,7 @@ export function EnterPlayerScores({
       </YStack>
 
       <Button
-        bg="$blue10"
+        bg={isMajor === "yes" ? "$green10" : "$blue10"}
         color="$white1"
         fontSize="$5"
         fontWeight="bold"

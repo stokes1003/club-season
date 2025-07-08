@@ -1,37 +1,14 @@
 import { YStack, Text, ScrollView, XStack } from "tamagui";
 import { RoundCard } from "../RoundCard";
-import { useEffect, useState } from "react";
-import { getLeagueRounds } from "../../../api/getLeagueRounds";
-
-type Score = {
-  player: string;
-  player_img: string;
-  gross: number;
-  hcp: number;
-  net: number;
-};
-
-type Round = {
-  _id: string;
-  course: string;
-  course_img: string;
-  date: string;
-  isMajor?: boolean;
-  majorName?: string;
-  scores: Score[];
-};
+import { useUser } from "../../../context/UserContext";
+import { getOfficialRounds } from "app/hooks/getOfficialRounds";
+import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 
 export function OfficialRounds() {
-  const [rounds, setRounds] = useState<Round[]>([]);
-  const leagueId = "7d1b13c1-56cd-4dbf-80e5-f4362c4879de";
-
-  useEffect(() => {
-    const fetchRounds = async () => {
-      const data = await getLeagueRounds(leagueId);
-      setRounds(data || []);
-    };
-    fetchRounds();
-  }, []);
+  const { user } = useUser();
+  const leagueId = user?.leagues?.[0]?.id;
+  const { refreshTrigger } = useOfficalRounds();
+  const rounds = getOfficialRounds(leagueId ?? "", refreshTrigger);
 
   return (
     <YStack gap="$4" width="100%">
