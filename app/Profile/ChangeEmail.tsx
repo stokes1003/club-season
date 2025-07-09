@@ -1,4 +1,4 @@
-import { ChangeEmail } from "../../../src/components/Profile/ChangeEmail";
+import { ChangeEmail } from "../../src/components/Profile/ChangeEmail";
 import { View } from "tamagui";
 
 export default function ChangeEmailScreen() {

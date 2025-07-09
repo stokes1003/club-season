@@ -1,7 +1,9 @@
 import { Text, Button, YStack } from "tamagui";
 import { LeaguesCard } from "./LeaguesCard";
+import { useRouter } from "expo-router";
 
 export function MyLeagues() {
+  const router = useRouter();
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack gap="$4" style={{ alignItems: "center" }}>
@@ -21,6 +23,9 @@ export function MyLeagues() {
         fontSize="$5"
         fontWeight="bold"
         width="$20"
+        onPress={() => {
+          router.push("/CreateLeague");
+        }}
       >
         Create A League
       </Button>
