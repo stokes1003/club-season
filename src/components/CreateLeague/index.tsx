@@ -20,13 +20,7 @@ export function CreateLeague() {
   const [numberOfPlayers, setNumberOfPlayers] = useState("");
   const [leagueAvatar, setLeagueAvatar] = useState("");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-
-  const handleSubmit = () => {
-    if (currentStep === "add-players") {
-      console.log("Submit league with players:", players);
-      // TODO: Implement league creation logic
-    }
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleHome = () => {
     router.push("/");
@@ -49,8 +43,8 @@ export function CreateLeague() {
             numberOfPlayers={numberOfPlayers}
             setNumberOfPlayers={setNumberOfPlayers}
             setLeagueAvatar={setLeagueAvatar}
+            leagueAvatar={leagueAvatar}
             onNextStep={() => {
-              // Initialize players array with the correct number of players
               const numPlayers = Number(numberOfPlayers);
               const newPlayers = Array.from({ length: numPlayers }, () => ({
                 name: "",
@@ -78,6 +72,8 @@ export function CreateLeague() {
             players={players}
             leagueAvatar={leagueAvatar}
             handleHome={handleHome}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
           />
         )}
       </View>

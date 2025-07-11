@@ -2,7 +2,7 @@ import { getPlayersByLeague } from "src/api/getPlayersByLeague";
 import { useEffect, useState } from "react";
 import { Player } from "../../src/types/player";
 
-export function getPlayers(leagueId: string, refreshTrigger?: number) {
+export function useGetPlayers(leagueId: string, refreshTrigger?: number) {
   const [players, setPlayers] = useState<Player[]>([]);
 
   useEffect(() => {

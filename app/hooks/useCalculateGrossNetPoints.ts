@@ -9,7 +9,7 @@ type PointsResult = {
   net: Record<string, number>;
 };
 
-export function calculateGrossNetPoints(
+export function useCalculateGrossNetPoints(
   scores: PlayerScore[],
   isMajor: boolean = false
 ): PointsResult {

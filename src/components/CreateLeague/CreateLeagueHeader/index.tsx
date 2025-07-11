@@ -48,6 +48,24 @@ export function CreateLeagueHeader({
           </View>
         </XStack>
       )}
+      {currentStep === "confirm-create-league" && (
+        <XStack
+          width="100%"
+          style={{ alignItems: "center", justifyContent: "space-between" }}
+        >
+          <View
+            style={{ alignItems: "center" }}
+            onPress={() => {
+              setCurrentStep("add-players");
+            }}
+          >
+            <ArrowLeft />
+          </View>
+          <View style={{ alignItems: "center" }} onPress={handleHome}>
+            <X />
+          </View>
+        </XStack>
+      )}
     </View>
   );
 }

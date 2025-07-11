@@ -8,7 +8,7 @@ import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
 import { SelectLeague } from "./SelectLeague";
 import { submitScores } from "../../api/submitScores";
-import { calculateGrossNetPoints } from "../../../app/hooks/calculateGrossNetPoints";
+import { useCalculateGrossNetPoints } from "../../../app/hooks/useCalculateGrossNetPoints";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
 
@@ -71,7 +71,7 @@ export function AddScores() {
       })
     );
 
-    const { gross: grossPoints, net: netPoints } = calculateGrossNetPoints(
+    const { gross: grossPoints, net: netPoints } = useCalculateGrossNetPoints(
       scoreList,
       isMajor === "yes"
     );

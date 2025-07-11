@@ -1,14 +1,14 @@
 import { YStack, Text, ScrollView, XStack } from "tamagui";
 import { RoundCard } from "../RoundCard";
 import { useUser } from "../../../context/UserContext";
-import { getOfficialRounds } from "app/hooks/getOfficialRounds";
+import { useGetOfficalRounds } from "app/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 
 export function OfficialRounds() {
   const { user } = useUser();
   const leagueId = user?.leagues?.[0]?.id;
   const { refreshTrigger } = useOfficalRounds();
-  const rounds = getOfficialRounds(leagueId ?? "", refreshTrigger);
+  const rounds = useGetOfficalRounds(leagueId ?? "", refreshTrigger);
 
   return (
     <YStack gap="$4" width="100%">

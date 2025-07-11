@@ -1,7 +1,19 @@
-import { View, Text, YStack, Button, Input, Label, XStack } from "tamagui";
+import {
+  View,
+  Text,
+  YStack,
+  Button,
+  Input,
+  Label,
+  XStack,
+  Avatar,
+} from "tamagui";
 import { Image } from "@tamagui/lucide-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
+import { uploadImage } from "src/api/uploadImage";
+import { v4 as uuidv4 } from "uuid";
+import { useRandomColor } from "app/hooks/useRandomColor";
 
 export function EnterLeagueName({
   leagueName,
@@ -9,6 +21,7 @@ export function EnterLeagueName({
   numberOfPlayers,
   setNumberOfPlayers,
   setLeagueAvatar,
+  leagueAvatar,
   onNextStep,
 }: {
   leagueName: string;
@@ -16,18 +29,47 @@ export function EnterLeagueName({
   numberOfPlayers: string;
   setNumberOfPlayers: (text: string) => void;
   setLeagueAvatar: (text: string) => void;
+  leagueAvatar: string;
   onNextStep: () => void;
 }) {
   const pickImage = async () => {
+    // Request permissions first
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
+
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: "images",
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
+
     if (!result.canceled) {
-      setLeagueAvatar(result.assets[0].uri);
+      const localUri = result.assets[0].uri;
+      setLeagueAvatar(localUri); // Set local URI for immediate display
+
+      // Upload to blob storage in background (don't switch URLs immediately)
+      try {
+        const path = `leagues/${uuidv4()}.jpg`;
+        const uploadedUrl = await uploadImage(localUri, path);
+
+        if (uploadedUrl) {
+          console.log("Image uploaded successfully:", uploadedUrl);
+          // Store the uploaded URL separately or in a ref for later use
+          // For now, keep the local URI visible
+        } else {
+          console.log("Upload failed, keeping local URI");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
     }
   };
 
-  const handleLeagueName = () => {
+  const handleLeagueName = async () => {
     if (leagueName === "") {
       Alert.alert("Please enter a league name");
       return;
@@ -77,20 +119,48 @@ export function EnterLeagueName({
             onChangeText={setNumberOfPlayers}
           />
         </XStack>
-        <YStack gap="$1">
+        <YStack gap="$4">
           <Label fontSize="$4" fontWeight="bold">
             League Avatar Photo
           </Label>
-          <Button
-            fontSize="$5"
-            variant="outlined"
-            borderColor="$blue10"
-            color="$blue10"
-            fontWeight="bold"
-            onPress={pickImage}
+          <XStack
+            gap="$6"
+            style={{ alignItems: "center", justifyContent: "center" }}
           >
-            <Image size="$1" color="$blue10" /> Upload Photo
-          </Button>
+            <View style={{ alignItems: "center" }}>
+              <Avatar size="$6" circular>
+                <Avatar.Image
+                  src={leagueAvatar}
+                  onError={(error) => {
+                    console.log("Avatar image failed to load:", error);
+                  }}
+                />
+
+                <Avatar.Fallback
+                  backgroundColor={useRandomColor() as any}
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text fontSize="$8" style={{ color: "white" }}>
+                    {leagueName.charAt(0)}
+                  </Text>
+                </Avatar.Fallback>
+              </Avatar>
+            </View>
+
+            <Button
+              fontSize="$5"
+              variant="outlined"
+              borderColor="$blue10"
+              color="$blue10"
+              fontWeight="bold"
+              onPress={pickImage}
+            >
+              <Image size="$1" color="$blue10" /> Upload Photo
+            </Button>
+          </XStack>
         </YStack>
       </YStack>
       <Button

@@ -1,7 +1,7 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
 import { useUser } from "../../../context/UserContext";
-import { getPlayers } from "app/hooks/getPlayers";
+import { useGetPlayers } from "app/hooks/useGetPlayers";
 import { useLeaderboard } from "../../../context/LeaderboardContext";
 
 export function Leaderboard() {
@@ -10,7 +10,7 @@ export function Leaderboard() {
 
   const leagueId = user?.leagues?.[0]?.id;
 
-  const players = getPlayers(leagueId ?? "", refreshTrigger);
+  const players = useGetPlayers(leagueId ?? "", refreshTrigger);
 
   const netSortedPlayers = () => {
     return [...players].sort((a, b) => {

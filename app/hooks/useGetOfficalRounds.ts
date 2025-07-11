@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Round } from "../../src/types/round";
 import { getLeagueRounds } from "src/api/getLeagueRounds";
 
-export function getOfficialRounds(leagueId: string, refreshTrigger?: number) {
+export function useGetOfficalRounds(leagueId: string, refreshTrigger?: number) {
   const [rounds, setRounds] = useState<Round[]>([]);
 
   useEffect(() => {

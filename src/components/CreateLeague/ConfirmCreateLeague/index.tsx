@@ -1,20 +1,33 @@
+import { useRandomColor } from "app/hooks/useRandomColor";
 import { Avatar, Text, YStack, XStack, View, Button } from "tamagui";
-import { router } from "expo-router";
-
 export function ConfirmCreateLeague({
   leagueName,
   players,
   leagueAvatar,
   handleHome,
+  isSubmitting,
+  setIsSubmitting,
 }: {
   leagueName: string;
   players: any[];
   leagueAvatar: string;
   handleHome: () => void;
+  isSubmitting: boolean;
+  setIsSubmitting: (isSubmitting: boolean) => void;
 }) {
+  const handleCreateLeague = () => {
+    console.log("create league");
+    console.log(players);
+    console.log(leagueName);
+    console.log(leagueAvatar);
+    setIsSubmitting(true);
+    handleHome();
+    setIsSubmitting(false);
+  };
+
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
-      <YStack gap="$6">
+      <YStack gap="$6" width="100%">
         <YStack style={{ alignItems: "center" }}>
           <Text fontSize="$8" fontWeight="bold">
             Confirm Create League
@@ -25,7 +38,7 @@ export function ConfirmCreateLeague({
           <Avatar size="$6" circular>
             <Avatar.Image src={leagueAvatar} />
             <Avatar.Fallback
-              backgroundColor="$blue10"
+              backgroundColor={useRandomColor() as any}
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -42,7 +55,7 @@ export function ConfirmCreateLeague({
         </YStack>
         <YStack gap="$4" style={{ alignSelf: "flex-start" }}>
           {players.map((player, index) => (
-            <XStack gap="$3" key={player.email} width="100%">
+            <XStack gap="$3" key={index} width="100%">
               <View
                 width="$1"
                 style={{
@@ -50,13 +63,13 @@ export function ConfirmCreateLeague({
                   alignItems: "center",
                 }}
               >
-                <Text fontSize="$7">{index + 1}.</Text>
+                <Text fontSize="$6">{index + 1}.</Text>
               </View>
 
               <Avatar size="$4" circular>
                 <Avatar.Image src={player.image} />
                 <Avatar.Fallback
-                  backgroundColor="$blue10"
+                  backgroundColor={useRandomColor() as any}
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
@@ -90,10 +103,18 @@ export function ConfirmCreateLeague({
           color="$blue10"
           fontWeight="bold"
           onPress={handleHome}
+          disabled={isSubmitting}
         >
           Cancel
         </Button>
-        <Button bg="$blue10" color="$white1" fontSize="$5" fontWeight="bold">
+        <Button
+          bg="$blue10"
+          color="$white1"
+          fontSize="$5"
+          fontWeight="bold"
+          onPress={handleCreateLeague}
+          disabled={isSubmitting}
+        >
           Create League
         </Button>
       </XStack>

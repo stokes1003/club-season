@@ -13,8 +13,6 @@ export function MyLeagues() {
       </YStack>
       <YStack gap="$4">
         <LeaguesCard />
-        <LeaguesCard />
-        <LeaguesCard />
       </YStack>
 
       <Button

@@ -1469,6 +1469,13 @@ __name(usePresence, "usePresence");
 // node_modules/@tamagui/animations-css/dist/esm/createAnimations.mjs
 var import_web = require("@tamagui/core");
 var import_react3 = __toESM(require("react"), 1);
+function extractDuration(animation) {
+  const msMatch = animation.match(/(\d+(?:\.\d+)?)\s*ms/);
+  if (msMatch) return Number.parseInt(msMatch[1], 10);
+  const sMatch = animation.match(/(\d+(?:\.\d+)?)\s*s/);
+  return sMatch ? Math.round(Number.parseFloat(sMatch[1]) * 1e3) : 300;
+}
+__name(extractDuration, "extractDuration");
 function createAnimations(animations) {
   const reactionListeners = /* @__PURE__ */ new WeakMap();
   return {
@@ -1523,11 +1530,13 @@ function createAnimations(animations) {
       return useIsomorphicLayoutEffect(() => {
         const host = stateRef.current.host;
         if (!sendExitComplete || !isExiting || !host) return;
-        const node = host, onFinishAnimation = /* @__PURE__ */ __name(() => {
+        const node = host, fallbackTimeout = animation ? extractDuration(animation) : 200, timeoutId = setTimeout(() => {
           sendExitComplete?.();
+        }, fallbackTimeout), onFinishAnimation = /* @__PURE__ */ __name(() => {
+          clearTimeout(timeoutId), sendExitComplete?.();
         }, "onFinishAnimation");
         return node.addEventListener("transitionend", onFinishAnimation), node.addEventListener("transitioncancel", onFinishAnimation), () => {
-          node.removeEventListener("transitionend", onFinishAnimation), node.removeEventListener("transitioncancel", onFinishAnimation);
+          clearTimeout(timeoutId), node.removeEventListener("transitionend", onFinishAnimation), node.removeEventListener("transitioncancel", onFinishAnimation);
         };
       }, [sendExitComplete, isExiting]), animation && (Array.isArray(style.transform) && (style.transform = (0, import_web.transformsToString)(style.transform)), style.transition = keys.map((key) => {
         const override = animations[animationConfig?.[key]] ?? animation;
