@@ -1,5 +1,7 @@
 import { useRandomColor } from "app/hooks/useRandomColor";
-import { Avatar, Text, YStack, XStack, View, Button } from "tamagui";
+
+import { Avatar, Text, YStack, XStack, View, Button, Spinner } from "tamagui";
+
 export function ConfirmCreateLeague({
   leagueName,
   players,
@@ -7,6 +9,8 @@ export function ConfirmCreateLeague({
   handleHome,
   isSubmitting,
   setIsSubmitting,
+
+  handleCreateLeague,
 }: {
   leagueName: string;
   players: any[];
@@ -14,17 +18,8 @@ export function ConfirmCreateLeague({
   handleHome: () => void;
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
+  handleCreateLeague: () => void;
 }) {
-  const handleCreateLeague = () => {
-    console.log("create league");
-    console.log(players);
-    console.log(leagueName);
-    console.log(leagueAvatar);
-    setIsSubmitting(true);
-    handleHome();
-    setIsSubmitting(false);
-  };
-
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack gap="$6" width="100%">
@@ -112,10 +107,15 @@ export function ConfirmCreateLeague({
           color="$white1"
           fontSize="$5"
           fontWeight="bold"
+          width="$14"
           onPress={handleCreateLeague}
           disabled={isSubmitting}
         >
-          Create League
+          {isSubmitting ? (
+            <Spinner size="small" color="$white1" />
+          ) : (
+            "Create League"
+          )}
         </Button>
       </XStack>
     </YStack>

@@ -87,6 +87,11 @@ export function EnterPlayerScores({
             value={handicapInput}
             onChangeText={setHandicapInput}
             fontSize="$5"
+            keyboardType="numeric"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            autoFocus={false}
           />
           <Input
             placeholder={`${addScoresData.players[currentPlayerIndex].name}'s Gross`}
@@ -94,6 +99,7 @@ export function EnterPlayerScores({
             value={grossInput}
             onChangeText={setGrossInput}
             fontSize="$5"
+            keyboardType="numeric"
           />
         </YStack>
       </YStack>

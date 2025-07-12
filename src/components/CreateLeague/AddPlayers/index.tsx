@@ -86,13 +86,78 @@ export function AddPlayers({
     }
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateName = (name: string, currentIndex: number) => {
+    const trimmedName = name.trim();
+
+    // Check if name is empty or only whitespace
+    if (!trimmedName) {
+      return { isValid: false, message: "Please enter a player name" };
+    }
+
+    // Check minimum length (at least 2 characters)
+    if (trimmedName.length < 2) {
+      return {
+        isValid: false,
+        message: "Name must be at least 2 characters long",
+      };
+    }
+
+    // Check maximum length (reasonable limit)
+    if (trimmedName.length > 50) {
+      return {
+        isValid: false,
+        message: "Name must be less than 50 characters",
+      };
+    }
+
+    // Check for valid characters (letters, spaces, hyphens, apostrophes)
+    const nameRegex = /^[a-zA-Z\s\-']+$/;
+    if (!nameRegex.test(trimmedName)) {
+      return {
+        isValid: false,
+        message:
+          "Name can only contain letters, spaces, hyphens, and apostrophes",
+      };
+    }
+
+    // Check for duplicate names (case-insensitive)
+    const currentName = trimmedName.toLowerCase();
+    for (let i = 0; i < players.length; i++) {
+      if (
+        i !== currentIndex &&
+        players[i].name.trim().toLowerCase() === currentName
+      ) {
+        return {
+          isValid: false,
+          message: "This name is already taken by another player",
+        };
+      }
+    }
+
+    return { isValid: true, message: "" };
+  };
+
   const handleSubmit = () => {
-    if (players[currentPlayerIndex].name === "") {
-      Alert.alert("Please enter a player name");
+    const nameValidation = validateName(
+      players[currentPlayerIndex].name,
+      currentPlayerIndex
+    );
+    if (!nameValidation.isValid) {
+      Alert.alert("Invalid Name", nameValidation.message);
       return;
     }
+
     if (players[currentPlayerIndex].email === "") {
       Alert.alert("Please enter a player email");
+      return;
+    }
+    if (!validateEmail(players[currentPlayerIndex].email)) {
+      Alert.alert("Please enter a valid email address");
       return;
     }
     if (currentPlayerIndex === Number(numberOfPlayers) - 1) {
@@ -117,6 +182,11 @@ export function AddPlayers({
             </Label>
             <Input
               value={players[currentPlayerIndex].name}
+              autoCapitalize="words"
+              autoComplete="name"
+              autoCorrect={false}
+              keyboardType="default"
+              maxLength={50}
               onChangeText={(text) => {
                 const updatedPlayers = [...players];
                 updatedPlayers[currentPlayerIndex] = {
@@ -170,6 +240,11 @@ export function AddPlayers({
             </Label>
             <Input
               value={players[currentPlayerIndex].email}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
+              autoFocus={false}
               onChangeText={(text) => {
                 const updatedPlayers = [...players];
                 updatedPlayers[currentPlayerIndex] = {

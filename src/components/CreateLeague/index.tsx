@@ -5,6 +5,7 @@ import { AddPlayers } from "./AddPlayers";
 import { useRouter } from "expo-router";
 import { CreateLeagueHeader } from "./CreateLeagueHeader";
 import { ConfirmCreateLeague } from "./ConfirmCreateLeague";
+import { useCreateLeague } from "app/hooks/useCreateLeague";
 
 export function CreateLeague() {
   const router = useRouter();
@@ -21,11 +22,13 @@ export function CreateLeague() {
   const [leagueAvatar, setLeagueAvatar] = useState("");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createLeague } = useCreateLeague();
 
   const handleHome = () => {
     router.push("/");
     setCurrentStep("select-league");
   };
+
   return (
     <ScrollView flex={1} showsVerticalScrollIndicator={false}>
       <View mt="$8" gap="$8">
@@ -74,6 +77,19 @@ export function CreateLeague() {
             handleHome={handleHome}
             isSubmitting={isSubmitting}
             setIsSubmitting={setIsSubmitting}
+            handleCreateLeague={() => {
+              createLeague({
+                leagueName,
+                leagueAvatar,
+                players,
+                handleHome,
+                setPlayers,
+                setLeagueAvatar,
+                setLeagueName,
+                setNumberOfPlayers,
+                setIsSubmitting,
+              });
+            }}
           />
         )}
       </View>

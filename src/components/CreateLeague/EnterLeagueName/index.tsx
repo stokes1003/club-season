@@ -58,8 +58,6 @@ export function EnterLeagueName({
 
         if (uploadedUrl) {
           console.log("Image uploaded successfully:", uploadedUrl);
-          // Store the uploaded URL separately or in a ref for later use
-          // For now, keep the local URI visible
         } else {
           console.log("Upload failed, keeping local URI");
         }
