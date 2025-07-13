@@ -72,3 +72,12 @@ export function useCalculateGrossNetPoints(
     net: calculateCategoryPoints("net"),
   };
 }
+
+export function getWinner(scores: PlayerScore[]): string | null {
+  const sorted = scores.sort((a, b) => a.net - b.net);
+  const bestScore = sorted[0]?.net;
+
+  const tiedPlayers = sorted.filter((score) => score.net === bestScore);
+
+  return tiedPlayers.length === 1 ? tiedPlayers[0].player : null;
+}

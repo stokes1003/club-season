@@ -2,6 +2,9 @@ export type League = {
   id: string;
   name: string;
   isCreator: boolean;
+  image_url: string;
+  created_at: string;
+  created_by: string;
 };
 
 export type User = {

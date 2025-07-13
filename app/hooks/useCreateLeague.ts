@@ -102,7 +102,7 @@ export const useCreateLeague = () => {
         // 1. Check if player already exists
         const { data: existing, error: fetchError } = await supabase
           .from("players")
-          .select("id")
+          .select("id, user_id")
           .eq("email", normalizedEmail)
           .maybeSingle();
 
@@ -116,14 +116,36 @@ export const useCreateLeague = () => {
 
         if (existing) {
           playerId = existing.id;
+
+          // 2. Update user_id if this is the current user's email and it's missing
+          if (
+            normalizedEmail === user.user.email?.toLowerCase() &&
+            !existing.user_id
+          ) {
+            const { error: updateError } = await supabase
+              .from("players")
+              .update({ user_id: user.user.id })
+              .eq("id", existing.id);
+
+            if (updateError) {
+              console.error(
+                `Failed to update user_id for player ${player.name}:`,
+                updateError
+              );
+            }
+          }
         } else {
-          // 2. Insert new player
+          // 3. Insert new player
           const { data: newPlayer, error: insertError } = await supabase
             .from("players")
             .insert({
               name: player.name,
-              email: player.email,
-              avatar_url: player.image || null, // Handle empty string
+              email: normalizedEmail,
+              avatar_url: player.image || null,
+              user_id:
+                normalizedEmail === user.user.email?.toLowerCase()
+                  ? user.user.id
+                  : null,
             })
             .select()
             .single();
@@ -133,13 +155,13 @@ export const useCreateLeague = () => {
               `Failed to insert player ${player.name}:`,
               insertError
             );
-            continue; // Skip linking if insert fails
+            continue;
           }
 
           playerId = newPlayer.id;
         }
 
-        // 3. Link to league
+        // 4. Link player to league
         const { error: lpError } = await supabase
           .from("league_players")
           .insert({

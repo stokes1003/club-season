@@ -14,6 +14,7 @@ export async function getUser(): Promise<User | null> {
 
   try {
     // Get player info + league info
+    console.log("Fetching player data for user:", user.id);
     const { data: playerData, error: playerError } = await supabase
       .from("players")
       .select(
@@ -26,16 +27,91 @@ export async function getUser(): Promise<User | null> {
           leagues (
             id,
             name,
-            created_by
+            created_by,
+            image_url,
+            created_at
           )
         )
       `
       )
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
+
+    console.log("Player query result:", { playerData, playerError });
 
     if (playerError) {
       console.error("Error fetching player profile:", playerError);
+
+      // If multiple rows found, get the first one
+      if (playerError.code === "PGRST116") {
+        console.log("Multiple rows found, fetching first player...");
+        const { data: firstPlayer, error: firstPlayerError } = await supabase
+          .from("players")
+          .select(
+            `
+            id,
+            name,
+            avatar_url,
+            league_players (
+              league_id,
+              leagues (
+                id,
+                name,
+                created_by,
+                image_url,
+                created_at
+              )
+            )
+          `
+          )
+          .eq("user_id", user.id)
+          .limit(1)
+          .single();
+
+        console.log("First player query result:", {
+          firstPlayer,
+          firstPlayerError,
+        });
+
+        if (firstPlayerError) {
+          console.error("Error fetching first player:", firstPlayerError);
+          return {
+            id: user.id,
+            email: user.email || "",
+            name: user.user_metadata?.name || null,
+            avatar_url: user.user_metadata?.avatar_url || null,
+          };
+        }
+
+        const leagues = firstPlayer.league_players.map((lp: any) => ({
+          id: lp.leagues.id,
+          name: lp.leagues.name,
+          isCreator: lp.leagues.created_by === user.id,
+          image_url: lp.leagues.image_url,
+          created_at: lp.leagues.created_at,
+          created_by: lp.leagues.created_by,
+        }));
+
+        return {
+          id: user.id,
+          email: user.email || null,
+          player_id: firstPlayer.id,
+          name: firstPlayer.name,
+          avatar_url: firstPlayer.avatar_url,
+          leagues,
+        };
+      }
+
+      return {
+        id: user.id,
+        email: user.email || "",
+        name: user.user_metadata?.name || null,
+        avatar_url: user.user_metadata?.avatar_url || null,
+      };
+    }
+
+    // Handle case where no player data is found
+    if (!playerData) {
       return {
         id: user.id,
         email: user.email || "",
@@ -48,6 +124,9 @@ export async function getUser(): Promise<User | null> {
       id: lp.leagues.id,
       name: lp.leagues.name,
       isCreator: lp.leagues.created_by === user.id,
+      image_url: lp.leagues.image_url,
+      created_at: lp.leagues.created_at,
+      created_by: lp.leagues.created_by,
     }));
 
     return {

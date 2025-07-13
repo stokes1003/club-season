@@ -3,7 +3,7 @@ import { MyLeagues } from "src/components/MyLeagues";
 
 export default function MyLeaguesScreen() {
   return (
-    <View flex={1} items="center" bg="$background" pt="$10" px="$8">
+    <View flex={1} items="center" bg="$background" pt="$10">
       <MyLeagues />
     </View>
   );
