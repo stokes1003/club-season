@@ -105,6 +105,8 @@ export async function uploadImage(uri: string, path: string) {
 
     // Upload to Supabase storage
     console.log("Uploading to images bucket...");
+    console.log("Upload path:", path);
+
     const { data, error } = await supabase.storage
       .from("images")
       .upload(path, blob, {
@@ -118,7 +120,6 @@ export async function uploadImage(uri: string, path: string) {
       console.error("Error details:", {
         message: error.message,
         name: error.name,
-        stack: error.stack,
       });
 
       // Check for specific error types
@@ -139,17 +140,58 @@ export async function uploadImage(uri: string, path: string) {
         return null;
       }
 
+      // Check if it's a bucket not found error
+      if (
+        error.message?.includes("bucket") ||
+        error.message?.includes("not found")
+      ) {
+        console.error(
+          "Storage bucket 'images' not found. Please create the bucket in your Supabase dashboard."
+        );
+        return null;
+      }
+
+      // Check if it's a permission error
+      if (
+        error.message?.includes("permission") ||
+        error.message?.includes("unauthorized")
+      ) {
+        console.error(
+          "Permission denied. Check your storage policies in Supabase."
+        );
+        return null;
+      }
+
       return null;
     }
 
     console.log("Upload successful:", data);
-    return supabase.storage.from("images").getPublicUrl(path).data.publicUrl;
+
+    // Get the public URL
+    const { data: urlData } = supabase.storage
+      .from("images")
+      .getPublicUrl(path);
+
+    console.log("Public URL generated:", urlData.publicUrl);
+    return urlData.publicUrl;
   } catch (error) {
     console.error("Upload error:", error);
     if (error instanceof Error) {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
     }
+
+    // Check if the error is a JSON parse error (HTML response)
+    if (error instanceof SyntaxError && error.message.includes("JSON")) {
+      console.error(
+        "Received HTML response instead of JSON. This usually means:"
+      );
+      console.error("1. The storage bucket doesn't exist");
+      console.error("2. There's a network connectivity issue");
+      console.error("3. The Supabase service is down");
+      console.error("4. There's an authentication issue");
+    }
+
     return null;
   }
 }

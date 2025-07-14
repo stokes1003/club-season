@@ -13,7 +13,9 @@ import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
-import { useRandomColor } from "app/hooks/useRandomColor";
+import { useRandomColor } from "src/hooks/useRandomColor";
+import { useUser } from "src/hooks/useUser";
+import { useEffect } from "react";
 
 export function AddPlayers({
   players,
@@ -32,6 +34,23 @@ export function AddPlayers({
   setCurrentPlayerIndex: (index: number) => void;
   setCurrentStep: (step: string) => void;
 }) {
+  const user = useUser();
+  console.log(user);
+
+  // Initialize first player with user data when component mounts
+  useEffect(() => {
+    if (user && players.length > 0 && currentPlayerIndex === 0) {
+      const updatedPlayers = [...players];
+      updatedPlayers[0] = {
+        ...updatedPlayers[0],
+        name: user.name || "",
+        email: user.email || "",
+        image: user.avatar_url || "",
+      };
+      setPlayers(updatedPlayers);
+    }
+  }, [user, currentPlayerIndex]);
+
   // Safety check to ensure players array exists and has the correct length
   if (!players || players.length === 0) {
     return (
@@ -180,13 +199,14 @@ export function AddPlayers({
             <Label fontSize="$4" fontWeight="bold">
               Player Name
             </Label>
+
             <Input
               value={players[currentPlayerIndex].name}
               autoCapitalize="words"
               autoComplete="name"
               autoCorrect={false}
+              placeholder={`Golfer ${currentPlayerIndex + 1}`}
               keyboardType="default"
-              maxLength={50}
               onChangeText={(text) => {
                 const updatedPlayers = [...players];
                 updatedPlayers[currentPlayerIndex] = {
@@ -195,7 +215,6 @@ export function AddPlayers({
                 };
                 setPlayers(updatedPlayers);
               }}
-              placeholder={`Golfer ${currentPlayerIndex + 1}`}
             />
           </YStack>
           <YStack gap="$1">
@@ -230,7 +249,10 @@ export function AddPlayers({
                 color="$blue10"
                 fontWeight="bold"
               >
-                <Image size="$1" color="$blue10" /> Upload Photo
+                <Image size="$1" color="$blue10" />
+                {players[currentPlayerIndex].image
+                  ? "Change Photo"
+                  : "Upload Photo"}
               </Button>
             </XStack>
           </YStack>
@@ -238,6 +260,7 @@ export function AddPlayers({
             <Label fontSize="$4" fontWeight="bold">
               Player Email
             </Label>
+
             <Input
               value={players[currentPlayerIndex].email}
               keyboardType="email-address"
@@ -253,7 +276,7 @@ export function AddPlayers({
                 };
                 setPlayers(updatedPlayers);
               }}
-              placeholder={`golfer${currentPlayerIndex + 1}@example.com`}
+              placeholder={`Golfer ${currentPlayerIndex + 1}@example.com`}
             />
           </YStack>
         </YStack>

@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { getPlayersByLeague } from "./getPlayersByLeague";
 
 type AddScoresCourse = {
   id: string;
@@ -19,34 +20,54 @@ type AddScoresData = {
 export async function getAddScoresData(
   leagueId: string
 ): Promise<AddScoresData | null> {
-  console.log("Fetching add scores data for league:", leagueId);
+  try {
+    // Get courses from RPC
+    const { data: rpcData, error: rpcError } = await supabase.rpc(
+      "get_add_scores_data",
+      {
+        league_id: leagueId,
+      }
+    );
 
-  const { data, error } = await supabase.rpc("get_add_scores_data", {
-    league_id: leagueId,
-  });
+    if (rpcError) {
+      console.error("Error fetching from RPC:", rpcError);
+    }
 
-  console.log("RPC response:", { data, error });
+    // Get players using the working getPlayersByLeague function
+    const playersData = await getPlayersByLeague(leagueId);
 
-  if (error) {
-    console.error("Error fetching add scores data:", error);
-    console.error("Error details:", {
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-      code: error.code,
-    });
+    // Transform players data to match the expected format
+    const players: AddScoresPlayer[] = playersData.map((player: any) => ({
+      id: player.player_id,
+      name: player.name,
+      avatar_url: player.avatar_url || "",
+    }));
+
+    // Use courses from RPC if available, otherwise get them directly
+    let courses: AddScoresCourse[] = [];
+    if (rpcData?.courses) {
+      courses = rpcData.courses;
+    } else {
+      // Fallback: get courses directly from the database
+      const { data: coursesData, error: coursesError } = await supabase
+        .from("golf_courses")
+        .select("id, course_name")
+        .order("course_name");
+
+      if (coursesError) {
+        console.error("Error fetching courses:", coursesError);
+        return null;
+      }
+
+      courses = coursesData || [];
+    }
+
+    return {
+      courses,
+      players,
+    };
+  } catch (error) {
+    console.error("Error in getAddScoresData:", error);
     return null;
   }
-
-  if (!data) {
-    console.error("No data returned from RPC");
-    return null;
-  }
-
-  console.log("RPC data received:", data);
-
-  return {
-    courses: data.courses || [],
-    players: data.players || [],
-  };
 }

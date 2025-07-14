@@ -1,7 +1,7 @@
 import { YStack, Text, ScrollView, XStack } from "tamagui";
 import { RoundCard } from "../RoundCard";
 import { useUser } from "../../../context/UserContext";
-import { useGetOfficalRounds } from "app/hooks/useGetOfficalRounds";
+import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 
 export function OfficialRounds() {

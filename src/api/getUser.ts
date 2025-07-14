@@ -37,8 +37,6 @@ export async function getUser(): Promise<User | null> {
       .eq("user_id", user.id)
       .maybeSingle();
 
-    console.log("Player query result:", { playerData, playerError });
-
     if (playerError) {
       console.error("Error fetching player profile:", playerError);
 

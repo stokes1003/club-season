@@ -1,17 +1,7 @@
 import { Avatar, Card, Text, XStack, YStack, View } from "tamagui";
 import { Medal } from "@tamagui/lucide-icons";
-
-type Player = {
-  avatar_url: string;
-  avg_gross_score: number;
-  avg_net_score: number;
-  best_gross_score: number;
-  best_net_score: number;
-  gross_points: number;
-  name: string;
-  net_points: number;
-  player_id: string;
-};
+import { useRandomColor } from "src/hooks/useRandomColor";
+import { Player } from "src/types/player";
 
 type PlayerCardProps = {
   playerData: Player;
@@ -35,8 +25,7 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
     <YStack gap="$3">
       <Card
         animation="bouncy"
-        width={240}
-        height={280}
+        width={260}
         scale={0.9}
         hoverStyle={{ scale: 0.925 }}
         pressStyle={{ scale: 0.875 }}
@@ -45,7 +34,7 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
         backgroundColor="white"
         borderWidth={0}
         borderRadius="$6"
-        padding="$3"
+        padding="$6"
         style={{
           boxShadow: getBoxShadow(),
         }}
@@ -62,7 +51,17 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               accessibilityLabel={playerData.name || "Unknown Player"}
               src={playerData.avatar_url || ""}
             />
-            <Avatar.Fallback backgroundColor="$blue10" />
+            <Avatar.Fallback
+              backgroundColor={useRandomColor() as any}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text fontSize="$8" style={{ color: "white" }}>
+                {playerData.name?.charAt(0) || "?"}
+              </Text>
+            </Avatar.Fallback>
           </Avatar>
 
           <Text fontSize="$6" fontWeight="bold">
@@ -82,6 +81,19 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               {playerData.net_points || 0}
             </Text>
           </XStack>
+          <XStack gap="$4" style={{ justifyContent: "space-between" }}>
+            <Text
+              fontSize="$6"
+              fontWeight="bold"
+              width={60}
+              style={{ textAlign: "right" }}
+            >
+              Wins
+            </Text>
+            <Text fontSize="$6" width={60}>
+              {playerData.net_wins || 0}
+            </Text>
+          </XStack>
 
           <XStack gap="$4" style={{ justifyContent: "space-between" }}>
             <Text
@@ -93,8 +105,8 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               AVG
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.avg_net_score && playerData.avg_net_score > 0
-                ? parseFloat(playerData.avg_net_score.toString()).toFixed(1)
+              {playerData.avg_net && playerData.avg_net > 0
+                ? parseFloat(playerData.avg_net.toString()).toFixed(1)
                 : "-"}
             </Text>
           </XStack>
@@ -109,7 +121,7 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               Best
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.best_net_score || 0}
+              {playerData.best_net || 0}
             </Text>
           </XStack>
         </YStack>

@@ -1,7 +1,7 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
 import { useUser } from "../../../context/UserContext";
-import { useGetPlayers } from "app/hooks/useGetPlayers";
+import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { useLeaderboard } from "../../../context/LeaderboardContext";
 
 export function Leaderboard() {

@@ -7,8 +7,22 @@ export function useGetPlayers(leagueId: string, refreshTrigger?: number) {
 
   useEffect(() => {
     const fetchPlayers = async () => {
-      const data = await getPlayersByLeague(leagueId ?? "");
-      setPlayers(data || []);
+      if (!leagueId) {
+        setPlayers([]);
+        return;
+      }
+
+      try {
+        const data = await getPlayersByLeague(leagueId);
+        setPlayers(data || []);
+      } catch (error) {
+        console.error(
+          "useGetPlayers: Error fetching players for leagueId:",
+          leagueId,
+          error
+        );
+        setPlayers([]);
+      }
     };
     fetchPlayers();
   }, [leagueId, refreshTrigger]);

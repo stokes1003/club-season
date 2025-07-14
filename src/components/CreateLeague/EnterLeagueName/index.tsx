@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
-import { useRandomColor } from "app/hooks/useRandomColor";
+import { useRandomColor } from "src/hooks/useRandomColor";
 
 export function EnterLeagueName({
   leagueName,

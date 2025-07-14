@@ -5,7 +5,7 @@ import { AddPlayers } from "./AddPlayers";
 import { useRouter } from "expo-router";
 import { CreateLeagueHeader } from "./CreateLeagueHeader";
 import { ConfirmCreateLeague } from "./ConfirmCreateLeague";
-import { useCreateLeague } from "app/hooks/useCreateLeague";
+import { useCreateLeague } from "src/hooks/useCreateLeague";
 
 export function CreateLeague() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar, Button, Input, Text, XStack, YStack } from "tamagui";
 
 type AddScoresData = {

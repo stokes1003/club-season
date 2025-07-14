@@ -1,7 +1,8 @@
 import { YStack, Text, Card, XStack, Avatar } from "tamagui";
-import { useUser } from "app/hooks/useUser";
-import { useGetPlayers } from "app/hooks/useGetPlayers";
-import { useGetPlayerById } from "app/hooks/useGetPlayerById";
+import { useUser } from "src/hooks/useUser";
+import { useGetPlayers } from "src/hooks/useGetPlayers";
+import { useGetPlayerById } from "src/hooks/useGetPlayerById";
+import { useRandomColor } from "src/hooks/useRandomColor";
 
 function LeagueCard({ league }: { league: any }) {
   const players = useGetPlayers(league.id);
@@ -41,8 +42,16 @@ function LeagueCard({ league }: { league: any }) {
         >
           <Avatar size="$8" circular>
             <Avatar.Image src={league.image_url} />
-            <Avatar.Fallback>
-              <Text>{league.name.charAt(0)}</Text>
+            <Avatar.Fallback
+              backgroundColor={useRandomColor() as any}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text fontSize="$10" fontWeight="bold" style={{ color: "white" }}>
+                {league.name.charAt(0)}
+              </Text>
             </Avatar.Fallback>
           </Avatar>
         </YStack>
@@ -71,7 +80,6 @@ function LeagueCard({ league }: { league: any }) {
 export function LeaguesCard() {
   const user = useUser();
   const leagues = user?.leagues;
-  console.log(user);
 
   return (
     <YStack>

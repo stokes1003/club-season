@@ -1,5 +1,5 @@
 import { YStack, Text, Button, Input } from "tamagui";
-import { useUser } from "app/hooks/useUser";
+import { useUser } from "src/hooks/useUser";
 
 export function ChangePassword() {
   const user = useUser();

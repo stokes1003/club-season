@@ -11,7 +11,7 @@ import {
 import { supabase } from "../../lib/supabase";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
-import { useUser } from "app/hooks/useUser";
+import { useUser } from "src/hooks/useUser";
 
 export function Profile() {
   const user = useUser();

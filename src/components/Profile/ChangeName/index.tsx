@@ -1,6 +1,6 @@
 import { YStack, Text, Button, Input } from "tamagui";
 import { useState, useEffect } from "react";
-import { useUser } from "app/hooks/useUser";
+import { useUser } from "src/hooks/useUser";
 
 export function ChangeName() {
   const user = useUser();

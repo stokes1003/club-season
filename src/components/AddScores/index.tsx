@@ -8,10 +8,7 @@ import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
 import { SelectLeague } from "./SelectLeague";
 import { submitScores } from "../../api/submitScores";
-import {
-  useCalculateGrossNetPoints,
-  getWinner,
-} from "../../../app/hooks/useCalculateGrossNetPoints";
+import { useCalculateGrossNetPoints } from "../../hooks/useCalculateGrossNetPoints";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
 
@@ -87,7 +84,6 @@ export function AddScores() {
       date: new Date().toISOString(),
       is_major: isMajor === "yes",
       major_name: isMajor === "yes" ? majorName : null,
-      winner: getWinner(scoreList),
       scores: Object.keys(scoresByPlayer).map((playerId) => ({
         player_id: playerId,
         gross: scoresByPlayer[playerId].gross,
@@ -117,6 +113,8 @@ export function AddScores() {
   };
 
   useEffect(() => {
+    // Reset addScoresData when leagueId changes
+    setAddScoresData(null);
     if (leagueId) {
       const fetchAddScoresData = async () => {
         const data = await getAddScoresData(leagueId);
@@ -126,7 +124,6 @@ export function AddScores() {
     }
   }, [leagueId]);
 
-  console.log(addScoresData);
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
       <YStack gap="$8" width="100%">

@@ -1,4 +1,4 @@
-import { useRandomColor } from "app/hooks/useRandomColor";
+import { useRandomColor } from "src/hooks/useRandomColor";
 
 import { Avatar, Text, YStack, XStack, View, Button, Spinner } from "tamagui";
 
@@ -8,8 +8,6 @@ export function ConfirmCreateLeague({
   leagueAvatar,
   handleHome,
   isSubmitting,
-  setIsSubmitting,
-
   handleCreateLeague,
 }: {
   leagueName: string;
@@ -17,7 +15,6 @@ export function ConfirmCreateLeague({
   leagueAvatar: string;
   handleHome: () => void;
   isSubmitting: boolean;
-  setIsSubmitting: (isSubmitting: boolean) => void;
   handleCreateLeague: () => void;
 }) {
   return (

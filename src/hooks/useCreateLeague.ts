@@ -118,18 +118,30 @@ export const useCreateLeague = () => {
           playerId = existing.id;
 
           // 2. Update user_id if this is the current user's email and it's missing
+          // AND update avatar_url if a new image is provided
+          const updates: any = {};
+
           if (
             normalizedEmail === user.user.email?.toLowerCase() &&
             !existing.user_id
           ) {
+            updates.user_id = user.user.id;
+          }
+
+          // Update avatar_url if player has a new image
+          if (player.image && player.image.trim() !== "") {
+            updates.avatar_url = player.image;
+          }
+
+          if (Object.keys(updates).length > 0) {
             const { error: updateError } = await supabase
               .from("players")
-              .update({ user_id: user.user.id })
+              .update(updates)
               .eq("id", existing.id);
 
             if (updateError) {
               console.error(
-                `Failed to update user_id for player ${player.name}:`,
+                `Failed to update player ${player.name}:`,
                 updateError
               );
             }
