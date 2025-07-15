@@ -1,7 +1,5 @@
 import { YStack, ScrollView } from "tamagui";
-import { Leaderboard } from "../../src/components/Home/Leaderboard";
-import { OfficialRounds } from "../../src/components/Home/OfficialRounds";
-import { LeagueName } from "../../src/components/Home/LeagueName";
+import { Home } from "../../src/components/Home";
 
 export default function TabOneScreen() {
   return (
@@ -12,14 +10,7 @@ export default function TabOneScreen() {
         py="$5"
         bg="$background"
       >
-        <YStack
-          style={{ alignItems: "center", justifyContent: "center" }}
-          gap="$6"
-        >
-          <LeagueName />
-          <Leaderboard />
-          <OfficialRounds />
-        </YStack>
+        <Home />
       </YStack>
     </ScrollView>
   );

@@ -17,6 +17,7 @@ import { UserProvider, useUser } from "../src/context/UserContext";
 import Auth from "../src/components/Auth";
 import { LeaderboardProvider } from "../src/context/LeaderboardContext";
 import { OfficalRoundsProvider } from "../src/context/OfficalRoundsContext";
+import { SelectedLeagueProvider } from "../src/context/SelectedLeagueContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -60,7 +61,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     <Provider>
       <UserProvider>
         <LeaderboardProvider>
-          <OfficalRoundsProvider>{children}</OfficalRoundsProvider>
+          <OfficalRoundsProvider>
+            <SelectedLeagueProvider>{children}</SelectedLeagueProvider>
+          </OfficalRoundsProvider>
         </LeaderboardProvider>
       </UserProvider>
     </Provider>

@@ -1,12 +1,11 @@
 import { YStack, Text, ScrollView, XStack } from "tamagui";
 import { RoundCard } from "../RoundCard";
-import { useUser } from "../../../context/UserContext";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
+import { League } from "../../../context/SelectedLeagueContext";
 
-export function OfficialRounds() {
-  const { user } = useUser();
-  const leagueId = user?.leagues?.[0]?.id;
+export function OfficialRounds({ league }: { league: League }) {
+  const leagueId = league.id;
   const { refreshTrigger } = useOfficalRounds();
   const rounds = useGetOfficalRounds(leagueId ?? "", refreshTrigger);
 

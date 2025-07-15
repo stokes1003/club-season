@@ -1,14 +1,13 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { PlayerCard } from "../PlayerCard";
-import { useUser } from "../../../context/UserContext";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { useLeaderboard } from "../../../context/LeaderboardContext";
+import { League } from "../../../context/SelectedLeagueContext";
 
-export function Leaderboard() {
-  const { user } = useUser();
+export function Leaderboard({ league }: { league: League }) {
   const { refreshTrigger } = useLeaderboard();
 
-  const leagueId = user?.leagues?.[0]?.id;
+  const leagueId = league.id;
 
   const players = useGetPlayers(leagueId ?? "", refreshTrigger);
 

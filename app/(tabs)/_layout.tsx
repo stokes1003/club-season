@@ -1,5 +1,5 @@
 import { Link, Tabs } from "expo-router";
-import { Avatar, useTheme, YStack, Text, XStack } from "tamagui";
+import { Avatar, useTheme, YStack, Text, XStack, View } from "tamagui";
 import {
   ChevronDown,
   House,
@@ -11,35 +11,65 @@ import {
 } from "@tamagui/lucide-icons";
 import { useUser } from "../../src/context/UserContext";
 import { useState } from "react";
+import { useSelectedLeague } from "../../src/context/SelectedLeagueContext";
+
+export type League = {
+  id: string;
+  name: string;
+  created_at: string;
+  created_by: string;
+  image_url: string;
+};
 
 export default function TabLayout() {
   const theme = useTheme();
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+  const { selectedLeague, setSelectedLeague } = useSelectedLeague();
+
+  const handleSelectLeague = (league: League | null) => {
+    setSelectedLeague(league as League);
+    setIsOpen(false);
+  };
 
   return (
     <>
       {isOpen && (
         <YStack
           position="absolute"
-          width="$16"
+          width="100%"
           gap="$2"
           borderWidth={1}
           borderColor="$black11"
-          background="$background"
-          p="$3"
+          p="$2"
           style={{
-            borderRadius: 8,
             zIndex: 9999,
             top: 100,
-            left: "50%",
+            left: "20%",
             transform: [{ translateX: -80 }],
+            backgroundColor: theme?.background?.val || "$background",
           }}
         >
-          {user?.leagues?.map((league) => (
-            <Text fontSize="$5" key={league.id}>
-              {league.name}
+          <View onPress={() => handleSelectLeague(null)}>
+            <Text
+              fontSize="$5"
+              fontWeight="400"
+              style={{ textAlign: "center" }}
+            >
+              All Leagues
             </Text>
+          </View>
+
+          {user?.leagues?.map((league) => (
+            <View key={league.id} onPress={() => handleSelectLeague(league)}>
+              <Text
+                fontSize="$5"
+                fontWeight="400"
+                style={{ textAlign: "center" }}
+              >
+                {league.name}
+              </Text>
+            </View>
           ))}
         </YStack>
       )}
@@ -75,7 +105,9 @@ export default function TabLayout() {
                 style={{ alignItems: "center" }}
                 onPress={() => setIsOpen(!isOpen)}
               >
-                <Text fontSize="$6">All Leagues</Text>
+                <Text fontSize="$6" style={{ textAlign: "center" }}>
+                  {selectedLeague?.name || "All Leagues"}
+                </Text>
                 {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
               </XStack>
             </YStack>
