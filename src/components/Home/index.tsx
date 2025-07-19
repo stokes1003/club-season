@@ -112,11 +112,7 @@ export function Home() {
       {selectedLeague && (
         <>
           <TopThree league={selectedLeague} isNet={isNet} setIsNet={setIsNet} />
-          <LeagueTable
-            league={selectedLeague}
-            isNet={isNet}
-            players={players}
-          />
+          <LeagueTable isNet={isNet} players={players} />
           <OfficialRounds league={selectedLeague} />
         </>
       )}

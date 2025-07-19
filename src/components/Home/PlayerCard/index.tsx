@@ -1,7 +1,7 @@
-import { Avatar, Card, Text, XStack, YStack, View } from "tamagui";
+import { Card, Text, XStack, YStack, View } from "tamagui";
 import { Medal } from "@tamagui/lucide-icons";
-import { useRandomColor } from "src/hooks/useRandomColor";
 import { Player } from "src/types/player";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 type PlayerCardProps = {
   playerData: Player;
@@ -21,6 +21,8 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
     if (index === 2) return "0 0 12px rgba(167, 112, 68, 0.6)";
     return "none";
   };
+
+  console.log(playerData);
 
   return (
     <YStack gap="$3">
@@ -47,23 +49,12 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
           {index === 2 && <Medal size={24} color="#A77044" />}
         </View>
         <YStack gap="$3" style={{ alignItems: "center" }}>
-          <Avatar circular size="$10">
-            <Avatar.Image
-              accessibilityLabel={playerData.name || "Unknown Player"}
-              src={playerData.avatar_url || ""}
-            />
-            <Avatar.Fallback
-              backgroundColor={useRandomColor() as any}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text fontSize="$8" style={{ color: "white" }}>
-                {playerData.name?.charAt(0) || "?"}
-              </Text>
-            </Avatar.Fallback>
-          </Avatar>
+          <PlayerAvatar
+            name={playerData.name || "Unknown Player"}
+            avatarUrl={playerData.avatar_url || ""}
+            size="$10"
+            color={playerData.player_color || "#6B7280"}
+          />
 
           <Text fontSize="$6" fontWeight="bold">
             {playerData.name || "Unknown Player"}

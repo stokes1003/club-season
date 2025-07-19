@@ -6,6 +6,7 @@ type Score = {
   gross: number;
   hcp: number;
   net: number;
+  player_color: string;
 };
 
 type Round = {
@@ -26,7 +27,7 @@ export async function getLeagueRounds(leagueId: string): Promise<Round[]> {
     return [];
   }
 
-  return data.map((round) => ({
+  return data.map((round: any) => ({
     _id: round.round_id,
     course: round.course_name,
     course_img: round.course_img,

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Avatar, Button, Input, Text, XStack, YStack } from "tamagui";
+import { Button, Input, Text, XStack, YStack } from "tamagui";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 type AddScoresData = {
   players: {
@@ -27,6 +28,7 @@ export function EnterPlayerScores({
       hcp: number;
       gross: number;
       avatar_url: string;
+      name: string;
     };
   }) => void;
   scoresByPlayer: {
@@ -34,6 +36,7 @@ export function EnterPlayerScores({
       hcp: number;
       gross: number;
       avatar_url: string;
+      name: string;
     };
   };
   isMajor: string;
@@ -56,6 +59,7 @@ export function EnterPlayerScores({
         hcp: Number(handicapInput),
         gross: Number(grossInput),
         avatar_url: addScoresData.players[currentPlayerIndex].avatar_url,
+        name: addScoresData.players[currentPlayerIndex].name,
       },
     });
   };
@@ -69,17 +73,17 @@ export function EnterPlayerScores({
       </YStack>
 
       <YStack gap="$4" style={{ alignItems: "center" }}>
-        <XStack style={{ alignItems: "center" }} gap="$3">
-          <Avatar circular size="$4">
-            <Avatar.Image
-              src={addScoresData.players[currentPlayerIndex].avatar_url}
-            />
-            <Avatar.Fallback backgroundColor="red" />
-          </Avatar>
-          <Text fontSize="$5" fontWeight="bold">
+        <XStack gap="$3" style={{ alignItems: "center" }}>
+          <PlayerAvatar
+            name={addScoresData.players[currentPlayerIndex].name}
+            avatarUrl={addScoresData.players[currentPlayerIndex].avatar_url}
+            size="$4"
+          />
+          <Text fontSize="$6" fontWeight="bold">
             {addScoresData.players[currentPlayerIndex].name}
           </Text>
         </XStack>
+
         <YStack gap="$4">
           <Input
             placeholder={`${addScoresData.players[currentPlayerIndex].name}'s HCP`}

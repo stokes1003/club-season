@@ -3,6 +3,13 @@ import { supabase } from "src/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImage } from "src/api/uploadImage";
 
+interface Player {
+  name: string;
+  image: string;
+  email: string;
+  color: string;
+}
+
 export const useCreateLeague = () => {
   const createLeague = async ({
     leagueName,
@@ -14,6 +21,18 @@ export const useCreateLeague = () => {
     setLeagueName,
     setNumberOfPlayers,
     setIsSubmitting,
+    leagueAvatarColor,
+  }: {
+    leagueName: string;
+    leagueAvatar: string;
+    players: Player[];
+    handleHome: () => void;
+    setPlayers: (players: Player[]) => void;
+    setLeagueAvatar: (avatar: string) => void;
+    setLeagueName: (name: string) => void;
+    setNumberOfPlayers: (number: string) => void;
+    setIsSubmitting: (submitting: boolean) => void;
+    leagueAvatarColor: string;
   }) => {
     try {
       setIsSubmitting(true);
@@ -83,6 +102,8 @@ export const useCreateLeague = () => {
         .insert({
           name: leagueName,
           created_by: user.user.id,
+          image_url: uploadedLeagueAvatar,
+          avatar_color: leagueAvatarColor,
         })
         .select()
         .single();
@@ -133,6 +154,9 @@ export const useCreateLeague = () => {
             updates.avatar_url = player.image;
           }
 
+          // Always update player_color for existing players
+          updates.player_color = player.color || "#6B7280";
+
           if (Object.keys(updates).length > 0) {
             const { error: updateError } = await supabase
               .from("players")
@@ -154,6 +178,7 @@ export const useCreateLeague = () => {
               name: player.name,
               email: normalizedEmail,
               avatar_url: player.image || null,
+              player_color: player.color || "#6B7280",
               user_id:
                 normalizedEmail === user.user.email?.toLowerCase()
                   ? user.user.id

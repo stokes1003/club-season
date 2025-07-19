@@ -46,6 +46,7 @@ export function AddScores() {
       hcp: number;
       gross: number;
       avatar_url: string;
+      name: string;
     };
   }>({});
   const handleHome = () => {

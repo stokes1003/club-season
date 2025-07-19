@@ -1,6 +1,6 @@
-import { Card, YStack, Avatar, Text, XStack } from "tamagui";
+import { Card, YStack, Text, XStack } from "tamagui";
 import { useUser } from "src/context/UserContext";
-import { useRandomColor } from "src/hooks/useRandomColor";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 export function UserStatsCard({
   userStats,
@@ -10,7 +10,6 @@ export function UserStatsCard({
   isNet: boolean;
 }) {
   const { user } = useUser();
-  const randomColor = useRandomColor();
 
   return (
     <>
@@ -31,23 +30,11 @@ export function UserStatsCard({
         }}
       >
         <YStack gap="$4" style={{ alignItems: "center" }}>
-          <Avatar circular size="$10">
-            <Avatar.Image
-              accessibilityLabel={user?.name || "Unknown Player"}
-              src={user?.avatar_url || ""}
-            />
-            <Avatar.Fallback
-              backgroundColor={randomColor as any}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text fontSize="$8" style={{ color: "white" }}>
-                {user?.name?.charAt(0) || "?"}
-              </Text>
-            </Avatar.Fallback>
-          </Avatar>
+          <PlayerAvatar
+            name={user?.name || "Unknown Player"}
+            avatarUrl={user?.avatar_url || ""}
+            size="$10"
+          />
           <Text fontSize="$6" fontWeight="bold">
             {user?.name || "Unknown Player"}
           </Text>

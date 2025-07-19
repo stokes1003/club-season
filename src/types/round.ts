@@ -1,6 +1,7 @@
 export type Score = {
   player: string;
   player_img: string;
+  player_color: string;
   gross: number;
   hcp: number;
   net: number;

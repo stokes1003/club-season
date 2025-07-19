@@ -19,20 +19,22 @@ export async function getUser(): Promise<User | null> {
       .from("players")
       .select(
         `
-        id,
-        name,
-        avatar_url,
-        league_players (
-          league_id,
-          leagues (
             id,
             name,
-            created_by,
-            image_url,
-            created_at
-          )
-        )
-      `
+            avatar_url,
+            player_color,
+            league_players (
+              league_id,
+              leagues (
+                id,
+                name,
+                created_by,
+                image_url,
+                avatar_color,
+                created_at
+              )
+            )
+          `
       )
       .eq("user_id", user.id)
       .maybeSingle();
@@ -50,6 +52,7 @@ export async function getUser(): Promise<User | null> {
             id,
             name,
             avatar_url,
+            player_color,
             league_players (
               league_id,
               leagues (
@@ -78,6 +81,7 @@ export async function getUser(): Promise<User | null> {
             email: user.email || "",
             name: user.user_metadata?.name || null,
             avatar_url: user.user_metadata?.avatar_url || null,
+            player_color: "#6B7280",
           };
         }
 
@@ -86,6 +90,7 @@ export async function getUser(): Promise<User | null> {
           name: lp.leagues.name,
           isCreator: lp.leagues.created_by === user.id,
           image_url: lp.leagues.image_url,
+          avatar_color: lp.leagues.avatar_color,
           created_at: lp.leagues.created_at,
           created_by: lp.leagues.created_by,
         }));
@@ -96,6 +101,7 @@ export async function getUser(): Promise<User | null> {
           player_id: firstPlayer.id,
           name: firstPlayer.name,
           avatar_url: firstPlayer.avatar_url,
+          player_color: firstPlayer.player_color,
           leagues,
         };
       }
@@ -105,6 +111,7 @@ export async function getUser(): Promise<User | null> {
         email: user.email || "",
         name: user.user_metadata?.name || null,
         avatar_url: user.user_metadata?.avatar_url || null,
+        player_color: "#6B7280",
       };
     }
 
@@ -115,6 +122,7 @@ export async function getUser(): Promise<User | null> {
         email: user.email || "",
         name: user.user_metadata?.name || null,
         avatar_url: user.user_metadata?.avatar_url || null,
+        player_color: "#6B7280",
       };
     }
 
@@ -123,6 +131,7 @@ export async function getUser(): Promise<User | null> {
       name: lp.leagues.name,
       isCreator: lp.leagues.created_by === user.id,
       image_url: lp.leagues.image_url,
+      avatar_color: lp.leagues.avatar_color,
       created_at: lp.leagues.created_at,
       created_by: lp.leagues.created_by,
     }));
@@ -133,6 +142,7 @@ export async function getUser(): Promise<User | null> {
       player_id: playerData.id,
       name: playerData.name,
       avatar_url: playerData.avatar_url,
+      player_color: playerData.player_color,
       leagues,
     };
   } catch (error) {
@@ -142,6 +152,7 @@ export async function getUser(): Promise<User | null> {
       email: user.email || null,
       name: user.user_metadata?.name || null,
       avatar_url: user.user_metadata?.avatar_url || null,
+      player_color: "#6B7280",
     };
   }
 }

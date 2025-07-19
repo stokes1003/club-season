@@ -1,21 +1,15 @@
-import {
-  View,
-  Text,
-  YStack,
-  Button,
-  Input,
-  Label,
-  Avatar,
-  XStack,
-} from "tamagui";
+import { View, Text, YStack, Button, Input, Label, XStack } from "tamagui";
 import { Image } from "@tamagui/lucide-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
-import { useRandomColor } from "src/hooks/useRandomColor";
 import { useUser } from "src/hooks/useUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { avatarColors } from "src/constants/Colors";
+
+const colors = avatarColors;
 
 export function AddPlayers({
   players,
@@ -25,9 +19,19 @@ export function AddPlayers({
   setCurrentPlayerIndex,
   setCurrentStep,
 }: {
-  players: Array<{ name: string; image: string; email: string }>;
+  players: Array<{
+    name: string;
+    image: string;
+    email: string;
+    color: string;
+  }>;
   setPlayers: (
-    players: Array<{ name: string; image: string; email: string }>
+    players: Array<{
+      name: string;
+      image: string;
+      email: string;
+      color: string;
+    }>
   ) => void;
   numberOfPlayers: string;
   currentPlayerIndex: number;
@@ -35,7 +39,6 @@ export function AddPlayers({
   setCurrentStep: (step: string) => void;
 }) {
   const user = useUser();
-  console.log(user);
 
   // Initialize first player with user data when component mounts
   useEffect(() => {
@@ -179,6 +182,10 @@ export function AddPlayers({
       Alert.alert("Please enter a valid email address");
       return;
     }
+    if (!players[currentPlayerIndex].color) {
+      Alert.alert("Please select a player color");
+      return;
+    }
     if (currentPlayerIndex === Number(numberOfPlayers) - 1) {
       setCurrentStep("confirm-create-league");
     } else {
@@ -226,20 +233,12 @@ export function AddPlayers({
               style={{ alignItems: "center", justifyContent: "center" }}
             >
               <View style={{ alignItems: "center" }}>
-                <Avatar size="$6" circular>
-                  <Avatar.Image src={players[currentPlayerIndex].image} />
-                  <Avatar.Fallback
-                    backgroundColor={useRandomColor() as any}
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text fontSize="$8" style={{ color: "white" }}>
-                      {players[currentPlayerIndex].name.charAt(0)}
-                    </Text>
-                  </Avatar.Fallback>
-                </Avatar>
+                <PlayerAvatar
+                  name={players[currentPlayerIndex].name}
+                  avatarUrl={players[currentPlayerIndex].image}
+                  size="$5"
+                  color={players[currentPlayerIndex].color}
+                />
               </View>
               <Button
                 onPress={pickImage}
@@ -254,6 +253,45 @@ export function AddPlayers({
                   ? "Change Photo"
                   : "Upload Photo"}
               </Button>
+            </XStack>
+          </YStack>
+          <YStack>
+            <Label fontSize="$4" fontWeight="bold">
+              Player Color
+            </Label>
+            <XStack
+              gap="$2"
+              p="$2"
+              style={{
+                alignItems: "space-between",
+                justifyContent: "space-between",
+              }}
+            >
+              {Object.keys(colors).map((color, index) => {
+                const colorValue = colors[color as keyof typeof colors];
+                const isSelected =
+                  players[currentPlayerIndex].color === colorValue;
+                return (
+                  <View
+                    key={index}
+                    onPress={() => {
+                      const updatedPlayers = [...players];
+                      updatedPlayers[currentPlayerIndex] = {
+                        ...updatedPlayers[currentPlayerIndex],
+                        color: colorValue,
+                      };
+                      setPlayers(updatedPlayers);
+                    }}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      backgroundColor: colorValue,
+                      borderRadius: "100%",
+                      transform: [{ scale: isSelected ? 1.3 : 1 }],
+                    }}
+                  />
+                );
+              })}
             </XStack>
           </YStack>
           <YStack gap="$1">

@@ -1,4 +1,5 @@
-import { Card, XStack, YStack, Text, Image, Avatar, View } from "tamagui";
+import { Card, XStack, YStack, Text, Image, View } from "tamagui";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 type Round = {
   _id: string;
@@ -13,6 +14,7 @@ type Round = {
     hcp: number;
     net: number;
     player_img: string;
+    player_color: string;
   }[];
 };
 
@@ -114,10 +116,12 @@ export function RoundCard({ roundData }: RoundCardProps) {
             .sort((a, b) => a.net - b.net)
             .map((score, index) => (
               <XStack key={index} gap={48} style={{ alignItems: "center" }}>
-                <Avatar circular size="$4">
-                  <Avatar.Image src={score.player_img} />
-                  <Avatar.Fallback backgroundColor="$blue10" />
-                </Avatar>
+                <PlayerAvatar
+                  name={score.player}
+                  avatarUrl={score.player_img}
+                  size="$4"
+                  color={score.player_color}
+                />
                 <Text width={32} fontSize="$6" style={{ textAlign: "center" }}>
                   {score?.gross || 0}
                 </Text>

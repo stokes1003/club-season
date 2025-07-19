@@ -5,6 +5,7 @@ export type League = {
   image_url: string;
   created_at: string;
   created_by: string;
+  avatar_color: string;
 };
 
 export type User = {
@@ -14,4 +15,5 @@ export type User = {
   name: string | null;
   avatar_url: string | null;
   leagues?: League[];
+  player_color: string;
 };

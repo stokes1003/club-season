@@ -1,13 +1,10 @@
 import { Text, XStack, YStack, Separator, Card } from "tamagui";
 import { Player } from "src/types/player";
-import { League } from "../../../context/SelectedLeagueContext";
 
 export function LeagueTable({
-  league,
   isNet,
   players,
 }: {
-  league: League;
   isNet: boolean;
   players: Player[];
 }) {

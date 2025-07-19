@@ -1,6 +1,5 @@
-import { useRandomColor } from "src/hooks/useRandomColor";
-
-import { Avatar, Text, YStack, XStack, View, Button, Spinner } from "tamagui";
+import { Text, YStack, XStack, View, Button, Spinner } from "tamagui";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 export function ConfirmCreateLeague({
   leagueName,
@@ -9,6 +8,7 @@ export function ConfirmCreateLeague({
   handleHome,
   isSubmitting,
   handleCreateLeague,
+  leagueAvatarColor,
 }: {
   leagueName: string;
   players: any[];
@@ -16,6 +16,7 @@ export function ConfirmCreateLeague({
   handleHome: () => void;
   isSubmitting: boolean;
   handleCreateLeague: () => void;
+  leagueAvatarColor: string;
 }) {
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
@@ -27,20 +28,13 @@ export function ConfirmCreateLeague({
         </YStack>
 
         <YStack gap="$2" style={{ alignItems: "center" }}>
-          <Avatar size="$6" circular>
-            <Avatar.Image src={leagueAvatar} />
-            <Avatar.Fallback
-              backgroundColor={useRandomColor() as any}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text fontSize="$8" style={{ color: "white" }}>
-                {leagueName.charAt(0)}
-              </Text>
-            </Avatar.Fallback>
-          </Avatar>
+          <PlayerAvatar
+            name={leagueName}
+            avatarUrl={leagueAvatar}
+            size="$6"
+            color={leagueAvatarColor}
+          />
+
           <Text fontSize="$8" fontWeight="bold">
             {leagueName}
           </Text>
@@ -58,25 +52,22 @@ export function ConfirmCreateLeague({
                 <Text fontSize="$6">{index + 1}.</Text>
               </View>
 
-              <Avatar size="$4" circular>
-                <Avatar.Image src={player.image} />
-                <Avatar.Fallback
-                  backgroundColor={useRandomColor() as any}
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    fontSize="$8"
-                    style={{
-                      color: "white",
-                    }}
-                  >
-                    {player.name.charAt(0)}
-                  </Text>
-                </Avatar.Fallback>
-              </Avatar>
+              <PlayerAvatar
+                name={player.name}
+                avatarUrl={player.image}
+                size="$4"
+                color={player.color}
+              />
+
+              <Text
+                fontSize="$8"
+                style={{
+                  color: "white",
+                }}
+              >
+                {player.name.charAt(0)}
+              </Text>
+
               <YStack gap="$1">
                 <Text fontSize="$6" fontWeight="bold">
                   {player.name}

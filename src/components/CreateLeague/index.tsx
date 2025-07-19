@@ -16,12 +16,14 @@ export function CreateLeague() {
       name: "",
       image: "",
       email: "",
+      color: "#6B7280",
     },
   ]);
   const [numberOfPlayers, setNumberOfPlayers] = useState("");
   const [leagueAvatar, setLeagueAvatar] = useState("");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [leagueAvatarColor, setLeagueAvatarColor] = useState<string>("#6B7280");
   const { createLeague } = useCreateLeague();
 
   const handleHome = () => {
@@ -47,12 +49,15 @@ export function CreateLeague() {
             setNumberOfPlayers={setNumberOfPlayers}
             setLeagueAvatar={setLeagueAvatar}
             leagueAvatar={leagueAvatar}
+            leagueAvatarColor={leagueAvatarColor}
+            setLeagueAvatarColor={setLeagueAvatarColor}
             onNextStep={() => {
               const numPlayers = Number(numberOfPlayers);
               const newPlayers = Array.from({ length: numPlayers }, () => ({
                 name: "",
                 image: "",
                 email: "",
+                color: "#6B7280",
               }));
               setPlayers(newPlayers);
               setCurrentStep("add-players");
@@ -74,6 +79,7 @@ export function CreateLeague() {
             leagueName={leagueName}
             players={players}
             leagueAvatar={leagueAvatar}
+            leagueAvatarColor={leagueAvatarColor}
             handleHome={handleHome}
             isSubmitting={isSubmitting}
             handleCreateLeague={() => {
@@ -87,6 +93,7 @@ export function CreateLeague() {
                 setLeagueName,
                 setNumberOfPlayers,
                 setIsSubmitting,
+                leagueAvatarColor,
               });
             }}
           />

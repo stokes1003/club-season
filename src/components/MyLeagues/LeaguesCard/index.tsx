@@ -1,9 +1,9 @@
-import { YStack, Text, Card, XStack, Avatar } from "tamagui";
+import { YStack, Text, Card, XStack } from "tamagui";
 import { useUser } from "src/hooks/useUser";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { useGetPlayerById } from "src/hooks/useGetPlayerById";
-import { useRandomColor } from "src/hooks/useRandomColor";
 import { LeagueCardSkeleton } from "../LeagueCardSkeleton/index";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 function LeagueCard({ league }: { league: any }) {
   const players = useGetPlayers(league.id);
@@ -41,20 +41,12 @@ function LeagueCard({ league }: { league: any }) {
           width="$5"
           style={{ justifyContent: "center", alignItems: "center" }}
         >
-          <Avatar size="$8" circular>
-            <Avatar.Image src={league.image_url} />
-            <Avatar.Fallback
-              backgroundColor={useRandomColor() as any}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text fontSize="$10" fontWeight="bold" style={{ color: "white" }}>
-                {league.name.charAt(0)}
-              </Text>
-            </Avatar.Fallback>
-          </Avatar>
+          <PlayerAvatar
+            name={league.name}
+            avatarUrl={league.image_url}
+            size="$8"
+            color={league.avatar_color}
+          />
         </YStack>
         <YStack gap="$1" style={{ alignItems: "flex-end" }}>
           <Text fontSize="$8" fontWeight="bold">

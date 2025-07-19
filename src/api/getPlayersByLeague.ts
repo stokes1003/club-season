@@ -18,9 +18,12 @@ export async function getPlayersByLeague(leagueId: string) {
       console.error("Error fetching player stats from league:", statsError);
     }
 
-    // If we got stats data, return it
+    // If we got stats data, return it with player_color fallback
     if (statsData && statsData.length > 0) {
-      return statsData;
+      return statsData.map((player: any) => ({
+        ...player,
+        player_color: player.player_color || "#6B7280",
+      }));
     }
 
     // If no stats data (no rounds played yet), get basic player info
@@ -32,7 +35,8 @@ export async function getPlayersByLeague(leagueId: string) {
         player_id,
         players (
           name,
-          avatar_url
+          avatar_url,
+          player_color
         )
       `
       )
@@ -49,10 +53,11 @@ export async function getPlayersByLeague(leagueId: string) {
         player_id: item.player_id,
         name: item.players?.name || "Unknown Player",
         avatar_url: item.players?.avatar_url || "",
-        avg_gross_score: 0,
-        avg_net_score: 0,
-        best_gross_score: 0,
-        best_net_score: 0,
+        player_color: item.players?.player_color || "#6B7280",
+        avg_gross: 0,
+        avg_net: 0,
+        best_gross: 0,
+        best_net: 0,
         gross_points: 0,
         net_points: 0,
         net_wins: 0,

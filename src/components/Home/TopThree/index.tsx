@@ -28,8 +28,17 @@ export function TopThree({
       return b.gross_points - a.gross_points;
     });
   };
-
-  const sortedPlayers = netSortedPlayers();
+  const grossSortedPlayers = () => {
+    return [...players].sort((a, b) => {
+      if (b.gross_points !== a.gross_points) {
+        return b.gross_points - a.gross_points;
+      }
+      return b.net_points - a.net_points;
+    });
+  };
+  const sortedPlayers = isNet
+    ? netSortedPlayers().slice(0, 3)
+    : grossSortedPlayers().slice(0, 3);
 
   return (
     <YStack width="100%">

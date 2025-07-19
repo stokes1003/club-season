@@ -1,5 +1,6 @@
-import { Text, YStack, XStack, Button, Avatar, View, Spinner } from "tamagui";
+import { Text, YStack, XStack, Button, View, Spinner } from "tamagui";
 import { Trophy } from "@tamagui/lucide-icons";
+import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 export function ConfirmRoundSubmit({
   isSubmitting,
@@ -7,7 +8,6 @@ export function ConfirmRoundSubmit({
   handleHome,
   scoresByPlayer,
   selectedCourse,
-
   isMajor,
   majorName,
 }: {
@@ -20,6 +20,7 @@ export function ConfirmRoundSubmit({
       hcp: number;
       gross: number;
       avatar_url: string;
+      name: string;
     };
   };
   selectedCourse: { id: string; course_name: string } | null;
@@ -83,9 +84,11 @@ export function ConfirmRoundSubmit({
           {Object.keys(scoresByPlayer).map((playerId) => (
             <XStack key={playerId} gap="$4" style={{ alignItems: "center" }}>
               <View width="$6" style={{ alignItems: "center" }}>
-                <Avatar circular size="$4">
-                  <Avatar.Image src={scoresByPlayer[playerId].avatar_url} />
-                </Avatar>
+                <PlayerAvatar
+                  name={scoresByPlayer[playerId].name}
+                  avatarUrl={scoresByPlayer[playerId].avatar_url}
+                  size="$4"
+                />
               </View>
               <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
                 {scoresByPlayer[playerId].gross}

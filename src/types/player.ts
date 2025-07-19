@@ -10,4 +10,5 @@ export type Player = {
   net_wins: number;
   gross_wins: number;
   player_id: string;
+  player_color: string;
 };
