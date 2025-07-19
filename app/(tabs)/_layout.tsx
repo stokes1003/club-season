@@ -1,5 +1,13 @@
 import { Link, Tabs } from "expo-router";
-import { Avatar, useTheme, YStack, Text, XStack, View } from "tamagui";
+import {
+  Avatar,
+  useTheme,
+  YStack,
+  Text,
+  XStack,
+  View,
+  Separator,
+} from "tamagui";
 import {
   ChevronDown,
   House,
@@ -50,23 +58,22 @@ export default function TabLayout() {
             backgroundColor: theme?.background?.val || "$background",
           }}
         >
-          <View onPress={() => handleSelectLeague(null)}>
-            <Text
-              fontSize="$5"
-              fontWeight="400"
-              style={{ textAlign: "center" }}
-            >
+          <View
+            onPress={() => handleSelectLeague(null)}
+            pressStyle={{ background: "$gray5" }}
+          >
+            <Text fontSize="$6" style={{ textAlign: "center" }}>
               All Leagues
             </Text>
           </View>
 
           {user?.leagues?.map((league) => (
-            <View key={league.id} onPress={() => handleSelectLeague(league)}>
-              <Text
-                fontSize="$5"
-                fontWeight="400"
-                style={{ textAlign: "center" }}
-              >
+            <View
+              key={league.id}
+              onPress={() => handleSelectLeague(league)}
+              pressStyle={{ background: "$gray5" }}
+            >
+              <Text fontSize="$6" style={{ textAlign: "center" }}>
                 {league.name}
               </Text>
             </View>
@@ -104,8 +111,13 @@ export default function TabLayout() {
                 gap="$2"
                 style={{ alignItems: "center" }}
                 onPress={() => setIsOpen(!isOpen)}
+                pressStyle={{ background: "$gray5" }}
               >
-                <Text fontSize="$6" style={{ textAlign: "center" }}>
+                <Text
+                  fontSize="$8"
+                  fontWeight="bold"
+                  style={{ textAlign: "center" }}
+                >
                   {selectedLeague?.name || "All Leagues"}
                 </Text>
                 {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}

@@ -76,7 +76,6 @@ export function CreateLeague() {
             leagueAvatar={leagueAvatar}
             handleHome={handleHome}
             isSubmitting={isSubmitting}
-            setIsSubmitting={setIsSubmitting}
             handleCreateLeague={() => {
               createLeague({
                 leagueName,

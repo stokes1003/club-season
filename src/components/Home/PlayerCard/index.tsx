@@ -6,9 +6,10 @@ import { Player } from "src/types/player";
 type PlayerCardProps = {
   playerData: Player;
   index?: number;
+  isNet: boolean;
 };
 
-export function PlayerCard({ playerData, index }: PlayerCardProps) {
+export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
   // Safety check for playerData
   if (!playerData) {
     return null;
@@ -78,7 +79,9 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               Points
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.net_points || 0}
+              {isNet
+                ? playerData.net_points || 0
+                : playerData.gross_points || 0}
             </Text>
           </XStack>
           <XStack gap="$4" style={{ justifyContent: "space-between" }}>
@@ -91,7 +94,7 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               Wins
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.net_wins || 0}
+              {isNet ? playerData.net_wins || 0 : playerData.gross_wins || 0}
             </Text>
           </XStack>
 
@@ -105,8 +108,12 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               AVG
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.avg_net && playerData.avg_net > 0
-                ? parseFloat(playerData.avg_net.toString()).toFixed(1)
+              {isNet
+                ? playerData.avg_net && playerData.avg_net > 0
+                  ? parseFloat(playerData.avg_net.toString()).toFixed(1)
+                  : "-"
+                : playerData.avg_gross && playerData.avg_gross > 0
+                ? parseFloat(playerData.avg_gross.toString()).toFixed(1)
                 : "-"}
             </Text>
           </XStack>
@@ -121,7 +128,7 @@ export function PlayerCard({ playerData, index }: PlayerCardProps) {
               Best
             </Text>
             <Text fontSize="$6" width={60}>
-              {playerData.best_net || 0}
+              {isNet ? playerData.best_net || 0 : playerData.best_gross || 0}
             </Text>
           </XStack>
         </YStack>

@@ -3,6 +3,7 @@ import { useUser } from "src/hooks/useUser";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { useGetPlayerById } from "src/hooks/useGetPlayerById";
 import { useRandomColor } from "src/hooks/useRandomColor";
+import { LeagueCardSkeleton } from "../LeagueCardSkeleton/index";
 
 function LeagueCard({ league }: { league: any }) {
   const players = useGetPlayers(league.id);
@@ -81,8 +82,19 @@ export function LeaguesCard() {
   const user = useUser();
   const leagues = user?.leagues;
 
+  // Show skeletons while loading
+  if (!leagues) {
+    return (
+      <YStack gap="$4">
+        <LeagueCardSkeleton />
+        <LeagueCardSkeleton />
+        <LeagueCardSkeleton />
+      </YStack>
+    );
+  }
+
   return (
-    <YStack>
+    <YStack gap="$4">
       {leagues?.map((league) => (
         <LeagueCard key={league.id} league={league} />
       ))}
