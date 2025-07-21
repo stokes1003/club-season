@@ -24,35 +24,13 @@ export function OfficialRounds({ league }: { league: League }) {
         snapToAlignment="center"
       >
         {rounds?.length > 0 ? (
-          <Card
-            backgroundColor="white"
-            borderWidth={0}
-            borderRadius="$6"
-            mx="$4"
-            style={{
-              boxShadow: "0 0 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <XStack>
-              {rounds?.map((round) => (
-                <RoundCard key={round._id} roundData={round} />
-              ))}
-            </XStack>
-          </Card>
+          <XStack>
+            {rounds?.map((round) => (
+              <RoundCard key={round._id} roundData={round} />
+            ))}
+          </XStack>
         ) : (
-          <Card
-            alignItems="center"
-            justifyContent="center"
-            backgroundColor="white"
-            borderWidth={0}
-            borderRadius="$6"
-            mx="$4"
-            style={{
-              boxShadow: "0 0 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Text>No rounds played yet</Text>
-          </Card>
+          <Text>No rounds played yet</Text>
         )}
       </ScrollView>
     </YStack>

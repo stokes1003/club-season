@@ -1,10 +1,14 @@
 import { Text, XStack, YStack, Separator, Card } from "tamagui";
 import { Player } from "src/types/player";
+import { getPlayerDisplayNames } from "src/utils/playerNameUtils";
+import { League } from "../../../context/SelectedLeagueContext";
 
 export function LeagueTable({
   isNet,
   players,
+  league,
 }: {
+  league: League;
   isNet: boolean;
   players: Player[];
 }) {
@@ -14,6 +18,7 @@ export function LeagueTable({
     }
     return b.gross_points - a.gross_points;
   });
+  const playerDisplayNames = getPlayerDisplayNames(players);
   return (
     <YStack gap="$4" style={{ alignItems: "center" }}>
       <YStack>
@@ -94,7 +99,7 @@ export function LeagueTable({
                   fontWeight="bold"
                   style={{ textAlign: "center" }}
                 >
-                  {playerData.name}
+                  {playerDisplayNames[index]}
                 </Text>
                 <Text width="$5" style={{ textAlign: "center" }}>
                   {isNet

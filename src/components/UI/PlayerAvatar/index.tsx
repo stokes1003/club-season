@@ -15,6 +15,12 @@ export function PlayerAvatar({
   gap = "$3",
   color,
 }: PlayerAvatarProps) {
+  let nameToDisplay = name;
+  if (name.split(" ").length > 1) {
+    nameToDisplay = name.split(" ")[0][0] + name.split(" ")[1][0];
+  } else {
+    nameToDisplay = name.substring(0, 2).toUpperCase();
+  }
   return (
     <XStack style={{ alignItems: "center" }} gap={gap}>
       <Avatar circular size={size}>
@@ -28,7 +34,7 @@ export function PlayerAvatar({
           }}
         >
           <Text fontSize="$6" color="white" fontWeight="bold">
-            {name.substring(0, 2).toUpperCase()}
+            {nameToDisplay}
           </Text>
         </Avatar.Fallback>
       </Avatar>

@@ -63,7 +63,7 @@ export default function TabLayout() {
             pressStyle={{ background: "$gray5" }}
           >
             <Text fontSize="$6" style={{ textAlign: "center" }}>
-              All Leagues
+              My Career
             </Text>
           </View>
 
@@ -114,11 +114,11 @@ export default function TabLayout() {
                 pressStyle={{ background: "$gray5" }}
               >
                 <Text
-                  fontSize="$8"
+                  fontSize="$7"
                   fontWeight="bold"
                   style={{ textAlign: "center" }}
                 >
-                  {selectedLeague?.name || "All Leagues"}
+                  {selectedLeague?.name || "My Career"}
                 </Text>
                 {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
               </XStack>
