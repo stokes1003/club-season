@@ -14,7 +14,7 @@ export async function submitScores({
   is_major: boolean;
   major_name: string | null;
   scores: {
-    player_id: string;
+    league_player_id: string;
     gross: number;
     hcp: number;
     net: number;
@@ -44,11 +44,11 @@ export async function submitScores({
 
   const round_id = round.id;
 
-  // 2. Insert individual scores
+  // 2. Insert scores using league_player_id
   const { error: scoresError } = await supabase.from("round_scores").insert(
     scores.map((score) => ({
       round_id,
-      player_id: score.player_id,
+      league_player_id: score.league_player_id,
       gross_score: score.gross,
       handicap: score.hcp,
       net_score: score.net,
@@ -65,8 +65,7 @@ export async function submitScores({
     const { error: updateError } = await supabase.rpc(
       "increment_league_player_points",
       {
-        p_league_id: league_id,
-        p_player_id: score.player_id,
+        p_league_player_id: score.league_player_id,
         p_gross_points: score.gross_points,
         p_net_points: score.net_points,
       }
@@ -74,8 +73,8 @@ export async function submitScores({
 
     if (updateError) {
       console.error(
-        "Failed to update points for player:",
-        score.player_id,
+        "Failed to update points for league_player:",
+        score.league_player_id,
         updateError
       );
       return { success: false, error: updateError };

@@ -6,7 +6,6 @@ export async function getPlayersByLeague(leagueId: string) {
   }
 
   try {
-    // First try to get players with stats (for leagues that have rounds)
     const { data: statsData, error: statsError } = await supabase.rpc(
       "get_league_player_stats",
       {
@@ -18,7 +17,6 @@ export async function getPlayersByLeague(leagueId: string) {
       console.error("Error fetching player stats from league:", statsError);
     }
 
-    // If we got stats data, return it with player_color fallback
     if (statsData && statsData.length > 0) {
       return statsData.map((player: any) => ({
         ...player,
@@ -26,18 +24,14 @@ export async function getPlayersByLeague(leagueId: string) {
       }));
     }
 
-    // If no stats data (no rounds played yet), get basic player info
-
     const { data: basicData, error: basicError } = await supabase
       .from("league_players")
       .select(
         `
-        player_id,
-        players (
-          name,
-          avatar_url,
-          player_color
-        )
+        id,
+        display_name,
+        avatar_url,
+        player_color
       `
       )
       .eq("league_id", leagueId);
@@ -47,13 +41,12 @@ export async function getPlayersByLeague(leagueId: string) {
       return [];
     }
 
-    // Transform the data to match the expected Player type
     return (
       basicData?.map((item: any) => ({
-        player_id: item.player_id,
-        name: item.players?.name || "Unknown Player",
-        avatar_url: item.players?.avatar_url || "",
-        player_color: item.players?.player_color || "#6B7280",
+        id: item.id,
+        display_name: item.display_name || "Unknown Player",
+        avatar_url: item.avatar_url || "",
+        player_color: item.player_color || "#6B7280",
         avg_gross: 0,
         avg_net: 0,
         best_gross: 0,

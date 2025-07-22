@@ -38,8 +38,8 @@ export async function getAddScoresData(
 
     // Transform players data to match the expected format
     const players: AddScoresPlayer[] = playersData.map((player: any) => ({
-      id: player.player_id,
-      name: player.name,
+      id: player.id,
+      name: player.display_name,
       avatar_url: player.avatar_url || "",
     }));
 

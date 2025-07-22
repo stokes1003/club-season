@@ -1,22 +1,19 @@
-import { Button, Separator, Text, XStack, YStack } from "tamagui";
+import { Text, YStack } from "tamagui";
 import { TopThree } from "./TopThree";
 import { OfficialRounds } from "./OfficialRounds";
 import { useSelectedLeague } from "../../context/SelectedLeagueContext";
 import { useUser } from "src/context/UserContext";
-import { useRouter } from "expo-router";
 import { getUserStats } from "src/api/getUserStats";
 import { useEffect, useState } from "react";
-import { NetGrossTabs } from "./NetGrossTabs";
 import { UserStatsCard } from "./UserStatsCard";
 import { Player } from "src/types/player";
 import { getPlayersByLeague } from "src/api/getPlayersByLeague";
 import { LeagueTable } from "./LeagueTable";
-import { LeaguesCard } from "../MyLeagues/LeaguesCard";
 
 export function Home() {
   const { selectedLeague } = useSelectedLeague();
   const { user } = useUser();
-  const router = useRouter();
+
   const [userStats, setUserStats] = useState<{
     rounds_played: number;
     avg_net_score: number;
@@ -77,36 +74,13 @@ export function Home() {
           style={{ alignItems: "center", justifyContent: "center" }}
         >
           <YStack gap="$2" style={{ alignItems: "center" }}>
-            <NetGrossTabs isNet={isNet} setIsNet={setIsNet} />
-            <UserStatsCard userStats={userStats} isNet={isNet} />
+            <UserStatsCard userStats={userStats} />
           </YStack>
-
-          <YStack gap="$2">
-            <Text
-              fontWeight="bold"
-              fontSize="$8"
-              style={{ textAlign: "center" }}
-            >
-              My Leagues
+          <YStack gap="$2" style={{ alignItems: "center" }}>
+            <Text fontSize="$6" fontWeight="bold">
+              Recent Rounds
             </Text>
-            {user.leagues && user.leagues.length > 0 ? (
-              <LeaguesCard />
-            ) : (
-              <Text>No leagues found</Text>
-            )}
           </YStack>
-          <Button
-            bg="$blue10"
-            color="$white1"
-            fontSize="$5"
-            fontWeight="bold"
-            width="$20"
-            onPress={() => {
-              router.push("/CreateLeague");
-            }}
-          >
-            Create A League
-          </Button>
         </YStack>
       )}
       {selectedLeague && (

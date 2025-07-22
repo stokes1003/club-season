@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 export async function getUserStats(userId: string) {
   // First get player IDs for this user
   const { data: playerIds, error: playerError } = await supabase
-    .from("players")
+    .from("league_players")
     .select("id")
     .eq("user_id", userId);
 
@@ -34,11 +34,11 @@ export async function getUserStats(userId: string) {
       net_score,
       gross_score,
       round_id,
-      player_id,
+      league_player_id,
       rounds!inner(league_id)
     `
     )
-    .in("player_id", playerIdArray);
+    .in("league_player_id", playerIdArray);
 
   if (error) {
     console.error("Error fetching user stats:", error.message);
@@ -116,10 +116,10 @@ export async function getUserStats(userId: string) {
 
     // Check if our player won (and it's not a tie)
     const playerNetScore = roundScores.find((rs) =>
-      playerIdArray.includes(rs.player_id)
+      playerIdArray.includes(rs.league_player_id)
     )?.net_score;
     const playerGrossScore = roundScores.find((rs) =>
-      playerIdArray.includes(rs.player_id)
+      playerIdArray.includes(rs.league_player_id)
     )?.gross_score;
 
     if (playerNetScore === bestNetScore && netWinners === 1) {

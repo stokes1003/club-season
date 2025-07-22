@@ -2,14 +2,9 @@ import { Card, YStack, Text, XStack } from "tamagui";
 import { useUser } from "src/context/UserContext";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
-export function UserStatsCard({
-  userStats,
-  isNet,
-}: {
-  userStats: any;
-  isNet: boolean;
-}) {
+export function UserStatsCard({ userStats }: { userStats: any }) {
   const { user } = useUser();
+  console.log(user);
 
   return (
     <>
@@ -34,25 +29,39 @@ export function UserStatsCard({
             name={user?.name || "Unknown Player"}
             avatarUrl={user?.avatar_url || ""}
             size="$10"
+            color={user?.player_color || "#6B7280"}
           />
           <Text fontSize="$6" fontWeight="bold">
             {user?.name || "Unknown Player"}
           </Text>
-          <XStack gap="$4" style={{ justifyContent: "space-between" }}>
+          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
             <Text
               fontSize="$6"
               fontWeight="bold"
-              width={60}
+              width={80}
               style={{ textAlign: "right" }}
             >
-              Wins
+              Net Wins
             </Text>
-            <Text fontSize="$6" width={60}>
-              {isNet ? userStats?.net_wins || 0 : userStats?.gross_wins || 0}
+            <Text fontSize="$6" width={80}>
+              {userStats?.net_wins || 0}
+            </Text>
+          </XStack>
+          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
+            <Text
+              fontSize="$6"
+              fontWeight="bold"
+              width={100}
+              style={{ textAlign: "right" }}
+            >
+              Gross Wins
+            </Text>
+            <Text fontSize="$6" width={100}>
+              {userStats?.gross_wins || 0}
             </Text>
           </XStack>
 
-          <XStack gap="$4" style={{ justifyContent: "space-between" }}>
+          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
             <Text
               fontSize="$6"
               fontWeight="bold"
@@ -62,35 +71,13 @@ export function UserStatsCard({
               AVG
             </Text>
             <Text fontSize="$6" width={60}>
-              {isNet
-                ? userStats?.avg_net_score && userStats?.avg_net_score > 0
-                  ? parseFloat(userStats?.avg_net_score.toString()).toFixed(1)
-                  : "-"
-                : userStats?.avg_gross_score && userStats?.avg_gross_score > 0
-                ? parseFloat(userStats?.avg_gross_score.toString()).toFixed(1)
+              {userStats?.avg_net_score && userStats?.avg_net_score > 0
+                ? parseFloat(userStats?.avg_net_score.toString()).toFixed(1)
                 : "-"}
             </Text>
           </XStack>
-          <XStack gap="$4" style={{ justifyContent: "space-between" }}>
-            <Text
-              fontSize="$6"
-              fontWeight="bold"
-              width={70}
-              style={{ textAlign: "right" }}
-            >
-              Best
-            </Text>
-            <Text fontSize="$6" width={70}>
-              {isNet
-                ? userStats?.best_net_score && userStats?.best_net_score > 0
-                  ? userStats?.best_net_score.toString()
-                  : "-"
-                : userStats?.best_gross_score && userStats?.best_gross_score > 0
-                ? userStats?.best_gross_score.toString()
-                : "-"}
-            </Text>
-          </XStack>
-          <XStack gap="$4" style={{ justifyContent: "space-between" }}>
+
+          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
             <Text
               fontSize="$6"
               fontWeight="bold"

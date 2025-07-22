@@ -9,7 +9,7 @@ export function ChangeName() {
     return <Text>Loading...</Text>;
   }
   return (
-    <YStack gap="$8" mt="$6" mb="$4" style={{ alignItems: "center" }}>
+    <YStack gap="$8" mb="$4" style={{ alignItems: "center" }}>
       <YStack gap="$6" style={{ alignItems: "flex-start" }}>
         <Text fontSize="$8" fontWeight="bold">
           Change Your Name

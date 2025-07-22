@@ -1,4 +1,4 @@
-import { Text, Button, YStack } from "tamagui";
+import { Text, Button, YStack, ScrollView } from "tamagui";
 import { LeaguesCard } from "./LeaguesCard";
 import { useRouter } from "expo-router";
 

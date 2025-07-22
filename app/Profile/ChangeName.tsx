@@ -3,7 +3,7 @@ import { ChangeName } from "../../src/components/Profile/ChangeName";
 
 export default function ChangeNameScreen() {
   return (
-    <View bg="$white1" style={{ flex: 1 }}>
+    <View bg="$white1" style={{ flex: 1 }} pt="$8">
       <ChangeName />
     </View>
   );

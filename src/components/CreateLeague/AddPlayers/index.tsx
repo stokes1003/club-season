@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "src/hooks/useUser";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { avatarColors } from "src/constants/Colors";
 

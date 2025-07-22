@@ -3,7 +3,7 @@ import { View } from "tamagui";
 
 export default function ChangePasswordScreen() {
   return (
-    <View bg="$white1" style={{ flex: 1 }}>
+    <View bg="$white1" style={{ flex: 1 }} pt="$8">
       <ChangePassword />
     </View>
   );
