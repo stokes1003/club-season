@@ -20,7 +20,7 @@ export function ConfirmRoundSubmit({
       hcp: number;
       gross: number;
       avatar_url: string;
-      name: string;
+      display_name: string;
     };
   };
   selectedCourse: { id: string; course_name: string } | null;
@@ -85,7 +85,7 @@ export function ConfirmRoundSubmit({
             <XStack key={playerId} gap="$4" style={{ alignItems: "center" }}>
               <View width="$6" style={{ alignItems: "center" }}>
                 <PlayerAvatar
-                  name={scoresByPlayer[playerId].name}
+                  name={scoresByPlayer[playerId].display_name}
                   avatarUrl={scoresByPlayer[playerId].avatar_url}
                   size="$4"
                 />

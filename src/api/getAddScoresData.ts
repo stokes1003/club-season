@@ -8,7 +8,7 @@ type AddScoresCourse = {
 
 type AddScoresPlayer = {
   id: string;
-  name: string;
+  display_name: string;
   avatar_url: string;
 };
 
@@ -33,13 +33,18 @@ export async function getAddScoresData(
       console.error("Error fetching from RPC:", rpcError);
     }
 
-    // Get players using the working getPlayersByLeague function
-    const playersData = await getPlayersByLeague(leagueId);
+    // Get players - use RPC data if available, otherwise fallback to getPlayersByLeague
+    let playersData: any[] = [];
+    if (rpcData?.players) {
+      playersData = rpcData.players;
+    } else {
+      playersData = await getPlayersByLeague(leagueId);
+    }
 
     // Transform players data to match the expected format
     const players: AddScoresPlayer[] = playersData.map((player: any) => ({
       id: player.id,
-      name: player.display_name,
+      display_name: player.name || player.display_name || "Unknown Player",
       avatar_url: player.avatar_url || "",
     }));
 

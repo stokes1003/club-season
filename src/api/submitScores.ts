@@ -39,6 +39,13 @@ export async function submitScores({
 
   if (roundError || !round) {
     console.error("Failed to create round:", roundError);
+    console.error("Round data:", {
+      league_id,
+      course_id,
+      date,
+      is_major,
+      major_name,
+    });
     return { success: false, error: roundError };
   }
 
@@ -57,6 +64,7 @@ export async function submitScores({
 
   if (scoresError) {
     console.error("Failed to insert scores:", scoresError);
+    console.error("Scores data:", scores);
     return { success: false, error: scoresError };
   }
 
@@ -65,9 +73,10 @@ export async function submitScores({
     const { error: updateError } = await supabase.rpc(
       "increment_league_player_points",
       {
-        p_league_player_id: score.league_player_id,
         p_gross_points: score.gross_points,
+        p_league_id: league_id,
         p_net_points: score.net_points,
+        p_player_id: score.league_player_id,
       }
     );
 

@@ -19,7 +19,7 @@ type AddScoresData = {
   }[];
   players: {
     id: string;
-    name: string;
+    display_name: string;
     avatar_url: string;
   }[];
 };
@@ -46,7 +46,7 @@ export function AddScores() {
       hcp: number;
       gross: number;
       avatar_url: string;
-      name: string;
+      display_name: string;
     };
   }>({});
   const handleHome = () => {
@@ -79,20 +79,31 @@ export function AddScores() {
 
     setIsSubmitting(true);
 
+    const scoresData = Object.keys(scoresByPlayer).map((playerId) => ({
+      league_player_id: playerId,
+      gross: scoresByPlayer[playerId].gross,
+      hcp: scoresByPlayer[playerId].hcp,
+      net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
+      gross_points: grossPoints[playerId] || 0,
+      net_points: netPoints[playerId] || 0,
+    }));
+
+    console.log("Submitting scores data:", {
+      league_id: leagueId,
+      course_id: selectedCourse.id,
+      date: new Date().toISOString(),
+      is_major: isMajor === "yes",
+      major_name: isMajor === "yes" ? majorName : null,
+      scores: scoresData,
+    });
+
     const { success, error } = await submitScores({
       league_id: leagueId,
       course_id: selectedCourse.id,
       date: new Date().toISOString(),
       is_major: isMajor === "yes",
       major_name: isMajor === "yes" ? majorName : null,
-      scores: Object.keys(scoresByPlayer).map((playerId) => ({
-        player_id: playerId,
-        gross: scoresByPlayer[playerId].gross,
-        hcp: scoresByPlayer[playerId].hcp,
-        net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
-        gross_points: grossPoints[playerId] || 0,
-        net_points: netPoints[playerId] || 0,
-      })),
+      scores: scoresData,
     });
 
     if (success) {

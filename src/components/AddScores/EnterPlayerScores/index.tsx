@@ -5,7 +5,7 @@ import { PlayerAvatar } from "../../UI/PlayerAvatar";
 type AddScoresData = {
   players: {
     id: string;
-    name: string;
+    display_name: string;
     avatar_url: string;
   }[];
 };
@@ -28,7 +28,7 @@ export function EnterPlayerScores({
       hcp: number;
       gross: number;
       avatar_url: string;
-      name: string;
+      display_name: string;
     };
   }) => void;
   scoresByPlayer: {
@@ -36,7 +36,7 @@ export function EnterPlayerScores({
       hcp: number;
       gross: number;
       avatar_url: string;
-      name: string;
+      display_name: string;
     };
   };
   isMajor: string;
@@ -55,14 +55,19 @@ export function EnterPlayerScores({
     }
     setScoresByPlayer({
       ...scoresByPlayer,
-      [addScoresData.players[currentPlayerIndex].id]: {
+      [currentPlayer.id]: {
         hcp: Number(handicapInput),
         gross: Number(grossInput),
-        avatar_url: addScoresData.players[currentPlayerIndex].avatar_url,
-        name: addScoresData.players[currentPlayerIndex].name,
+        avatar_url: playerAvatarUrl,
+        display_name: playerName,
       },
     });
   };
+
+  // Safety check for current player data
+  const currentPlayer = addScoresData.players[currentPlayerIndex];
+  const playerName = currentPlayer?.display_name || "Unknown Player";
+  const playerAvatarUrl = currentPlayer?.avatar_url || "";
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
@@ -75,18 +80,18 @@ export function EnterPlayerScores({
       <YStack gap="$4" style={{ alignItems: "center" }}>
         <XStack gap="$3" style={{ alignItems: "center" }}>
           <PlayerAvatar
-            name={addScoresData.players[currentPlayerIndex].name}
-            avatarUrl={addScoresData.players[currentPlayerIndex].avatar_url}
+            name={playerName}
+            avatarUrl={playerAvatarUrl}
             size="$4"
           />
           <Text fontSize="$6" fontWeight="bold">
-            {addScoresData.players[currentPlayerIndex].name}
+            {playerName}
           </Text>
         </XStack>
 
         <YStack gap="$4">
           <Input
-            placeholder={`${addScoresData.players[currentPlayerIndex].name}'s HCP`}
+            placeholder={`${playerName}'s HCP`}
             width="$18"
             value={handicapInput}
             onChangeText={setHandicapInput}
@@ -98,7 +103,7 @@ export function EnterPlayerScores({
             autoFocus={false}
           />
           <Input
-            placeholder={`${addScoresData.players[currentPlayerIndex].name}'s Gross`}
+            placeholder={`${playerName}'s Gross`}
             width="$18"
             value={grossInput}
             onChangeText={setGrossInput}

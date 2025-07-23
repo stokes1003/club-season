@@ -18,6 +18,7 @@ export async function getPlayersByLeague(leagueId: string) {
     }
 
     if (statsData && statsData.length > 0) {
+      console.log("RPC stats data:", statsData);
       return statsData.map((player: any) => ({
         ...player,
         player_color: player.player_color || "#6B7280",
@@ -40,6 +41,8 @@ export async function getPlayersByLeague(leagueId: string) {
       console.error("Error fetching basic player info:", basicError);
       return [];
     }
+
+    console.log("Basic data from league_players:", basicData);
 
     return (
       basicData?.map((item: any) => ({
