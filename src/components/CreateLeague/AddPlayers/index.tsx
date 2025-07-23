@@ -113,38 +113,6 @@ export function AddPlayers({
     return emailRegex.test(email);
   };
 
-  const validateEmailUnique = (email: string, currentIndex: number) => {
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // Check for duplicate emails (case-insensitive)
-    for (let i = 0; i < players.length; i++) {
-      if (
-        i !== currentIndex &&
-        players[i].email.trim().toLowerCase() === normalizedEmail
-      ) {
-        return {
-          isValid: false,
-          message: "This email is already used by another player",
-        };
-      }
-    }
-
-    return { isValid: true, message: "" };
-  };
-
-  const getAvailableColors = (currentIndex: number) => {
-    // Get all colors that are currently selected by other players
-    const selectedColors = players
-      .map((player, index) => (index !== currentIndex ? player.color : null))
-      .filter((color) => color !== null);
-
-    // Filter out colors that are already selected
-    return Object.keys(colors).filter((colorKey) => {
-      const colorValue = colors[colorKey as keyof typeof colors];
-      return !selectedColors.includes(colorValue);
-    });
-  };
-
   const validateName = (name: string, currentIndex: number) => {
     const trimmedName = name.trim();
 
@@ -214,16 +182,6 @@ export function AddPlayers({
       Alert.alert("Please enter a valid email address");
       return;
     }
-
-    const emailUniqueValidation = validateEmailUnique(
-      players[currentPlayerIndex].email,
-      currentPlayerIndex
-    );
-    if (!emailUniqueValidation.isValid) {
-      Alert.alert("Invalid Email", emailUniqueValidation.message);
-      return;
-    }
-
     if (!players[currentPlayerIndex].color) {
       Alert.alert("Please select a player color");
       return;
@@ -309,8 +267,8 @@ export function AddPlayers({
                 justifyContent: "space-between",
               }}
             >
-              {getAvailableColors(currentPlayerIndex).map((colorKey, index) => {
-                const colorValue = colors[colorKey as keyof typeof colors];
+              {Object.keys(colors).map((color, index) => {
+                const colorValue = colors[color as keyof typeof colors];
                 const isSelected =
                   players[currentPlayerIndex].color === colorValue;
                 return (

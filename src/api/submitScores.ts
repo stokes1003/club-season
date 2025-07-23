@@ -70,35 +70,15 @@ export async function submitScores({
 
   // 3. Update league_players with new points
   for (const score of scores) {
-    // First get current points
-    const { data: currentPlayer, error: fetchError } = await supabase
-      .from("league_players")
-      .select("gross_points, net_points")
-      .eq("id", score.league_player_id)
-      .single();
-
-    if (fetchError || !currentPlayer) {
-      console.error(
-        "Failed to fetch current points for league_player:",
-        score.league_player_id,
-        fetchError
-      );
-      return { success: false, error: fetchError };
-    }
-
-    // Calculate new totals
-    const newGrossPoints =
-      (currentPlayer.gross_points || 0) + score.gross_points;
-    const newNetPoints = (currentPlayer.net_points || 0) + score.net_points;
-
-    // Update with new totals
-    const { error: updateError } = await supabase
-      .from("league_players")
-      .update({
-        gross_points: newGrossPoints,
-        net_points: newNetPoints,
-      })
-      .eq("id", score.league_player_id);
+    const { error: updateError } = await supabase.rpc(
+      "increment_league_player_points",
+      {
+        p_gross_points: score.gross_points,
+        p_league_id: league_id,
+        p_net_points: score.net_points,
+        p_player_id: score.league_player_id,
+      }
+    );
 
     if (updateError) {
       console.error(

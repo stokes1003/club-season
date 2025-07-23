@@ -16,7 +16,7 @@ export function getPlayerDisplayName(
     firstName.length > 10 ? firstName.substring(0, 8) + "..." : firstName;
 
   // Add first letter of last name if there's a duplicate first name and we have a last name
-  if (hasDuplicateFirstName && lastName && lastName.length > 0) {
+  if (hasDuplicateFirstName && lastName) {
     displayName =
       displayName.length > 10
         ? firstName.substring(0, 7) + lastName[0] + "..."

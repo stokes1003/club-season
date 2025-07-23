@@ -115,52 +115,101 @@ export const useCreateLeague = () => {
         return;
       }
 
-      // Process players - insert directly into league_players table
+      // Process players
       for (const player of updatedPlayers) {
         const normalizedEmail = player.email.trim().toLowerCase();
+        let playerId: string | null = null;
 
-        // Check if this email is already associated with a user_id in league_players
-        let userIdToUse: string | null = null;
+        // 1. Check if player already exists
+        const { data: existing, error: fetchError } = await supabase
+          .from("players")
+          .select("id, user_id")
+          .eq("email", normalizedEmail)
+          .maybeSingle();
 
-        if (normalizedEmail === user.user.email?.toLowerCase()) {
-          // If it's the current user's email, use their user_id
-          userIdToUse = user.user.id;
-        } else {
-          // Check if this email exists in any league_players record with a user_id
-          const { data: existingPlayer, error: fetchError } = await supabase
-            .from("league_players")
-            .select("user_id")
-            .eq("invite_email", normalizedEmail)
-            .not("user_id", "is", null)
-            .maybeSingle();
-
-          if (fetchError) {
-            console.error(
-              `Error checking existing player for email ${normalizedEmail}:`,
-              fetchError
-            );
-          } else if (existingPlayer?.user_id) {
-            userIdToUse = existingPlayer.user_id;
-          }
-          // If not found, user_id will remain null - they can link their account later
+        if (fetchError) {
+          console.error(
+            `Error checking existing player ${player.name}:`,
+            fetchError
+          );
+          continue;
         }
 
-        // Insert player directly into league_players table
-        const { error: insertError } = await supabase
+        if (existing) {
+          playerId = existing.id;
+
+          // 2. Update user_id if this is the current user's email and it's missing
+          // AND update avatar_url if a new image is provided
+          const updates: any = {};
+
+          if (
+            normalizedEmail === user.user.email?.toLowerCase() &&
+            !existing.user_id
+          ) {
+            updates.user_id = user.user.id;
+          }
+
+          // Update avatar_url if player has a new image
+          if (player.image && player.image.trim() !== "") {
+            updates.avatar_url = player.image;
+          }
+
+          // Always update player_color for existing players
+          updates.player_color = player.color || "#6B7280";
+
+          if (Object.keys(updates).length > 0) {
+            const { error: updateError } = await supabase
+              .from("players")
+              .update(updates)
+              .eq("id", existing.id);
+
+            if (updateError) {
+              console.error(
+                `Failed to update player ${player.name}:`,
+                updateError
+              );
+            }
+          }
+        } else {
+          // 3. Insert new player
+          const { data: newPlayer, error: insertError } = await supabase
+            .from("players")
+            .insert({
+              name: player.name,
+              email: normalizedEmail,
+              avatar_url: player.image || null,
+              player_color: player.color || "#6B7280",
+              user_id:
+                normalizedEmail === user.user.email?.toLowerCase()
+                  ? user.user.id
+                  : null,
+            })
+            .select()
+            .single();
+
+          if (insertError || !newPlayer) {
+            console.error(
+              `Failed to insert player ${player.name}:`,
+              insertError
+            );
+            continue;
+          }
+
+          playerId = newPlayer.id;
+        }
+
+        // 4. Link player to league
+        const { error: lpError } = await supabase
           .from("league_players")
           .insert({
             league_id: league.id,
-            display_name: player.name,
-            avatar_url: player.image || null,
-            player_color: player.color || "#6B7280",
-            user_id: userIdToUse,
-            invite_email: normalizedEmail,
+            player_id: playerId,
           });
 
-        if (insertError) {
+        if (lpError) {
           console.error(
-            `Failed to insert player ${player.name} into league:`,
-            insertError
+            `Failed to link player ${player.email} to league:`,
+            lpError
           );
         }
       }
