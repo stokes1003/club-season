@@ -8,7 +8,7 @@ import { PlayerAvatar } from "../../UI/PlayerAvatar";
 function LeagueCard({ league }: { league: any }) {
   const players = useGetPlayers(league.id);
 
-  const playerName = useGetPlayerById(league.created_by);
+  const playerName = useGetPlayerById(league.created_by, league.id);
   return (
     <Card
       key={league.id}

@@ -16,10 +16,11 @@ export function PlayerAvatar({
   color,
 }: PlayerAvatarProps) {
   // Handle undefined or null names
-  const safeName = name || "Unknown";
+  const safeName = name || "";
   let nameToDisplay = safeName;
-  if (safeName.split(" ").length > 1) {
-    nameToDisplay = safeName.split(" ")[0][0] + safeName.split(" ")[1][0];
+  const nameParts = safeName.split(" ").filter((part) => part.length > 0);
+  if (nameParts.length > 1) {
+    nameToDisplay = nameParts[0][0] + nameParts[1][0];
   } else {
     nameToDisplay = safeName.substring(0, 2).toUpperCase();
   }

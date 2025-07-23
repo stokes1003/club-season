@@ -6,8 +6,8 @@ import { useUser } from "src/context/UserContext";
 import { getUserStats } from "src/api/getUserStats";
 import { useEffect, useState } from "react";
 import { UserStatsCard } from "./UserStatsCard";
-import { Player } from "src/types/player";
-import { getPlayersByLeague } from "src/api/getPlayersByLeague";
+import { useGetPlayers } from "src/hooks/useGetPlayers";
+import { useLeaderboard } from "../../context/LeaderboardContext";
 import { LeagueTable } from "./LeagueTable";
 
 export function Home() {
@@ -25,7 +25,8 @@ export function Home() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isNet, setIsNet] = useState(true);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const { refreshTrigger } = useLeaderboard();
+  const players = useGetPlayers(selectedLeague?.id || "", refreshTrigger);
 
   useEffect(() => {
     async function fetchUserStats() {
@@ -46,21 +47,6 @@ export function Home() {
 
     fetchUserStats();
   }, [user]);
-
-  useEffect(() => {
-    async function fetchPlayers() {
-      if (!selectedLeague) return;
-
-      try {
-        const leaguePlayers = await getPlayersByLeague(selectedLeague.id);
-        setPlayers(leaguePlayers);
-      } catch (error) {
-        console.error("Error fetching players:", error);
-      }
-    }
-
-    fetchPlayers();
-  }, [selectedLeague]);
 
   if (!user) {
     return null;
@@ -86,11 +72,7 @@ export function Home() {
       {selectedLeague && (
         <>
           <TopThree league={selectedLeague} isNet={isNet} setIsNet={setIsNet} />
-          <LeagueTable
-            league={selectedLeague}
-            isNet={isNet}
-            players={players}
-          />
+          <LeagueTable isNet={isNet} players={players} />
           <OfficialRounds league={selectedLeague} />
         </>
       )}

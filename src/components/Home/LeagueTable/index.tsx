@@ -1,14 +1,11 @@
 import { Text, XStack, YStack, Separator, Card } from "tamagui";
 import { Player } from "src/types/player";
 import { getPlayerDisplayNames } from "src/utils/playerNameUtils";
-import { League } from "../../../context/SelectedLeagueContext";
 
 export function LeagueTable({
   isNet,
   players,
-  league,
 }: {
-  league: League;
   isNet: boolean;
   players: Player[];
 }) {

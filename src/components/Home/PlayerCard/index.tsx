@@ -22,8 +22,6 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
     return "none";
   };
 
-  console.log(playerData);
-
   return (
     <YStack gap="$3">
       <Card
