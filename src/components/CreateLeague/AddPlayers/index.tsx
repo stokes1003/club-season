@@ -113,6 +113,19 @@ export function AddPlayers({
     return emailRegex.test(email);
   };
 
+  const getAvailableColors = (currentIndex: number) => {
+    // Get all colors that are currently selected by other players
+    const selectedColors = players
+      .map((player, index) => (index !== currentIndex ? player.color : null))
+      .filter((color) => color !== null);
+
+    // Filter out colors that are already selected
+    return Object.keys(colors).filter((colorKey) => {
+      const colorValue = colors[colorKey as keyof typeof colors];
+      return !selectedColors.includes(colorValue);
+    });
+  };
+
   const validateName = (name: string, currentIndex: number) => {
     const trimmedName = name.trim();
 
@@ -267,8 +280,8 @@ export function AddPlayers({
                 justifyContent: "space-between",
               }}
             >
-              {Object.keys(colors).map((color, index) => {
-                const colorValue = colors[color as keyof typeof colors];
+              {getAvailableColors(currentPlayerIndex).map((colorKey, index) => {
+                const colorValue = colors[colorKey as keyof typeof colors];
                 const isSelected =
                   players[currentPlayerIndex].color === colorValue;
                 return (
