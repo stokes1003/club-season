@@ -1,7 +1,8 @@
 const GOLF_API_BASE_URL = "https://api.golfcourseapi.com/v1";
+const GOLF_API_KEY = "VNBQL2XFEX2VRA44O7CHFHJQA4";
 
 const headers = {
-  Authorization: `Key ${process.env.NEXT_PUBLIC_GOLF_API_KEY}`,
+  Authorization: `Key ${GOLF_API_KEY}`,
 };
 
 export async function searchCourses(searchQuery: string) {

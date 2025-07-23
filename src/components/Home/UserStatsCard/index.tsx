@@ -4,7 +4,6 @@ import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 export function UserStatsCard({ userStats }: { userStats: any }) {
   const { user } = useUser();
-  console.log(user);
 
   return (
     <>

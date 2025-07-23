@@ -1,21 +1,13 @@
-import { Link, Tabs } from "expo-router";
-import {
-  Avatar,
-  useTheme,
-  YStack,
-  Text,
-  XStack,
-  View,
-  Separator,
-} from "tamagui";
+import { Tabs } from "expo-router";
+import { Avatar, useTheme, YStack, Text, XStack, View } from "tamagui";
 import {
   ChevronDown,
   House,
   LandPlot,
   Plus,
-  Settings,
   User,
   ChevronUp,
+  ChartNoAxesCombined,
 } from "@tamagui/lucide-icons";
 import { useUser } from "../../src/context/UserContext";
 import { useState } from "react";
@@ -93,18 +85,6 @@ export default function TabLayout() {
           },
           headerTintColor: theme?.color?.val || "#000000",
 
-          // ✅ Avatar in top-right corner on all screens
-          headerRight: () =>
-            user ? (
-              <Link href="/Profile" asChild>
-                <Avatar circular size="$3" mr="$4" mb="$2">
-                  <Avatar.Image
-                    src={user.avatar_url ?? "https://via.placeholder.com/40"}
-                    accessibilityLabel="User avatar"
-                  />
-                </Avatar>
-              </Link>
-            ) : null,
           headerTitle: () => (
             <YStack style={{ alignItems: "center" }}>
               <XStack
@@ -130,35 +110,54 @@ export default function TabLayout() {
           name="index"
           options={{
             title: "Home",
+
             tabBarIcon: ({ color }) => <House color={color as any} />,
           }}
         />
+
         <Tabs.Screen
-          name="My Leagues"
+          name="Stats"
           options={{
-            title: "My Leagues",
-            tabBarIcon: ({ color }) => <LandPlot color={color as any} />,
+            title: "Stats",
+
+            tabBarIcon: ({ color }) => (
+              <ChartNoAxesCombined color={color as any} />
+            ),
           }}
         />
         <Tabs.Screen
           name="AddScores"
           options={{
             title: "Add Scores",
+
             tabBarIcon: ({ color }) => <Plus color={color as any} />,
           }}
         />
         <Tabs.Screen
-          name="Settings"
+          name="My Leagues"
           options={{
-            title: "Settings",
-            tabBarIcon: ({ color }) => <Settings color={color as any} />,
+            title: "My Leagues",
+
+            tabBarIcon: ({ color }) => <LandPlot color={color as any} />,
           }}
         />
+
         <Tabs.Screen
           name="Profile"
           options={{
-            title: "Profile",
-            tabBarIcon: ({ color }) => <User color={color as any} />,
+            title: "",
+
+            tabBarIcon: ({ color }) =>
+              user ? (
+                <Avatar circular size="$3" mt="$3">
+                  <Avatar.Image
+                    src={user.avatar_url ?? "https://via.placeholder.com/40"}
+                    accessibilityLabel="User avatar"
+                  />
+                </Avatar>
+              ) : (
+                <User color={color as any} />
+              ),
           }}
         />
       </Tabs>

@@ -1,9 +1,9 @@
 import { Text, View } from "tamagui";
 
-export function Settings() {
+export function Stats() {
   return (
     <View>
-      <Text>Settings</Text>
+      <Text>Stats</Text>
     </View>
   );
 }

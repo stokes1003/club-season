@@ -1,10 +1,10 @@
 import { View } from "tamagui";
-import { Settings } from "../../src/components/Settings";
+import { Stats } from "../../src/components/Stats";
 
-export default function SettingsScreen() {
+export default function StatsScreen() {
   return (
     <View flex={1} items="center" bg="$background" pt="$10" px="$8">
-      <Settings />
+      <Stats />
     </View>
   );
 }
