@@ -3,6 +3,17 @@ import { Alert } from "react-native";
 import { Button, Input, ScrollView, Text, YStack, Tabs, View } from "tamagui";
 import { searchCourses } from "../../../api/getGolfCourses";
 import { GolfCourse } from "../../../types/golfCourse";
+import { getLeagueCourses } from "../../../api/getLeagueCourses";
+
+type LeagueCourse = {
+  id: string;
+  course_name: string;
+  club_name: string;
+  times_played: number;
+  external_course_id: number;
+};
+
+type CourseSelection = GolfCourse | LeagueCourse;
 
 export function SelectGolfCourse({
   setCurrentStep,
@@ -12,19 +23,30 @@ export function SelectGolfCourse({
   setIsMajor,
   majorName,
   setMajorName,
+  leagueId,
 }: {
   setCurrentStep: (step: string) => void;
-  setSelectedCourse: (course: GolfCourse) => void;
-  selectedCourse: GolfCourse | null;
+  setSelectedCourse: (course: CourseSelection) => void;
+  selectedCourse: CourseSelection | null;
   isMajor: string;
   setIsMajor: (isMajor: string) => void;
   majorName: string;
   setMajorName: (majorName: string) => void;
+  leagueId: string;
 }) {
+  const [leagueCourses, setLeagueCourses] = useState<LeagueCourse[]>([]);
   const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [courses, setCourses] = useState<GolfCourse[]>([]);
+
+  useEffect(() => {
+    if (leagueId) {
+      getLeagueCourses(leagueId).then((courses) => {
+        setLeagueCourses(courses);
+      });
+    }
+  }, [leagueId]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -81,6 +103,33 @@ export function SelectGolfCourse({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
+          {search.length < 2 && isFocused && leagueCourses.length > 0 && (
+            <ScrollView width="$20">
+              <YStack
+                gap="$4"
+                borderWidth={1}
+                borderColor="$black11"
+                p="$3"
+                style={{ borderRadius: 8 }}
+              >
+                {leagueCourses.map((course) => (
+                  <Text
+                    key={course.id}
+                    fontSize="$5"
+                    onPress={() => {
+                      setSearch(course.course_name);
+                      setSelectedCourse(course);
+                      setIsFocused(false);
+                    }}
+                  >
+                    {course.club_name === course.course_name
+                      ? course.course_name
+                      : `${course.club_name} - ${course.course_name}`}
+                  </Text>
+                ))}
+              </YStack>
+            </ScrollView>
+          )}
           {search.length > 0 && isFocused && (
             <ScrollView width="$20">
               <YStack

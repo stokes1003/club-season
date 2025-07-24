@@ -3,6 +3,16 @@ import { Trophy } from "@tamagui/lucide-icons";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { GolfCourse } from "src/types/golfCourse";
 
+type LeagueCourse = {
+  id: string;
+  course_name: string;
+  club_name: string;
+  times_played: number;
+  external_course_id: number;
+};
+
+type CourseSelection = GolfCourse | LeagueCourse;
+
 export function ConfirmRoundSubmit({
   isSubmitting,
   submitRound,
@@ -24,7 +34,7 @@ export function ConfirmRoundSubmit({
       display_name: string;
     };
   };
-  selectedCourse: GolfCourse | null;
+  selectedCourse: CourseSelection | null;
   leagueId: string;
   isMajor: string;
   majorName: string;

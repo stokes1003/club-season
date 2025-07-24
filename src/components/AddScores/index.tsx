@@ -13,6 +13,39 @@ import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
 import { GolfCourse } from "src/types/golfCourse";
 
+type LeagueCourse = {
+  id: string;
+  course_name: string;
+  club_name: string;
+  times_played: number;
+  external_course_id: number;
+};
+
+type CourseSelection = GolfCourse | LeagueCourse;
+
+// Helper function to convert CourseSelection to GolfCourse for API calls
+function convertToGolfCourse(course: CourseSelection): GolfCourse {
+  if ("location" in course && "tees" in course) {
+    return course; // Already a GolfCourse
+  } else {
+    // Convert LeagueCourse to GolfCourse
+    return {
+      id: course.external_course_id,
+      club_name: course.club_name,
+      course_name: course.course_name,
+      location: {
+        address: "",
+        city: "",
+        state: "",
+        country: "",
+        latitude: 0,
+        longitude: 0,
+      },
+      tees: { female: [], male: [] },
+    };
+  }
+}
+
 type AddScoresData = {
   courses: {
     id: string;
@@ -38,7 +71,9 @@ export function AddScores() {
   );
   const [isMajor, setIsMajor] = useState("no");
   const [majorName, setMajorName] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState<GolfCourse | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<CourseSelection | null>(
+    null
+  );
   const [scoresByPlayer, setScoresByPlayer] = useState<{
     [key: string]: {
       hcp: number;
@@ -97,7 +132,7 @@ export function AddScores() {
 
     const { success, error } = await submitScores({
       league_id: leagueId,
-      golfCourse: selectedCourse,
+      golfCourse: convertToGolfCourse(selectedCourse!),
       date: new Date().toISOString(),
       is_major: isMajor === "yes",
       major_name: isMajor === "yes" ? majorName : null,
@@ -162,6 +197,7 @@ export function AddScores() {
             setIsMajor={setIsMajor}
             majorName={majorName}
             setMajorName={setMajorName}
+            leagueId={leagueId}
           />
         )}
         {currentStep === "enter-player-scores" && addScoresData && (
