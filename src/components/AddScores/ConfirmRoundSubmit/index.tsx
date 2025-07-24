@@ -1,6 +1,7 @@
 import { Text, YStack, XStack, Button, View, Spinner } from "tamagui";
 import { Trophy } from "@tamagui/lucide-icons";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { GolfCourse } from "src/types/golfCourse";
 
 export function ConfirmRoundSubmit({
   isSubmitting,
@@ -23,11 +24,14 @@ export function ConfirmRoundSubmit({
       display_name: string;
     };
   };
-  selectedCourse: { id: string; course_name: string } | null;
+  selectedCourse: GolfCourse | null;
   leagueId: string;
   isMajor: string;
   majorName: string;
 }) {
+  console.log("ConfirmRoundSubmit scoresByPlayer:", scoresByPlayer);
+  console.log("ConfirmRoundSubmit Object.keys:", Object.keys(scoresByPlayer));
+
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack gap="$4" style={{ alignItems: "center" }}>
@@ -59,7 +63,9 @@ export function ConfirmRoundSubmit({
             </View>
           )}
           <Text fontWeight="bold" fontSize="$6">
-            {selectedCourse?.course_name}
+            {selectedCourse?.club_name === selectedCourse?.course_name
+              ? selectedCourse?.course_name
+              : `${selectedCourse?.club_name} - ${selectedCourse?.course_name}`}
           </Text>
 
           <Text fontSize="$5" color="$black11">
@@ -81,26 +87,29 @@ export function ConfirmRoundSubmit({
           </Text>
         </XStack>
         <YStack gap="$4" style={{ alignItems: "center" }}>
-          {Object.keys(scoresByPlayer).map((playerId) => (
-            <XStack key={playerId} gap="$4" style={{ alignItems: "center" }}>
-              <View width="$6" style={{ alignItems: "center" }}>
-                <PlayerAvatar
-                  name={scoresByPlayer[playerId].display_name}
-                  avatarUrl={scoresByPlayer[playerId].avatar_url}
-                  size="$4"
-                />
-              </View>
-              <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
-                {scoresByPlayer[playerId].gross}
-              </Text>
-              <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
-                {scoresByPlayer[playerId].hcp}
-              </Text>
-              <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
-                {scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp}
-              </Text>
-            </XStack>
-          ))}
+          {Object.keys(scoresByPlayer)
+            .filter((playerId) => playerId !== "undefined")
+            .map((playerId) => (
+              <XStack key={playerId} gap="$4" style={{ alignItems: "center" }}>
+                <View width="$6" style={{ alignItems: "center" }}>
+                  <PlayerAvatar
+                    name={scoresByPlayer[playerId].display_name}
+                    avatarUrl={scoresByPlayer[playerId].avatar_url}
+                    size="$4"
+                  />
+                </View>
+                <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
+                  {scoresByPlayer[playerId].gross}
+                </Text>
+                <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
+                  {scoresByPlayer[playerId].hcp}
+                </Text>
+                <Text width="$6" style={{ textAlign: "center" }} fontSize="$5">
+                  {scoresByPlayer[playerId].gross -
+                    scoresByPlayer[playerId].hcp}
+                </Text>
+              </XStack>
+            ))}
         </YStack>
       </YStack>
       <XStack gap="$4">

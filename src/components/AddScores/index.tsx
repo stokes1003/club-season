@@ -11,6 +11,7 @@ import { submitScores } from "../../api/submitScores";
 import { useCalculateGrossNetPoints } from "../../hooks/useCalculateGrossNetPoints";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
+import { GolfCourse } from "src/types/golfCourse";
 
 type AddScoresData = {
   courses: {
@@ -37,10 +38,7 @@ export function AddScores() {
   );
   const [isMajor, setIsMajor] = useState("no");
   const [majorName, setMajorName] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState<{
-    id: string;
-    course_name: string;
-  } | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<GolfCourse | null>(null);
   const [scoresByPlayer, setScoresByPlayer] = useState<{
     [key: string]: {
       hcp: number;
@@ -99,7 +97,7 @@ export function AddScores() {
 
     const { success, error } = await submitScores({
       league_id: leagueId,
-      course_id: selectedCourse.id,
+      golfCourse: selectedCourse,
       date: new Date().toISOString(),
       is_major: isMajor === "yes",
       major_name: isMajor === "yes" ? majorName : null,
@@ -125,7 +123,6 @@ export function AddScores() {
   };
 
   useEffect(() => {
-    // Reset addScoresData when leagueId changes
     setAddScoresData(null);
     if (leagueId) {
       const fetchAddScoresData = async () => {
@@ -135,6 +132,8 @@ export function AddScores() {
       fetchAddScoresData();
     }
   }, [leagueId]);
+
+  console.log("AddScoresData", addScoresData);
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
@@ -154,10 +153,9 @@ export function AddScores() {
           />
         )}
 
-        {currentStep === "select-golf-course" && addScoresData && (
+        {currentStep === "select-golf-course" && (
           <SelectGolfCourse
             setCurrentStep={setCurrentStep}
-            addScoresData={addScoresData}
             setSelectedCourse={setSelectedCourse}
             selectedCourse={selectedCourse}
             isMajor={isMajor}

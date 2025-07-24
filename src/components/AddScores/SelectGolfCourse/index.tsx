@@ -1,17 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { Button, Input, ScrollView, Text, YStack, Tabs, View } from "tamagui";
-
-type AddScoresData = {
-  courses: {
-    id: string;
-    course_name: string;
-  }[];
-};
+import { searchCourses } from "../../../api/getGolfCourses";
+import { GolfCourse } from "../../../types/golfCourse";
 
 export function SelectGolfCourse({
   setCurrentStep,
-  addScoresData,
   setSelectedCourse,
   selectedCourse,
   isMajor,
@@ -20,9 +14,8 @@ export function SelectGolfCourse({
   setMajorName,
 }: {
   setCurrentStep: (step: string) => void;
-  addScoresData: AddScoresData;
-  setSelectedCourse: (course: { id: string; course_name: string }) => void;
-  selectedCourse: { id: string; course_name: string } | null;
+  setSelectedCourse: (course: GolfCourse) => void;
+  selectedCourse: GolfCourse | null;
   isMajor: string;
   setIsMajor: (isMajor: string) => void;
   majorName: string;
@@ -30,9 +23,43 @@ export function SelectGolfCourse({
 }) {
   const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [courses, setCourses] = useState<GolfCourse[]>([]);
 
-  const filteredCourses = addScoresData.courses.filter((course) =>
-    course.course_name.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (search) {
+        handleSearch(search);
+      } else {
+        setCourses([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [search]);
+
+  async function handleSearch(query: string) {
+    if (query.length < 2) {
+      setCourses([]);
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      const data = await searchCourses(query);
+      setCourses(data.courses || []);
+    } catch (err) {
+      console.error("Search failed:", err);
+      setCourses([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.course_name.toLowerCase().includes(search.toLowerCase()) ||
+      course.club_name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -43,41 +70,66 @@ export function SelectGolfCourse({
         </Text>
       </YStack>
       <YStack gap="$6" style={{ alignItems: "center" }}>
-        <Input
-          width="$18"
-          borderWidth={2}
-          placeholder="Type to search"
-          value={search}
-          onChangeText={setSearch}
-          onFocus={() => setIsSearching(true)}
-          onBlur={() => setIsSearching(false)}
-          fontSize="$5"
-        />
-        {isSearching && (
-          <ScrollView width="$18">
-            <YStack
-              gap="$4"
-              borderWidth={1}
-              borderColor="$black11"
-              p="$3"
-              style={{ borderRadius: 8 }}
-            >
-              {filteredCourses.map((course) => (
-                <Text
-                  key={course.id}
-                  fontSize="$5"
-                  onPress={() => {
-                    setSearch(course.course_name);
-                    setIsSearching(false);
-                    setSelectedCourse(course);
-                  }}
-                >
-                  {course.course_name}
-                </Text>
-              ))}
-            </YStack>
-          </ScrollView>
-        )}
+        <YStack gap="$3">
+          <Input
+            width="$20"
+            borderWidth={2}
+            placeholder="Type to search courses..."
+            value={search}
+            onChangeText={setSearch}
+            fontSize="$5"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+          {search.length > 0 && isFocused && (
+            <ScrollView width="$20">
+              <YStack
+                gap="$4"
+                borderWidth={1}
+                borderColor="$black11"
+                p="$3"
+                style={{ borderRadius: 8 }}
+              >
+                {isSearching ? (
+                  <Text fontSize="$5" style={{ textAlign: "center" }}>
+                    Searching...
+                  </Text>
+                ) : filteredCourses.length > 0 ? (
+                  filteredCourses
+                    .map((course) => (
+                      <Text
+                        key={course.id}
+                        fontSize="$5"
+                        onPress={() => {
+                          const displayName =
+                            course.club_name === course.course_name
+                              ? course.course_name
+                              : `${course.club_name} - ${course.course_name}`;
+                          setSearch(displayName);
+                          setSelectedCourse(course);
+                          setIsFocused(false);
+                        }}
+                        pressStyle={{ opacity: 0.7 }}
+                      >
+                        {course.club_name === course.course_name
+                          ? course.course_name
+                          : `${course.club_name} - ${course.course_name}`}
+                      </Text>
+                    ))
+                    .slice(0, 6)
+                ) : (
+                  <Text
+                    fontSize="$5"
+                    style={{ textAlign: "center", color: "#666" }}
+                  >
+                    No courses found
+                  </Text>
+                )}
+              </YStack>
+            </ScrollView>
+          )}
+        </YStack>
+
         <YStack gap="$4" style={{ alignItems: "center" }}>
           <Text fontSize="$7" fontWeight="bold">
             Is this round a Major?

@@ -45,6 +45,19 @@ export function EnterPlayerScores({
   const [grossInput, setGrossInput] = useState("");
 
   const handleSubmitScores = () => {
+    // Safety check to ensure currentPlayer exists and has an id
+    if (!currentPlayer || !currentPlayer.id) {
+      console.error(
+        "Current player is undefined or missing id:",
+        currentPlayer
+      );
+      return;
+    }
+
+    // Clean up any existing "undefined" entries
+    const cleanScoresByPlayer = { ...scoresByPlayer };
+    delete cleanScoresByPlayer["undefined"];
+
     if (currentPlayerIndex === addScoresData.players.length - 1) {
       setCurrentStep("confirm-round-submit");
       setCurrentPlayerIndex(0);
@@ -54,7 +67,7 @@ export function EnterPlayerScores({
       setGrossInput("");
     }
     setScoresByPlayer({
-      ...scoresByPlayer,
+      ...cleanScoresByPlayer,
       [currentPlayer.id]: {
         hcp: Number(handicapInput),
         gross: Number(grossInput),
@@ -68,6 +81,15 @@ export function EnterPlayerScores({
   const currentPlayer = addScoresData.players[currentPlayerIndex];
   const playerName = currentPlayer?.display_name || "Unknown Player";
   const playerAvatarUrl = currentPlayer?.avatar_url || "";
+
+  console.log("EnterPlayerScores debug:", {
+    currentPlayerIndex,
+    totalPlayers: addScoresData.players.length,
+    currentPlayer,
+    playerName,
+    playerAvatarUrl,
+    currentPlayerId: currentPlayer?.id,
+  });
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>

@@ -21,51 +21,33 @@ export async function getAddScoresData(
   leagueId: string
 ): Promise<AddScoresData | null> {
   try {
-    // Get courses from RPC
-    const { data: rpcData, error: rpcError } = await supabase.rpc(
-      "get_add_scores_data",
-      {
-        league_id: leagueId,
-      }
+    // Get players directly from league_players table
+    const { data: playersData, error: playersError } = await supabase
+      .from("league_players")
+      .select("id, display_name, avatar_url")
+      .eq("league_id", leagueId);
+
+    if (playersError) {
+      console.error("Error fetching players:", playersError);
+      return null;
+    }
+
+    console.log("Raw players data from DB:", playersData);
+
+    // Transform players data to match the expected format and remove duplicates
+    const uniquePlayers = (playersData || []).filter(
+      (player: any, index: number, self: any[]) =>
+        index === self.findIndex((p: any) => p.id === player.id)
     );
 
-    if (rpcError) {
-      console.error("Error fetching from RPC:", rpcError);
-    }
-
-    // Get players - use RPC data if available, otherwise fallback to getPlayersByLeague
-    let playersData: any[] = [];
-    if (rpcData?.players) {
-      playersData = rpcData.players;
-    } else {
-      playersData = await getPlayersByLeague(leagueId);
-    }
-
-    // Transform players data to match the expected format
-    const players: AddScoresPlayer[] = playersData.map((player: any) => ({
+    const players: AddScoresPlayer[] = uniquePlayers.map((player: any) => ({
       id: player.id,
-      display_name: player.name || player.display_name || "Unknown Player",
+      display_name: player.display_name || "Unknown Player",
       avatar_url: player.avatar_url || "",
     }));
 
-    // Use courses from RPC if available, otherwise get them directly
-    let courses: AddScoresCourse[] = [];
-    if (rpcData?.courses) {
-      courses = rpcData.courses;
-    } else {
-      // Fallback: get courses directly from the database
-      const { data: coursesData, error: coursesError } = await supabase
-        .from("golf_courses")
-        .select("id, course_name")
-        .order("course_name");
-
-      if (coursesError) {
-        console.error("Error fetching courses:", coursesError);
-        return null;
-      }
-
-      courses = coursesData || [];
-    }
+    // Return empty courses array since we're using external golf API
+    const courses: AddScoresCourse[] = [];
 
     return {
       courses,
