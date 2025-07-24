@@ -5,10 +5,9 @@ import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 import { League } from "../../../context/SelectedLeagueContext";
 
 export function OfficialRounds({ league }: { league: League }) {
-  const leagueId = league.id;
   const { refreshTrigger } = useOfficalRounds();
 
-  const rounds = useGetOfficalRounds(leagueId, refreshTrigger);
+  const leagueRounds = useGetOfficalRounds(league?.id || "", refreshTrigger);
 
   return (
     <YStack gap="$4" width="100%" style={{ alignItems: "center" }} mb="$8">
@@ -22,9 +21,9 @@ export function OfficialRounds({ league }: { league: League }) {
         decelerationRate="fast"
         snapToAlignment="center"
       >
-        {rounds?.length > 0 ? (
+        {leagueRounds && leagueRounds.length > 0 ? (
           <XStack>
-            {rounds?.map((round) => (
+            {leagueRounds.map((round) => (
               <RoundCard key={round._id} roundData={round} />
             ))}
           </XStack>
