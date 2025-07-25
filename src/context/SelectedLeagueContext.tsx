@@ -11,6 +11,8 @@ export type League = {
 type SelectedLeagueContextType = {
   selectedLeague: League | null;
   setSelectedLeague: (league: League | null) => void;
+  refreshTrigger: number;
+  triggerRefresh: () => void;
 };
 
 const SelectedLeagueContext = createContext<SelectedLeagueContextType | null>(
@@ -23,10 +25,20 @@ export function SelectedLeagueProvider({
   children: React.ReactNode;
 }) {
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const triggerRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   return (
     <SelectedLeagueContext.Provider
-      value={{ selectedLeague, setSelectedLeague }}
+      value={{
+        selectedLeague,
+        setSelectedLeague,
+        refreshTrigger,
+        triggerRefresh,
+      }}
     >
       {children}
     </SelectedLeagueContext.Provider>

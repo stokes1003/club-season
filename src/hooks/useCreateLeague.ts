@@ -2,6 +2,7 @@ import { Alert } from "react-native";
 import { supabase } from "src/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImage } from "src/api/uploadImage";
+import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 
 interface Player {
   name: string;
@@ -11,6 +12,7 @@ interface Player {
 }
 
 export const useCreateLeague = () => {
+  const { triggerRefresh } = useSelectedLeague();
   const createLeague = async ({
     leagueName,
     leagueAvatar,
@@ -218,6 +220,7 @@ export const useCreateLeague = () => {
       setLeagueAvatar("");
       setLeagueName("");
       setNumberOfPlayers("");
+      triggerRefresh();
 
       Alert.alert("Success", "League created successfully");
       handleHome();

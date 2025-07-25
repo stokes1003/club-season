@@ -1,7 +1,7 @@
 import { Card, Text, XStack, YStack, View } from "tamagui";
 import { Medal } from "@tamagui/lucide-icons";
 import { Player } from "src/types/player";
-import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 
 type PlayerCardProps = {
   playerData: Player;
@@ -21,8 +21,6 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
     if (index === 2) return "0 0 12px rgba(167, 112, 68, 0.6)";
     return "none";
   };
-
-  console.log(playerData);
 
   return (
     <YStack gap="$3">

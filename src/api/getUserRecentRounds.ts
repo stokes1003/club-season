@@ -20,26 +20,17 @@ export async function getUserRecentRounds(
   limit: number = 10
 ): Promise<UserRound[]> {
   try {
-    console.log("getUserRecentRounds called with userId:", userId);
-
     // First, get all league_player_ids for this user
     const { data: leaguePlayers, error: leaguePlayersError } = await supabase
       .from("league_players")
       .select("id, league_id")
       .eq("user_id", userId);
 
-    console.log("League players for user:", {
-      leaguePlayers,
-      leaguePlayersError,
-    });
-
     if (leaguePlayersError || !leaguePlayers || leaguePlayers.length === 0) {
-      console.log("No league players found for user");
       return [];
     }
 
     const leaguePlayerIds = leaguePlayers.map((lp) => lp.id);
-    console.log("League player IDs:", leaguePlayerIds);
 
     // Get rounds where the user participated
     const { data: scores, error } = await supabase
@@ -48,8 +39,6 @@ export async function getUserRecentRounds(
       .in("league_player_id", leaguePlayerIds)
       .order("round_id", { ascending: false })
       .limit(limit);
-
-    console.log("Scores query result:", { scores, error });
 
     if (error || !scores) {
       console.error("Error fetching user scores:", error);
@@ -82,8 +71,6 @@ export async function getUserRecentRounds(
       .from("league_courses")
       .select("id, external_course_id, course_name, photo_url")
       .in("external_course_id", courseIds);
-
-    console.log("Course lookup:", { courseIds, courses });
 
     // Create lookup maps
     const leagueMap = new Map(

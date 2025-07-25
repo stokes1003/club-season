@@ -1,6 +1,6 @@
 import { Card, YStack, Text, XStack } from "tamagui";
 import { useUser } from "src/context/UserContext";
-import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 
 export function UserStatsCard({ userStats }: { userStats: any }) {
   const { user } = useUser();

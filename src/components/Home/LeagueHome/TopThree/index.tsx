@@ -1,9 +1,9 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
-import { PlayerCard } from "../PlayerCard";
+import { PlayerCard } from "../../PlayerHome/PlayerCard";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
-import { useLeaderboard } from "../../../context/LeaderboardContext";
-import { League } from "../../../context/SelectedLeagueContext";
-import { NetGrossTabs } from "../NetGrossTabs";
+import { useLeaderboard } from "src/context/LeaderboardContext";
+import { League } from "src/context/SelectedLeagueContext";
+import { NetGrossTabs } from "../../../NetGrossTabs/index";
 
 export function TopThree({
   league,

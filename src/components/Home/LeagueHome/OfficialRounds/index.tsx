@@ -1,8 +1,8 @@
 import { YStack, Text, ScrollView, XStack, Card } from "tamagui";
-import { RoundCard } from "../RoundCard";
+import { RoundCard } from "../../RoundCard";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
-import { League } from "../../../context/SelectedLeagueContext";
+import { League } from "../../../../context/SelectedLeagueContext";
 
 export function OfficialRounds({ league }: { league: League }) {
   const { refreshTrigger } = useOfficalRounds();
