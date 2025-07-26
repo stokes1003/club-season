@@ -1,12 +1,14 @@
 import { Card, YStack, Text, XStack } from "tamagui";
 import { useUser } from "src/context/UserContext";
-import { PlayerAvatar } from "../../../UI/PlayerAvatar";
+import { PlayerAvatar } from "../../../../UI/PlayerAvatar";
+import { useGetUserStats } from "src/hooks/useGetUserStats";
 
-export function UserStatsCard({ userStats }: { userStats: any }) {
+export function UserStatsCard() {
   const { user } = useUser();
+  const { userStats } = useGetUserStats(user);
 
   return (
-    <>
+    <YStack gap="$2" style={{ alignItems: "center" }}>
       <Card
         animation="bouncy"
         width={300}
@@ -93,6 +95,6 @@ export function UserStatsCard({ userStats }: { userStats: any }) {
           </XStack>
         </YStack>
       </Card>
-    </>
+    </YStack>
   );
 }
