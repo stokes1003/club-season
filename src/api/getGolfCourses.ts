@@ -1,38 +1,19 @@
-const GOLF_API_BASE_URL =
-  process.env.EXPO_PUBLIC_GOLF_API_BASE_URL || "https://api.golf.com/v1";
-const EXPO_PUBLIC_GOLF_API_KEY = process.env.EXPO_PUBLIC_GOLF_API_KEY || "";
-
-const headers = {
-  Authorization: `Key ${EXPO_PUBLIC_GOLF_API_KEY}`,
-};
+import { supabase } from "../lib/supabase";
 
 export async function searchCourses(searchQuery: string) {
-  const response = await fetch(
-    `${GOLF_API_BASE_URL}/search?search_query=${encodeURIComponent(
-      searchQuery
-    )}`,
-    {
-      method: "GET",
-      headers,
+  try {
+    const { data, error } = await supabase.functions.invoke("search-courses", {
+      body: { searchQuery },
+    });
+
+    if (error) {
+      console.error("Edge function error:", error);
+      throw new Error(`Search failed: ${error.message}`);
     }
-  );
 
-  if (!response.ok) {
-    throw new Error(`Search failed: ${response.status}`);
+    return data;
+  } catch (error) {
+    console.error("Network error details:", error);
+    throw error;
   }
-
-  return response.json();
-}
-
-export async function getCourseById(courseId: number) {
-  const response = await fetch(`${GOLF_API_BASE_URL}/courses/${courseId}`, {
-    method: "GET",
-    headers,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Fetch course failed: ${response.status}`);
-  }
-
-  return response.json();
 }
