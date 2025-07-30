@@ -1,19 +1,14 @@
 import { supabase } from "../lib/supabase";
-
-type LeagueCourse = {
-  id: string;
-  course_name: string;
-  club_name: string;
-  times_played: number;
-  external_course_id: number;
-};
+import { LeagueCourse } from "../types/courseSelection";
 
 export async function getLeagueCourses(
   leagueId: string
 ): Promise<LeagueCourse[]> {
   const { data, error } = await supabase
     .from("league_courses")
-    .select("id, course_name, club_name, times_played, external_course_id")
+    .select(
+      "id, course_name, club_name, times_played, external_course_id, location, tees"
+    )
     .eq("league_id", leagueId);
 
   if (error) {
@@ -27,5 +22,7 @@ export async function getLeagueCourses(
     club_name: course.club_name,
     times_played: course.times_played,
     external_course_id: course.external_course_id,
+    location: course.location,
+    tees: course.tees,
   }));
 }

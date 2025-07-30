@@ -3,7 +3,18 @@ import { Avatar, Text, XStack } from "tamagui";
 interface PlayerAvatarProps {
   name?: string;
   avatarUrl?: string;
-  size?: "$2" | "$3" | "$4" | "$5" | "$6" | "$7" | "$8" | "$9" | "$10";
+  size?:
+    | "$2"
+    | "$3"
+    | "$4"
+    | "$5"
+    | "$6"
+    | "$7"
+    | "$8"
+    | "$9"
+    | "$10"
+    | "$11"
+    | "$12";
   gap?: "$2" | "$3" | "$4" | "$5";
   color?: string;
 }

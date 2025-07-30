@@ -36,6 +36,7 @@
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.4",
+    "expo-location": "~18.1.6",
     "expo-router": "~5.0.5",
     "expo-splash-screen": "~0.30.8",
     "expo-status-bar": "~2.2.3",
@@ -51,6 +52,7 @@
     "react-native-svg": "15.11.2",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.20.0",
+    "resend": "^4.7.0",
     "tamagui": "^1.130.7",
     "uuid": "^11.1.0"
   },

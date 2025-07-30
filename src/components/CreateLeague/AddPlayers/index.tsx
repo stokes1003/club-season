@@ -327,7 +327,7 @@ export function AddPlayers({
                 };
                 setPlayers(updatedPlayers);
               }}
-              placeholder={`Golfer ${currentPlayerIndex + 1}@example.com`}
+              placeholder={`golfer${currentPlayerIndex + 1}@example.com`}
             />
           </YStack>
         </YStack>

@@ -2103,6 +2103,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-email/render@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@react-email/render@npm:1.1.2"
+  dependencies:
+    html-to-text: "npm:^9.0.5"
+    prettier: "npm:^3.5.3"
+    react-promise-suspense: "npm:^0.3.4"
+  peerDependencies:
+    react: ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^18.0 || ^19.0 || ^19.0.0-rc
+  checksum: 10/f865f403e7d037d4a956b694920aafb688b773a656e10e5cf64d93629ea250e9be6613b6d1d7dc41d57526002da0b6fb2fc3e4a953e980eb45317befdb29439d
+  languageName: node
+  linkType: hard
+
 "@react-native-async-storage/async-storage@npm:^2.2.0":
   version: 2.2.0
   resolution: "@react-native-async-storage/async-storage@npm:2.2.0"
@@ -2651,6 +2665,16 @@ __metadata:
   peerDependencies:
     "@rneui/base": 4.0.0-rc.7
   checksum: 10/5035d51530ddc4df5813cc84aca36a35d0a0cc9a50fed295ffc90ebc04db559d7d6ac2b837ce6e99e24c78e84e8620729dd6937b6214e1a340be9894d600ff6e
+  languageName: node
+  linkType: hard
+
+"@selderee/plugin-htmlparser2@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@selderee/plugin-htmlparser2@npm:0.11.0"
+  dependencies:
+    domhandler: "npm:^5.0.3"
+    selderee: "npm:^0.11.0"
+  checksum: 10/7550108d270e6ea2be4850d55cbf4d58d5a90c109a15b874c3c7c622a1399bd8015359ef3672983a86118432ca8325a6aca1fe79d961b01278fdaeaea8895c5f
   languageName: node
   linkType: hard
 
@@ -5624,6 +5648,7 @@ __metadata:
     expo-image-picker: "npm:~16.1.4"
     expo-linear-gradient: "npm:~14.1.5"
     expo-linking: "npm:~7.1.4"
+    expo-location: "npm:~18.1.6"
     expo-router: "npm:~5.0.5"
     expo-splash-screen: "npm:~0.30.8"
     expo-status-bar: "npm:~2.2.3"
@@ -5639,6 +5664,7 @@ __metadata:
     react-native-svg: "npm:15.11.2"
     react-native-url-polyfill: "npm:^2.0.0"
     react-native-web: "npm:^0.20.0"
+    resend: "npm:^4.7.0"
     tamagui: "npm:^1.130.7"
     typescript: "npm:~5.8.3"
     uuid: "npm:^11.1.0"
@@ -6207,7 +6233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"entities@npm:^4.2.0":
+"entities@npm:^4.2.0, entities@npm:^4.4.0":
   version: 4.5.0
   resolution: "entities@npm:4.5.0"
   checksum: 10/ede2a35c9bce1aeccd055a1b445d41c75a14a2bb1cd22e242f20cf04d236cdcd7f9c859eb83f76885327bfae0c25bf03303665ee1ce3d47c5927b98b0e3e3d48
@@ -6575,6 +6601,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-location@npm:~18.1.6":
+  version: 18.1.6
+  resolution: "expo-location@npm:18.1.6"
+  peerDependencies:
+    expo: "*"
+  checksum: 10/3c99899df8312c4926d8fcd88b7f873a92045c5cf9f4e5088be61070fbe76f011add211aa24e7f485526f135ebaee3888759aae111a317fb1a498b32002362b1
+  languageName: node
+  linkType: hard
+
 "expo-modules-autolinking@npm:2.1.9":
   version: 2.1.9
   resolution: "expo-modules-autolinking@npm:2.1.9"
@@ -6781,6 +6816,13 @@ __metadata:
   version: 1.0.0
   resolution: "fast-base64-decode@npm:1.0.0"
   checksum: 10/4c59eb1775a7f132333f296c5082476fdcc8f58d023c42ed6d378d2e2da4c328c7a71562f271181a725dd17cdaa8f2805346cc330cdbad3b8e4b9751508bd0a3
+  languageName: node
+  linkType: hard
+
+"fast-deep-equal@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "fast-deep-equal@npm:2.0.1"
+  checksum: 10/b701835a87985e0ec4925bdf1f0c1e7eb56309b5d12d534d5b4b69d95a54d65bb16861c081781ead55f73f12d6c60ba668713391ee7fbf6b0567026f579b7b0b
   languageName: node
   linkType: hard
 
@@ -7342,6 +7384,31 @@ __metadata:
   dependencies:
     lru-cache: "npm:^10.0.1"
   checksum: 10/8f085df8a4a637d995f357f48b1e3f6fc1f9f92e82b33fb406415b5741834ed431a510a09141071001e8deea2eee43ce72786463e2aa5e5a70db8648c0eedeab
+  languageName: node
+  linkType: hard
+
+"html-to-text@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "html-to-text@npm:9.0.5"
+  dependencies:
+    "@selderee/plugin-htmlparser2": "npm:^0.11.0"
+    deepmerge: "npm:^4.3.1"
+    dom-serializer: "npm:^2.0.0"
+    htmlparser2: "npm:^8.0.2"
+    selderee: "npm:^0.11.0"
+  checksum: 10/e5991f9946dd0e5c91c4ed863c71a4feaef3d5ce85cd8684fb0f2fc175b1ccee323bb97a1773b6bebc47ac7963dbbfd1fc81b024adff705ae7c0e08992d1dba5
+  languageName: node
+  linkType: hard
+
+"htmlparser2@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "htmlparser2@npm:8.0.2"
+  dependencies:
+    domelementtype: "npm:^2.3.0"
+    domhandler: "npm:^5.0.3"
+    domutils: "npm:^3.0.1"
+    entities: "npm:^4.4.0"
+  checksum: 10/ea5512956eee06f5835add68b4291d313c745e8407efa63848f4b8a90a2dee45f498a698bca8614e436f1ee0cfdd609938b71d67c693794545982b76e53e6f11
   languageName: node
   linkType: hard
 
@@ -7940,6 +8007,13 @@ __metadata:
   bin:
     lan-network: dist/lan-network-cli.js
   checksum: 10/005b6a30c114b7caa69922756cf5d5dd07679dab254127823255525b426c979388db0f1f74d7c364d96fb2c4dabcbe29bed8ed97a96c290431f3c6127a592f46
+  languageName: node
+  linkType: hard
+
+"leac@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "leac@npm:0.6.0"
+  checksum: 10/bfe6aa128ca98664f124096f65584778194a8e1ddebf77d315fd9681be849c1619b0a9d9f4743e67aea0298808bd69ef25bd74320cad50a80be6852714627870
   languageName: node
   linkType: hard
 
@@ -9217,6 +9291,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parseley@npm:^0.12.0":
+  version: 0.12.1
+  resolution: "parseley@npm:0.12.1"
+  dependencies:
+    leac: "npm:^0.6.0"
+    peberminta: "npm:^0.9.0"
+  checksum: 10/64788dbe1fbbc231e0fef235357823e03ca3d915693b2109ad862293aad5d091e902fd7cf6f54763728e758a228d06497c787a9af0dfdacd6a941bc2dbf2019e
+  languageName: node
+  linkType: hard
+
 "parseurl@npm:~1.3.3":
   version: 1.3.3
   resolution: "parseurl@npm:1.3.3"
@@ -9300,6 +9384,13 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 10/5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"peberminta@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "peberminta@npm:0.9.0"
+  checksum: 10/b396cf8bac836b3cfe9315e6c94747fa02bb68b252a4b176c0f7d6a3fcbdc5e9f23c3523480c91244b42f87be63f200d775587b039abe4b4731915480da2528d
   languageName: node
   linkType: hard
 
@@ -9392,6 +9483,15 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10/28fe1005b1339870e0a5006375ba5ac1213fd69800f79e7db09c398e074421ba6e162898e94f64942fed554037fd292db3811d87835d25ab5ef7f3c9daacb6ca
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.5.3":
+  version: 3.6.2
+  resolution: "prettier@npm:3.6.2"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/1213691706bcef1371d16ef72773c8111106c3533b660b1cc8ec158bd109cdf1462804125f87f981f23c4a3dba053b6efafda30ab0114cc5b4a725606bb9ff26
   languageName: node
   linkType: hard
 
@@ -9941,6 +10041,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-promise-suspense@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "react-promise-suspense@npm:0.3.4"
+  dependencies:
+    fast-deep-equal: "npm:^2.0.1"
+  checksum: 10/fff75d53b27e2c9e045cc0ead296bb6b93b82a92b0bfb69ed0063e69b0043ce464bb3cdedea2ca0ee507b6bf9efe3ff700ccba7921b07d70831fbda54bef2fb7
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.14.0, react-refresh@npm:^0.14.2":
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
@@ -10050,6 +10159,15 @@ __metadata:
     rc: "npm:~1.2.7"
     resolve: "npm:~1.7.1"
   checksum: 10/ae3c7759448a8348307ad99f7487f4571a8e5319c5fc5e0499a8791839d1504f3baf61ca846b70731e1973a9243d9d1ef3b54f6f674a5d67d427c92a0d78b072
+  languageName: node
+  linkType: hard
+
+"resend@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "resend@npm:4.7.0"
+  dependencies:
+    "@react-email/render": "npm:1.1.2"
+  checksum: 10/067ef9b65c9a93aae4890d01a7504f0114307f1e348fb1e4a2b532fe92b06521f7220033750fd42347032fc1b55c183af92c9163db34acea61e90a49a77613d7
   languageName: node
   linkType: hard
 
@@ -10213,6 +10331,15 @@ __metadata:
     ajv-formats: "npm:^2.1.1"
     ajv-keywords: "npm:^5.1.0"
   checksum: 10/02c32c34aae762d48468f98465a96a167fede637772871c7c7d8923671ddb9f20b2cc6f6e8448ae6bef5363e3597493c655212c8b06a4ee73aa099d9452fbd8b
+  languageName: node
+  linkType: hard
+
+"selderee@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "selderee@npm:0.11.0"
+  dependencies:
+    parseley: "npm:^0.12.0"
+  checksum: 10/9f697a00b8270354777a8423e555fd3168abead1304b8d267412877a4b007830624d8aa562eb29a3ec2d9d2f7f977808d17b790b9c210a7d828c12ed9ef0f1f0
   languageName: node
   linkType: hard
 

@@ -6,6 +6,7 @@ import { useGetUserStats } from "src/hooks/useGetUserStats";
 export function UserStatsCard() {
   const { user } = useUser();
   const { userStats } = useGetUserStats(user);
+  console.log(user);
 
   return (
     <YStack gap="$2" style={{ alignItems: "center" }}>

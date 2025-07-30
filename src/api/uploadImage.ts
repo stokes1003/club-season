@@ -167,7 +167,7 @@ export async function uploadImage(uri: string, path: string) {
 
     console.log("Upload successful:", data);
 
-    // Get the public URL
+    // Get the public URL (no expiration)
     const { data: urlData } = supabase.storage
       .from("images")
       .getPublicUrl(path);

@@ -11,40 +11,7 @@ import { submitScores } from "../../api/submitScores";
 import { useCalculateGrossNetPoints } from "../../hooks/useCalculateGrossNetPoints";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
-import { GolfCourse } from "src/types/golfCourse";
-
-type LeagueCourse = {
-  id: string;
-  course_name: string;
-  club_name: string;
-  times_played: number;
-  external_course_id: number;
-};
-
-type CourseSelection = GolfCourse | LeagueCourse;
-
-// Helper function to convert CourseSelection to GolfCourse for API calls
-function convertToGolfCourse(course: CourseSelection): GolfCourse {
-  if ("location" in course && "tees" in course) {
-    return course; // Already a GolfCourse
-  } else {
-    // Convert LeagueCourse to GolfCourse
-    return {
-      id: course.external_course_id,
-      club_name: course.club_name,
-      course_name: course.course_name,
-      location: {
-        address: "",
-        city: "",
-        state: "",
-        country: "",
-        latitude: 0,
-        longitude: 0,
-      },
-      tees: { female: [], male: [] },
-    };
-  }
-}
+import { CourseSelection } from "src/types/courseSelection";
 
 type AddScoresData = {
   courses: {
@@ -132,7 +99,7 @@ export function AddScores() {
 
     const { success, error } = await submitScores({
       league_id: leagueId,
-      golfCourse: convertToGolfCourse(selectedCourse!),
+      golfCourse: selectedCourse!,
       date: new Date().toISOString(),
       is_major: isMajor === "yes",
       major_name: isMajor === "yes" ? majorName : null,

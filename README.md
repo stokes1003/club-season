@@ -24,24 +24,42 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
   - Player scores (sorted by net score)
   - Major tournament indicators (green banner)
 - **Score Breakdown**: Gross, net, and handicap for each player
+- **Recent Rounds**: View user's recent rounds across all leagues
 
 ### Add Scores
 
 - **Multi-step Process**:
-  1. Select golf course
+  1. Select golf course (with search functionality)
   2. Enter player scores (handicap and gross)
   3. Confirm and submit round details
 - **Player Management**: Navigate through multiple players
 - **Score Validation**: Input validation for handicap and gross scores
+- **Course Search**: Real-time golf course search with secure API integration
+
+### League Management
+
+- **Multiple Leagues**: Create and manage multiple golf leagues
+- **League Switching**: Dropdown selector to switch between leagues
+- **Player Management**: Add players to leagues
+- **League Statistics**: Track performance across different leagues
 
 ## 🛠️ Tech Stack
 
 - **Framework**: React Native with Expo
 - **UI Library**: Tamagui
 - **Navigation**: Expo Router
-- **Backend**: Supabase
+- **Backend**: Supabase (PostgreSQL)
+- **Edge Functions**: Supabase Edge Functions for secure API handling
 - **Icons**: Lucide Icons
 - **Language**: TypeScript
+- **State Management**: React Context + Custom Hooks
+
+## 🔒 Security Features
+
+- **Secure API Integration**: Golf course API calls handled through Supabase Edge Functions
+- **No Client-Side Secrets**: API keys stored securely on Supabase servers
+- **Row Level Security**: Database-level security with Supabase RLS
+- **Environment Variables**: Secure configuration management
 
 ## 📱 Screenshots
 
@@ -50,10 +68,11 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
 - League name and season display
 - Leaderboard with player cards
 - Official rounds with course images
+- Recent rounds for current user
 
 ### Add Scores Flow
 
-- Golf course selection
+- Golf course selection with search
 - Player score entry
 - Round confirmation
 
@@ -64,6 +83,7 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
 - Node.js (v16 or higher)
 - Yarn package manager
 - Expo CLI
+- Supabase CLI
 - iOS Simulator or Android Emulator (optional)
 
 ### Installation
@@ -81,21 +101,42 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
    yarn install
    ```
 
-3. **Set up environment variables**
-   Create a `.env` file in the root directory:
+3. **Set up Supabase**
 
-   ```
-   EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
-   EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```bash
+   # Install Supabase CLI (if not already installed)
+   brew install supabase/tap/supabase
+
+   # Link to your Supabase project
+   supabase link --project-ref YOUR_PROJECT_REF
+
+   # Set up Edge Function secrets
+   supabase secrets set GOLF_API_KEY=YOUR_GOLF_API_KEY
+
+   # Deploy Edge Functions
+   supabase functions deploy search-courses
    ```
 
-4. **Start the development server**
+4. **Configure Supabase**
+
+   Create a `src/lib/supabase.ts` file with your project credentials:
+
+   ```typescript
+   import { createClient } from "@supabase/supabase-js";
+
+   const supabaseUrl = "YOUR_SUPABASE_URL";
+   const supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY";
+
+   export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+   ```
+
+5. **Start the development server**
 
    ```bash
    yarn start
    ```
 
-5. **Run on device/simulator**
+6. **Run on device/simulator**
    - Press `i` for iOS Simulator
    - Press `a` for Android Emulator
    - Scan QR code with Expo Go app on your phone
@@ -108,25 +149,32 @@ club-season/
 │   ├── (tabs)/
 │   │   ├── index.tsx              # Home screen
 │   │   ├── AddScores.tsx          # Add scores tab
+│   │   ├── MyLeagues.tsx          # League management
+│   │   ├── Stats.tsx              # Statistics screen
+│   │   ├── Settings.tsx           # Settings screen
 │   │   └── _layout.tsx            # Tab navigation
-│   ├── components/
-│   │   ├── Leaderboard/
-│   │   │   └── index.tsx          # Leaderboard component
-│   │   ├── PlayerCard/
-│   │   │   └── index.tsx          # Individual player card
-│   │   ├── OfficialRounds/
-│   │   │   └── index.tsx          # Rounds display
-│   │   ├── RoundCard/
-│   │   │   └── index.tsx          # Individual round card
-│   │   └── AddScores/
-│   │       ├── index.tsx          # Main add scores component
-│   │       ├── SelectGolfCourse/
-│   │       ├── EnterPlayerScores/
-│   │       └── ConfirmRoundSubmit/
-│   ├── api/
-│   │   ├── getPlayersByLeague.ts  # Player data API
-│   │   └── getLeagueRounds.ts     # Rounds data API
+│   ├── Profile/                   # Profile management
+│   ├── CreateLeague.tsx           # League creation
 │   └── _layout.tsx                # Root layout
+├── src/
+│   ├── components/
+│   │   ├── AddScores/             # Add scores flow components
+│   │   ├── Auth/                  # Authentication components
+│   │   ├── CreateLeague/          # League creation components
+│   │   ├── Home/                  # Home screen components
+│   │   ├── MyLeagues/             # League management components
+│   │   ├── Profile/               # Profile components
+│   │   ├── Settings/              # Settings components
+│   │   └── UI/                    # Reusable UI components
+│   ├── api/                       # API functions
+│   ├── context/                   # React Context providers
+│   ├── hooks/                     # Custom React hooks
+│   ├── lib/                       # Library configurations
+│   ├── types/                     # TypeScript type definitions
+│   └── utils/                     # Utility functions
+├── supabase/
+│   └── functions/
+│       └── search-courses/        # Edge Function for golf course search
 ├── constants/
 │   └── Colors.ts                  # Color definitions
 ├── tamagui.config.ts              # Tamagui configuration
@@ -181,6 +229,18 @@ type Round = {
 };
 ```
 
+### Golf Course
+
+```typescript
+type GolfCourse = {
+  id: number;
+  name: string;
+  location: string;
+  tees: TeeInfo[];
+  img_url?: string;
+};
+```
+
 ## 🔧 Development
 
 ### Available Scripts
@@ -190,6 +250,19 @@ type Round = {
 - `yarn ios` - Run on iOS
 - `yarn web` - Run on web
 - `yarn tamagui check` - Check Tamagui configuration
+
+### Edge Functions
+
+```bash
+# Deploy Edge Functions
+supabase functions deploy search-courses
+
+# Set secrets
+supabase secrets set GOLF_API_KEY=YOUR_API_KEY
+
+# Test locally (requires Docker)
+supabase functions serve search-courses
+```
 
 ### Code Style
 
@@ -209,11 +282,28 @@ expo build:android
 expo build:ios
 ```
 
+### Supabase Deployment
+
+```bash
+# Deploy Edge Functions
+supabase functions deploy
+
+# Deploy database migrations
+supabase db push
+```
+
 ### App Store Deployment
 
 1. Configure app.json with proper metadata
 2. Build production version
 3. Submit to App Store/Google Play
+
+## 🔒 Security
+
+- **API Keys**: Stored securely in Supabase Edge Functions
+- **Database**: Row Level Security (RLS) enabled
+- **Authentication**: Supabase Auth with proper session management
+- **Environment Variables**: No sensitive data in client-side code
 
 ## 🤝 Contributing
 

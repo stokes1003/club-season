@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { GolfCourse } from "../types/golfCourse";
+import { CourseSelection } from "../types/courseSelection";
 import { getOrCreateLeagueCourse } from "./manageLeagueCourse";
 
 export async function submitScores({
@@ -11,7 +12,7 @@ export async function submitScores({
   scores,
 }: {
   league_id: string;
-  golfCourse: GolfCourse;
+  golfCourse: CourseSelection;
   date: string;
   is_major: boolean;
   major_name: string | null;

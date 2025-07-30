@@ -3,6 +3,9 @@ import { supabase } from "src/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImage } from "src/api/uploadImage";
 import { useSelectedLeague } from "src/context/SelectedLeagueContext";
+import { useLeaderboard } from "src/context/LeaderboardContext";
+import { useOfficalRounds } from "src/context/OfficalRoundsContext";
+import { sendEmail } from "src/api/sendEmail";
 
 interface Player {
   name: string;
@@ -12,7 +15,9 @@ interface Player {
 }
 
 export const useCreateLeague = () => {
-  const { triggerRefresh } = useSelectedLeague();
+  const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();
+  const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
+  const { triggerRefresh: triggerRoundsRefresh } = useOfficalRounds();
   const createLeague = async ({
     leagueName,
     leagueAvatar,
@@ -72,7 +77,7 @@ export const useCreateLeague = () => {
 
           // Only upload if player has an image
           if (player.image && player.image.trim() !== "") {
-            const path = `players/${player.name}.jpg`;
+            const path = `players/${uuidv4()}.jpg`;
             const uploadedUrl = await uploadImage(player.image, path);
             if (uploadedUrl) {
               updatedPlayers[i] = { ...player, image: uploadedUrl };
@@ -117,36 +122,34 @@ export const useCreateLeague = () => {
         return;
       }
 
-      // Process players
+      // Process players - now directly inserting into league_players
       for (const player of updatedPlayers) {
         const normalizedEmail = player.email.trim().toLowerCase();
-        let playerId: string | null = null;
 
-        // 1. Check if player already exists
-        const { data: existing, error: fetchError } = await supabase
-          .from("players")
+        // Check if player already exists in this league
+        const { data: existingLeaguePlayer, error: fetchError } = await supabase
+          .from("league_players")
           .select("id, user_id")
-          .eq("email", normalizedEmail)
+          .eq("league_id", league.id)
+          .eq("invite_email", normalizedEmail)
           .maybeSingle();
 
         if (fetchError) {
           console.error(
-            `Error checking existing player ${player.name}:`,
+            `Error checking existing league player ${player.name}:`,
             fetchError
           );
           continue;
         }
 
-        if (existing) {
-          playerId = existing.id;
-
-          // 2. Update user_id if this is the current user's email and it's missing
-          // AND update avatar_url if a new image is provided
+        if (existingLeaguePlayer) {
+          // Update existing league player
           const updates: any = {};
 
+          // Update user_id if this is the current user's email and it's missing
           if (
             normalizedEmail === user.user.email?.toLowerCase() &&
-            !existing.user_id
+            !existingLeaguePlayer.user_id
           ) {
             updates.user_id = user.user.id;
           }
@@ -156,71 +159,97 @@ export const useCreateLeague = () => {
             updates.avatar_url = player.image;
           }
 
-          // Always update player_color for existing players
+          // Update display_name and player_color
+          updates.display_name = player.name;
           updates.player_color = player.color || "#6B7280";
 
-          if (Object.keys(updates).length > 0) {
-            const { error: updateError } = await supabase
-              .from("players")
-              .update(updates)
-              .eq("id", existing.id);
+          const { error: updateError } = await supabase
+            .from("league_players")
+            .update(updates)
+            .eq("id", existingLeaguePlayer.id);
 
-            if (updateError) {
-              console.error(
-                `Failed to update player ${player.name}:`,
-                updateError
-              );
-            }
+          if (updateError) {
+            console.error(
+              `Failed to update league player ${player.name}:`,
+              updateError
+            );
           }
         } else {
-          // 3. Insert new player
-          const { data: newPlayer, error: insertError } = await supabase
-            .from("players")
+          // Check if this email is associated with any existing user account
+          let userIdToLink: string | null = null;
+
+          if (normalizedEmail === user.user.email?.toLowerCase()) {
+            // Current user
+            userIdToLink = user.user.id;
+          } else {
+            // Check if this email exists in any league_players with a user_id
+            const { data: existingUserPlayer, error: userCheckError } =
+              await supabase
+                .from("league_players")
+                .select("user_id")
+                .eq("invite_email", normalizedEmail)
+                .not("user_id", "is", null)
+                .maybeSingle();
+
+            if (!userCheckError && existingUserPlayer?.user_id) {
+              userIdToLink = existingUserPlayer.user_id;
+            }
+          }
+
+          // Insert new league player
+          const { data: newLeaguePlayer, error: insertError } = await supabase
+            .from("league_players")
             .insert({
-              name: player.name,
-              email: normalizedEmail,
+              league_id: league.id,
+              display_name: player.name,
+              invite_email: normalizedEmail,
               avatar_url: player.image || null,
               player_color: player.color || "#6B7280",
-              user_id:
-                normalizedEmail === user.user.email?.toLowerCase()
-                  ? user.user.id
-                  : null,
+              user_id: userIdToLink,
             })
             .select()
             .single();
 
-          if (insertError || !newPlayer) {
+          if (insertError || !newLeaguePlayer) {
             console.error(
-              `Failed to insert player ${player.name}:`,
+              `Failed to insert league player ${player.name}:`,
               insertError
             );
             continue;
           }
-
-          playerId = newPlayer.id;
-        }
-
-        // 4. Link player to league
-        const { error: lpError } = await supabase
-          .from("league_players")
-          .insert({
-            league_id: league.id,
-            player_id: playerId,
-          });
-
-        if (lpError) {
-          console.error(
-            `Failed to link player ${player.email} to league:`,
-            lpError
-          );
         }
       }
+      // Send welcome emails to players
+      const emailPromises = players
+        .filter((player) => player.email)
+        .map(async (player) => {
+          try {
+            await sendEmail({
+              to: player.email,
+              subject: `You've been added to ${leagueName}`,
+              html: `
+              <p>You've been added to ${leagueName} by ${user.user.email}.</p>
+              <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
+              `,
+            });
+          } catch (error) {
+            console.error(`Failed to send email to ${player.email}:`, error);
+            // Don't fail the entire operation if email fails
+          }
+        });
+
+      // Wait for all emails to be sent (but don't fail if some fail)
+      await Promise.allSettled(emailPromises);
 
       setPlayers([]);
       setLeagueAvatar("");
       setLeagueName("");
       setNumberOfPlayers("");
-      triggerRefresh();
+
+      // Trigger all necessary refreshes
+      triggerSelectedLeagueRefresh();
+      triggerLeaderboardRefresh();
+      triggerRoundsRefresh();
 
       Alert.alert("Success", "League created successfully");
       handleHome();

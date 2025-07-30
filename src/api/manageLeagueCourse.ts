@@ -1,9 +1,10 @@
 import { supabase } from "../lib/supabase";
 import { GolfCourse } from "../types/golfCourse";
+import { CourseSelection } from "../types/courseSelection";
 
 export async function getOrCreateLeagueCourse(
   league_id: string,
-  golfCourse: GolfCourse
+  golfCourse: CourseSelection
 ) {
   // First, check if this course already exists for this league
   const { data: existingCourse, error: fetchError } = await supabase
@@ -43,9 +44,8 @@ export async function getOrCreateLeagueCourse(
         external_course_id: golfCourse.id,
         club_name: golfCourse.club_name,
         course_name: golfCourse.course_name,
-        city: golfCourse.location.city,
-        state: golfCourse.location.state,
-        country: golfCourse.location.country,
+        location: golfCourse.location,
+        tees: golfCourse.tees,
         times_played: 1,
       },
     ])
