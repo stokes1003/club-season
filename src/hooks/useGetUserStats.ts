@@ -1,15 +1,47 @@
 import { useEffect } from "react";
 import { User } from "../types/user";
 import { useState } from "react";
-import { getUserStats } from "src/api/getUserStats";
+import { getUserStats } from "../api/userStats";
 
 export function useGetUserStats(user: User | null) {
   const [userStats, setUserStats] = useState<{
     rounds_played: number;
     avg_net_score: number;
-    best_net_score: number;
+    best_net_score: {
+      score: number;
+      course_name: string;
+      date: Date;
+    };
+    worst_net_score: {
+      score: number;
+      course_name: string;
+      date: Date;
+    };
     avg_gross_score: number;
-    best_gross_score: number;
+    best_gross_score: {
+      score: number;
+      course_name: string;
+      date: Date;
+    };
+    worst_gross_score: {
+      score: number;
+      course_name: string;
+      date: Date;
+    };
+    most_played_course?: {
+      course_name: string;
+      times_played: number;
+    };
+    best_course: {
+      course_name: string;
+      avg_score: number;
+      times_played: number;
+    };
+    worst_course: {
+      course_name: string;
+      avg_score: number;
+      times_played: number;
+    };
     net_wins: number;
     gross_wins: number;
   } | null>(null);

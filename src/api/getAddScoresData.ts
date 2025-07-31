@@ -1,5 +1,4 @@
 import { supabase } from "../lib/supabase";
-import { getPlayersByLeague } from "./getPlayersByLeague";
 
 type AddScoresCourse = {
   id: string;

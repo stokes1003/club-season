@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
-import { getUser } from "../api/getUser";
+import { getUser } from "../api/user";
 import { User } from "../types/user";
 
 type UserContextType = {

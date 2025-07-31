@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Alert } from "react-native";
+import { makeRedirectUri } from "expo-auth-session";
 import { supabase } from "src/lib/supabase";
+import * as WebBrowser from "expo-web-browser";
 import {
   Button,
   Input,
@@ -66,17 +68,32 @@ export function SignIn({ mode, setMode }: SignInProps) {
 
   async function signInWithGoogle() {
     setLoading(true);
+
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: "club-season://auth/callback",
         },
       });
 
       if (error) {
         console.error("Google sign in error:", error);
         Alert.alert("Sign In Error", "Failed to sign in with Google");
+      } else {
+        console.log("OAuth initiated:", data);
+        // Open the OAuth URL in a web browser
+        const result = await WebBrowser.openAuthSessionAsync(
+          data.url,
+          "club-season://auth/callback"
+        );
+
+        if (result.type === "success") {
+          // Handle successful authentication
+          console.log("OAuth successful:", result.url);
+        } else {
+          console.log("OAuth cancelled or failed:", result.type);
+        }
       }
     } catch (error) {
       console.error("Google sign in error:", error);

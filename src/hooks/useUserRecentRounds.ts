@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserRecentRounds } from "../api/getUserRecentRounds";
+import { getUserRounds } from "../api/userRounds";
 
 type UserRound = {
   id: string;
@@ -32,7 +32,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
       try {
         setLoading(true);
         setError(null);
-        const data = await getUserRecentRounds(userId, limit);
+        const data = await getUserRounds(userId, limit);
         setRounds(data);
       } catch (err) {
         console.error("Error fetching user rounds:", err);
@@ -51,7 +51,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getUserRecentRounds(userId, limit);
+      const data = await getUserRounds(userId, limit);
       setRounds(data);
     } catch (err) {
       console.error("Error refreshing user rounds:", err);

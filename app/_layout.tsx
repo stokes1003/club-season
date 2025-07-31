@@ -1,7 +1,7 @@
 import "react-native-get-random-values";
 import "../tamagui-web.css";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {

@@ -1,5 +1,4 @@
 import { supabase } from "../lib/supabase";
-import { GolfCourse } from "../types/golfCourse";
 import { CourseSelection } from "../types/courseSelection";
 
 export async function getOrCreateLeagueCourse(
