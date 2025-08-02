@@ -31,6 +31,7 @@ export function useGetUserStats(user: User | null) {
     most_played_course?: {
       course_name: string;
       times_played: number;
+      avg_score: number;
     };
     best_course: {
       course_name: string;

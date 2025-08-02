@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
 import { SelectLeague } from "./SelectLeague";
-import { submitScores } from "../../api/submitScores";
+import { submitScores } from "../../api/scoreSubmission/index";
 import { useCalculateGrossNetPoints } from "../../hooks/useCalculateGrossNetPoints";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
@@ -135,7 +135,7 @@ export function AddScores() {
     }
   }, [leagueId]);
 
-  console.log("AddScoresData", addScoresData);
+  console.log("selectedCourse", selectedCourse);
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">

@@ -1,54 +1,69 @@
-import { Label, Text, YStack } from "tamagui";
+import { YStack, Separator, Text } from "tamagui";
 import { UserStatsCard } from "../Home/PlayerHome/PlayerCard/UserStatsCard";
 import { useUser } from "src/context/UserContext";
 import { useGetUserStats } from "src/hooks/useGetUserStats";
+import { UserStats } from "./UserStats";
+import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 
 export function Stats() {
   const { user } = useUser();
   const { userStats } = useGetUserStats(user);
+  const { selectedLeague } = useSelectedLeague();
+
+  const coursePlayerStats = [
+    {
+      title: "Best Round",
+      course: userStats?.best_gross_score,
+      showDate: true,
+    },
+    {
+      title: "Worst Round",
+      course: userStats?.worst_gross_score,
+      showDate: true,
+    },
+    {
+      title: "Best Course",
+      course: userStats?.best_course,
+      showDate: false,
+    },
+    {
+      title: "Worst Course",
+      course: userStats?.worst_course,
+      showDate: false,
+    },
+    {
+      title: "Most Played Course",
+      course: userStats?.most_played_course,
+      showDate: false,
+    },
+  ];
 
   return (
-    <YStack gap="$4">
-      <UserStatsCard />
-      <YStack>
-        <Label fontSize="$8" fontWeight="bold">
-          Best Round
-        </Label>
-        <Text>{userStats?.best_gross_score.score}</Text>
-        <Text>{userStats?.best_gross_score.course_name}</Text>
-        <Text>{userStats?.best_gross_score.date.toLocaleDateString()}</Text>
-      </YStack>
-      <YStack>
-        <Label fontSize="$8" fontWeight="bold">
-          Worst Round
-        </Label>
-        <Text>{userStats?.worst_gross_score.score}</Text>
-        <Text>{userStats?.worst_gross_score.course_name}</Text>
-        <Text>{userStats?.worst_gross_score.date.toLocaleDateString()}</Text>
-      </YStack>
-      <YStack>
-        <Label fontSize="$8" fontWeight="bold">
-          Best Course
-        </Label>
-        <Text>{userStats?.best_course?.avg_score}</Text>
-        <Text>{userStats?.best_course?.course_name}</Text>
-        <Text>{userStats?.best_course?.times_played}</Text>
-      </YStack>
-      <YStack>
-        <Label fontSize="$8" fontWeight="bold">
-          Worst Course
-        </Label>
-        <Text>{userStats?.worst_course?.avg_score}</Text>
-        <Text>{userStats?.worst_course?.course_name}</Text>
-        <Text>{userStats?.worst_course?.times_played}</Text>
-      </YStack>
-      <YStack>
-        <Label fontSize="$8" fontWeight="bold">
-          Most Played Course
-        </Label>
-        <Text>{userStats?.most_played_course?.course_name}</Text>
-        <Text>{userStats?.most_played_course?.times_played}</Text>
-      </YStack>
+    <YStack gap="$4" pb="$5">
+      {!selectedLeague && (
+        <>
+          <UserStatsCard />
+          <YStack gap="$6" width="100%">
+            {coursePlayerStats.map((stat, index) => (
+              <YStack key={stat.title} gap="$4">
+                <UserStats
+                  title={stat.title}
+                  course={stat.course}
+                  showDate={stat.showDate}
+                />
+                {index < coursePlayerStats.length - 1 && (
+                  <Separator width="100%" borderColor="$black10" />
+                )}
+              </YStack>
+            ))}
+          </YStack>
+        </>
+      )}
+      {selectedLeague && (
+        <YStack gap="$6" width="100%">
+          <Text>League Stats</Text>
+        </YStack>
+      )}
     </YStack>
   );
 }

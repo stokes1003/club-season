@@ -84,6 +84,19 @@ export const getCourseStats = async (userId: string) => {
     mostPlayedCourse[a] > mostPlayedCourse[b] ? a : b
   );
 
+  const mostPlayedCourseScores = roundScores.filter((score) => {
+    const courseId = (score.rounds as any).course_id;
+    return courseId === Number(mostPlayedCourseName);
+  });
+
+  const mostPlayedCourseAvgScore =
+    mostPlayedCourseScores.length > 0
+      ? mostPlayedCourseScores.reduce(
+          (acc, score) => acc + (score.net_score || 0),
+          0
+        ) / mostPlayedCourseScores.length
+      : 0;
+
   // Get Average Score by Course
   const courseStats = roundScores.reduce(
     (acc, score) => {
@@ -119,6 +132,7 @@ export const getCourseStats = async (userId: string) => {
     most_played_course: {
       course_name: courseDetails[mostPlayedCourseName]?.course_name || "",
       times_played: mostPlayedCourse[mostPlayedCourseName],
+      avg_score: Math.round(mostPlayedCourseAvgScore * 10) / 10,
     },
     best_course: {
       course_name: courseDetails[bestCourse.courseId]?.course_name || "",
