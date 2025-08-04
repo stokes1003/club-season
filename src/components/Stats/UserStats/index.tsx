@@ -1,53 +1,59 @@
-import { Label, Text, View, XStack, YStack } from "tamagui";
+import { YStack, Separator } from "tamagui";
+import { useGetUserStats } from "src/hooks/useGetUserStats";
+import { useUser } from "src/context/UserContext";
+import { UserCourseStats } from "./UserCourseStats";
+import { UserBasicStats } from "./UserBasicStats";
 
-export function UserStats({
-  title,
-  course,
-  showDate = false,
-}: {
-  title: string;
-  course: any;
-  showDate?: boolean;
-}) {
-  const formatScore = (score: number | undefined) => {
-    if (score === undefined || score === null) return "-";
-    return Number.isInteger(score) ? score : score.toFixed(1);
-  };
+export function UserStats() {
+  const { user } = useUser();
+  const { userStats } = useGetUserStats(user);
+
+  const coursePlayerStats = [
+    {
+      title: "Best Round",
+      course: userStats?.best_gross_score,
+      showDate: true,
+    },
+    {
+      title: "Worst Round",
+      course: userStats?.worst_gross_score,
+      showDate: true,
+    },
+    {
+      title: "Best Course",
+      course: userStats?.best_course,
+      showDate: false,
+    },
+    {
+      title: "Worst Course",
+      course: userStats?.worst_course,
+      showDate: false,
+    },
+    {
+      title: "Most Played Course",
+      course: userStats?.most_played_course,
+      showDate: false,
+    },
+  ];
 
   return (
-    <YStack>
-      <Label fontSize="$8" fontWeight="bold">
-        {title}
-      </Label>
-      <XStack style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <YStack gap="$2" width="$20">
-          <Text fontSize="$5" fontWeight="bold">
-            {course?.course_name}
-          </Text>
-          {showDate ? (
-            <Text fontSize="$5">{course?.date?.toLocaleDateString()}</Text>
-          ) : (
-            <XStack gap="$2">
-              <Text fontSize="$5">Rounds:</Text>
-              <Text fontSize="$5">{course?.times_played}</Text>
-            </XStack>
-          )}
-        </YStack>
-        <View
-          width="$6"
-          height="$6"
-          borderColor="$black10"
-          borderWidth="$0.25"
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text fontSize="$8" fontWeight="bold" style={{ textAlign: "center" }}>
-            {formatScore(course?.score || course?.avg_score)}
-          </Text>
-        </View>
-      </XStack>
-    </YStack>
+    <>
+      <YStack gap="$6" width="100%">
+        <UserBasicStats user={user} />
+
+        {coursePlayerStats.map((stat, index) => (
+          <YStack key={stat.title} gap="$6">
+            <UserCourseStats
+              title={stat.title}
+              course={stat.course}
+              showDate={stat.showDate}
+            />
+            {index < coursePlayerStats.length - 1 && (
+              <Separator width="100%" borderColor="$black10" />
+            )}
+          </YStack>
+        ))}
+      </YStack>
+    </>
   );
 }

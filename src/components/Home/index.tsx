@@ -1,6 +1,5 @@
 import { YStack } from "tamagui";
 import { useSelectedLeague } from "../../context/SelectedLeagueContext";
-
 import { LeagueHome } from "./LeagueHome";
 import { PlayerHome } from "./PlayerHome";
 

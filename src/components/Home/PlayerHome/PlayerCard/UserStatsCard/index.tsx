@@ -6,7 +6,6 @@ import { useGetUserStats } from "src/hooks/useGetUserStats";
 export function UserStatsCard() {
   const { user } = useUser();
   const { userStats } = useGetUserStats(user);
-  console.log(user);
 
   return (
     <YStack gap="$2" style={{ alignItems: "center" }}>
@@ -36,32 +35,6 @@ export function UserStatsCard() {
           <Text fontSize="$6" fontWeight="bold">
             {user?.name || "Unknown Player"}
           </Text>
-          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
-            <Text
-              fontSize="$6"
-              fontWeight="bold"
-              width={80}
-              style={{ textAlign: "right" }}
-            >
-              Net Wins
-            </Text>
-            <Text fontSize="$6" width={80}>
-              {userStats?.net_wins || 0}
-            </Text>
-          </XStack>
-          <XStack gap="$2" style={{ justifyContent: "space-between" }}>
-            <Text
-              fontSize="$6"
-              fontWeight="bold"
-              width={100}
-              style={{ textAlign: "right" }}
-            >
-              Gross Wins
-            </Text>
-            <Text fontSize="$6" width={100}>
-              {userStats?.gross_wins || 0}
-            </Text>
-          </XStack>
 
           <XStack gap="$2" style={{ justifyContent: "space-between" }}>
             <Text

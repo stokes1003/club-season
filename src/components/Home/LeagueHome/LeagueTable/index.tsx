@@ -2,6 +2,7 @@ import { Text, XStack, YStack, Separator, Card } from "tamagui";
 import { Player } from "src/types/player";
 import { getPlayerDisplayNames } from "src/utils/playerNameUtils";
 import { League } from "../../../../context/SelectedLeagueContext";
+import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 
 export function LeagueTable({
   isNet,
@@ -44,86 +45,62 @@ export function LeagueTable({
             <XStack style={{ justifyContent: "center", width: 320 }}>
               <Text
                 fontWeight="bold"
-                width="$4"
+                width="$5"
                 style={{ textAlign: "center" }}
               >
                 Rank
               </Text>
               <Text
                 fontWeight="bold"
-                width="$8"
+                width="$10"
                 style={{ textAlign: "center" }}
               >
                 Player
               </Text>
               <Text
                 fontWeight="bold"
-                width="$5"
+                width="$8"
                 style={{ textAlign: "center" }}
               >
                 Points
               </Text>
               <Text
                 fontWeight="bold"
-                width="$5"
+                width="$8"
                 style={{ textAlign: "center" }}
               >
                 Wins
-              </Text>
-              <Text
-                fontWeight="bold"
-                width="$5"
-                style={{ textAlign: "center" }}
-              >
-                AVG
-              </Text>
-              <Text
-                fontWeight="bold"
-                width="$5"
-                style={{ textAlign: "center" }}
-              >
-                Best
               </Text>
             </XStack>
             <Separator width={330} borderColor="$black10" />
             {sortedPlayers.map((playerData: Player, index: number) => (
               <XStack
                 key={playerData.player_id}
-                style={{ justifyContent: "center", width: 320 }}
+                style={{
+                  justifyContent: "center",
+                  width: 320,
+                  alignItems: "center",
+                }}
               >
-                <Text width="$4" style={{ textAlign: "center" }}>
+                <Text width="$5" style={{ textAlign: "center" }}>
                   {index + 1}
                 </Text>
-                <Text
-                  width="$8"
-                  fontWeight="bold"
-                  style={{ textAlign: "center" }}
-                >
-                  {playerDisplayNames[index]}
-                </Text>
-                <Text width="$5" style={{ textAlign: "center" }}>
+                <XStack style={{ alignItems: "center" }} gap="$2" width="$10">
+                  <PlayerAvatar avatarUrl={playerData.avatar_url} size="$2" />
+                  <Text fontWeight="bold" style={{ textAlign: "center" }}>
+                    {playerDisplayNames[index]}
+                  </Text>
+                </XStack>
+
+                <Text width="$8" style={{ textAlign: "center" }}>
                   {isNet
                     ? playerData.net_points || 0
                     : playerData.gross_points || 0}
                 </Text>
-                <Text width="$5" style={{ textAlign: "center" }}>
+                <Text width="$8" style={{ textAlign: "center" }}>
                   {isNet
                     ? playerData.net_wins || 0
                     : playerData.gross_wins || 0}
-                </Text>
-                <Text width="$5" style={{ textAlign: "center" }}>
-                  {isNet
-                    ? playerData.avg_net && playerData.avg_net > 0
-                      ? parseFloat(playerData.avg_net.toString()).toFixed(1)
-                      : "-"
-                    : playerData.avg_gross && playerData.avg_gross > 0
-                    ? parseFloat(playerData.avg_gross.toString()).toFixed(1)
-                    : "-"}
-                </Text>
-                <Text width="$5" style={{ textAlign: "center" }}>
-                  {isNet
-                    ? playerData.best_net || 0
-                    : playerData.best_gross || 0}
                 </Text>
               </XStack>
             ))}
