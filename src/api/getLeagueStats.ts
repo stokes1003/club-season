@@ -1,6 +1,7 @@
 import { supabase } from "../lib/supabase";
 import { getPlayersByLeague } from "./getPlayersByLeague";
 import { getLeagueCourses } from "./getLeagueCourses";
+import { LeagueStats } from "../types/leagueStats";
 
 //Get all rounds for a league
 export const getLeagueRounds = async (leagueId: string) => {
@@ -32,7 +33,9 @@ export const getLeagueScores = async (roundId: string) => {
   return data;
 };
 
-export const getLeagueStats = async (leagueId: string) => {
+export const getLeagueStats = async (
+  leagueId: string
+): Promise<LeagueStats | null> => {
   //Get all players for a league
   const players = await getPlayersByLeague(leagueId);
   //Get all courses for a league

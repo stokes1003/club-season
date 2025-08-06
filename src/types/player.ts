@@ -11,4 +11,5 @@ export type Player = {
   gross_wins: number;
   player_id: string;
   player_color: string;
+  email: string;
 };

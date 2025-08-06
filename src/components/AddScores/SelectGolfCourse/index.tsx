@@ -97,6 +97,7 @@ export function SelectGolfCourse({
       course.course_name.toLowerCase().includes(search.toLowerCase()) ||
       course.club_name.toLowerCase().includes(search.toLowerCase())
   );
+  
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>

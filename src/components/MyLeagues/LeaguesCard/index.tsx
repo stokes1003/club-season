@@ -2,11 +2,10 @@ import { YStack, Text, XStack } from "tamagui";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { ChevronRight } from "@tamagui/lucide-icons";
-import { useGetPlayerById } from "src/hooks/useGetPlayerById";
 
 export function LeagueCard({ league }: { league: any }) {
   const players = useGetPlayers(league.id);
-  const ownerName = useGetPlayerById(league.created_by, league.id);
+
   return (
     <YStack width={320} gap="$4">
       <XStack
