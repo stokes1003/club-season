@@ -15,12 +15,11 @@ import {
 } from "tamagui";
 import { getEmailValidationMessage } from "src/utils/validation";
 
-interface SignInProps {
-  mode: "signIn" | "signUp" | "forgotPassword";
-  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
-}
+type SignInProps = {
+  onToggleMode: () => void;
+};
 
-export function SignIn({ mode, setMode }: SignInProps) {
+export function SignIn({ onToggleMode }: SignInProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -152,7 +151,7 @@ export function SignIn({ mode, setMode }: SignInProps) {
             <View>
               <Label fontSize="$5">Password</Label>
             </View>
-            <View onPress={() => setMode("forgotPassword")}>
+            <View onPress={() => onToggleMode()}>
               <Text fontSize="$4" color="$blue10">
                 Forgot Password?
               </Text>
@@ -211,7 +210,7 @@ export function SignIn({ mode, setMode }: SignInProps) {
         <Text fontSize="$5" color="$black10">
           Don't have an account?
         </Text>
-        <View onPress={() => setMode("signUp")}>
+        <View onPress={() => onToggleMode()}>
           <Text fontSize="$5" color="$blue10">
             Sign Up
           </Text>

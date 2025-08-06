@@ -7,12 +7,12 @@ import { useLeaderboard } from "src/context/LeaderboardContext";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 import { sendEmail } from "src/api/sendEmail";
 
-interface Player {
+type Player = {
   name: string;
   image: string;
   email: string;
   color: string;
-}
+};
 
 export const useCreateLeague = () => {
   const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();

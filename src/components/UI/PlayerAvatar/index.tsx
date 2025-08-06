@@ -1,6 +1,6 @@
 import { Avatar, Text, XStack } from "tamagui";
 
-interface PlayerAvatarProps {
+type PlayerAvatarProps = {
   name?: string;
   avatarUrl?: string;
   size?:
@@ -17,7 +17,7 @@ interface PlayerAvatarProps {
     | "$12";
   gap?: "$2" | "$3" | "$4" | "$5";
   color?: string;
-}
+};
 
 export function PlayerAvatar({
   name,

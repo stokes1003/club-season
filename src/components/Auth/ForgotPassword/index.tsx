@@ -5,12 +5,11 @@ import { useState } from "react";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import { getEmailValidationMessage } from "src/utils/validation";
 
-interface ForgotPasswordProps {
-  mode: "signIn" | "signUp" | "forgotPassword";
-  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
-}
+type ForgotPasswordProps = {
+  onToggleMode: () => void;
+};
 
-export function ForgotPassword({ mode, setMode }: ForgotPasswordProps) {
+export function ForgotPassword({ onToggleMode }: ForgotPasswordProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -99,7 +98,7 @@ export function ForgotPassword({ mode, setMode }: ForgotPasswordProps) {
           </Button>
         </View>
 
-        <View onPress={() => setMode("signIn")}>
+        <View onPress={() => onToggleMode()}>
           <XStack gap="$2" style={{ alignItems: "center" }}>
             <ArrowLeft size={16} color="#007AFF" />
             <Text color="$blue10" fontSize="$5">

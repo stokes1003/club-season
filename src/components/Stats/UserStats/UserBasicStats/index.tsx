@@ -3,9 +3,9 @@ import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 import { User } from "src/types/user";
 import { useGetUserStats } from "src/hooks/useGetUserStats";
 
-interface UserBasicStatsProps {
+type UserBasicStatsProps = {
   user: User | null;
-}
+};
 
 export function UserBasicStats({ user }: UserBasicStatsProps) {
   const { userStats } = useGetUserStats(user);

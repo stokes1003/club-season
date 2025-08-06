@@ -5,7 +5,7 @@ export const getPlayerById = async (userId: string, leagueId: string) => {
     .from("league_players")
     .select("display_name")
     .eq("user_id", userId)
-    .eq("league_id", leagueId) // optional: ensures it's scoped to a league
+    .eq("league_id", leagueId)
     .single();
 
   if (error) {

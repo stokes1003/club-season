@@ -10,6 +10,7 @@ export type LeagueCourse = {
   external_course_id: number;
   location: Location;
   tees: Tees;
+  photo_url: string;
 };
 
 export type CourseSelection = GolfCourse | LeagueCourse | NearbyCourse;

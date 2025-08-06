@@ -1,64 +1,64 @@
-import { YStack, Text, Separator } from "tamagui";
+import { YStack, XStack, Text } from "tamagui";
 import type { League } from "..";
-import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
+import { ArrowLeft } from "@tamagui/lucide-icons";
+import { Pressable } from "react-native";
+import { LeaguePlayerDetails } from "./LeaguePlayerDetails";
 import { useGetPlayerById } from "src/hooks/useGetPlayerById";
-import { useGetPlayers } from "src/hooks/useGetPlayers";
+import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
+import { LeagueCourseDetails } from "./LeagueCourseDetails";
+import { useUser } from "src/context/UserContext";
 
-export function LeagueDetails({ selectedLeague }: { selectedLeague: League }) {
-  const leagueOwner = useGetPlayerById(
+export function LeagueDetails({
+  selectedLeague,
+  setSelectedLeague,
+}: {
+  selectedLeague: League;
+  setSelectedLeague: (league: League | null) => void;
+}) {
+  const commissioner = useGetPlayerById(
     selectedLeague.created_by,
     selectedLeague.id
   );
-
-  const players = useGetPlayers(selectedLeague.id);
-  console.log(players);
+  const { user } = useUser();
+  const isCommissioner = user?.id === selectedLeague.created_by;
 
   return (
-    <>
+    <YStack gap="$6" style={{ alignItems: "center", width: "100%" }}>
+      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
+        <Pressable onPress={() => setSelectedLeague(null)}>
+          <ArrowLeft />
+        </Pressable>
+      </XStack>
       <YStack gap="$4" style={{ alignItems: "center" }}>
-        <YStack>
-          <PlayerAvatar
-            name={selectedLeague.name}
-            avatarUrl={selectedLeague.image_url}
-            size="$8"
-            color={selectedLeague.avatar_color || undefined}
-          />
-          <Text fontSize="$6" fontWeight="bold">
+        <PlayerAvatar
+          name={selectedLeague.name}
+          avatarUrl={selectedLeague.image_url}
+          size="$10"
+          color={selectedLeague.avatar_color || undefined}
+        />
+
+        <YStack gap="$2" style={{ alignItems: "center" }}>
+          <Text fontSize="$8" fontWeight="bold">
             {selectedLeague.name}
+          </Text>
+          <Text fontSize="$2" fontWeight="400">
+            Commissioner: {commissioner}
           </Text>
           <Text fontSize="$2" fontWeight="400">
             Est. {new Date(selectedLeague.created_at).toLocaleDateString()}
           </Text>
-          <Text fontSize="$2" fontWeight="400">
-            Created by: {leagueOwner}
-          </Text>
-        </YStack>
-
-        <YStack>
-          <Text fontSize="$6" fontWeight="bold">
-            Players
-          </Text>
-          <YStack>
-            {players?.map((player) => (
-              <YStack key={player.player_id}>
-                <PlayerAvatar
-                  name={player.name}
-                  avatarUrl={player.avatar_url}
-                  size="$8"
-                  color={player.player_color || undefined}
-                />
-                <Text fontSize="$2" fontWeight="400">
-                  {player.name}
-                </Text>
-                <Text fontSize="$2" fontWeight="400">
-                  {player.invite_email}
-                </Text>
-                <Separator width={320} borderColor="$black10" />
-              </YStack>
-            ))}
-          </YStack>
         </YStack>
       </YStack>
-    </>
+      <YStack gap="$8">
+        <LeaguePlayerDetails
+          selectedLeague={selectedLeague}
+          isCommissioner={isCommissioner}
+        />
+        <LeagueCourseDetails
+          selectedLeague={selectedLeague}
+          isCommissioner={isCommissioner}
+        />
+      </YStack>
+    </YStack>
   );
 }

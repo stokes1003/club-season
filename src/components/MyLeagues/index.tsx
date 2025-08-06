@@ -17,9 +17,12 @@ export function MyLeagues() {
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
 
   return (
-    <YStack gap="$8" style={{ alignItems: "center" }} width={320}>
+    <YStack gap="$8" style={{ alignItems: "center" }} width={320} mb="$8">
       {selectedLeague ? (
-        <LeagueDetails selectedLeague={selectedLeague} />
+        <LeagueDetails
+          selectedLeague={selectedLeague}
+          setSelectedLeague={setSelectedLeague}
+        />
       ) : (
         <LeaguesDashboard setSelectedLeague={setSelectedLeague} />
       )}

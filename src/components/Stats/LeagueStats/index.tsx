@@ -9,6 +9,8 @@ export function LeagueStats() {
   const { selectedLeague } = useSelectedLeague();
   const leagueStats = useGetLeagueStats(selectedLeague?.id || "");
 
+  console.log("leagueStats:", leagueStats);
+
   const courseLeagueStats = [
     {
       title: "Best Round",
@@ -31,17 +33,28 @@ export function LeagueStats() {
   const leagueBasicStats = [
     {
       title: "Most Wins",
-      score: leagueStats?.most_wins,
+      score: {
+        player: leagueStats?.most_wins?.player,
+        score: leagueStats?.most_wins?.wins,
+      },
     },
     {
       title: "Most Major Wins",
-      score: leagueStats?.most_major_wins,
+      score: {
+        player: leagueStats?.most_major_wins?.player,
+        score: leagueStats?.most_major_wins?.wins,
+      },
     },
     {
       title: "Best Average",
-      score: leagueStats?.best_average,
+      score: {
+        player: leagueStats?.best_average?.player,
+        score: leagueStats?.best_average?.score,
+      },
     },
   ];
+
+  console.log("leagueBasicStats:", leagueBasicStats);
 
   if (!leagueStats || !leagueStats.best_score) {
     return (

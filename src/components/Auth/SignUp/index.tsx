@@ -19,12 +19,11 @@ import {
   type PasswordValidation,
 } from "src/utils/validation";
 
-interface SignUpProps {
-  mode: "signIn" | "signUp" | "forgotPassword";
-  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
-}
+type SignUpProps = {
+  onToggleMode: () => void;
+};
 
-export function SignUp({ mode, setMode }: SignUpProps) {
+export function SignUp({ onToggleMode }: SignUpProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -106,7 +105,7 @@ export function SignUp({ mode, setMode }: SignUpProps) {
         "Check your email",
         "We've sent you a verification email. Please check your inbox and spam folder."
       );
-      setMode("signIn");
+      onToggleMode();
       setName("");
       setEmail("");
       setPassword("");
@@ -281,7 +280,7 @@ export function SignUp({ mode, setMode }: SignUpProps) {
         <View>
           <Text>Already have an account?</Text>
         </View>
-        <View onPress={() => setMode("signIn")}>
+        <View onPress={onToggleMode}>
           <Text fontSize="$5" color="$blue10">
             Sign In
           </Text>
