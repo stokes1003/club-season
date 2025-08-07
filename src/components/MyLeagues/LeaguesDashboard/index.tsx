@@ -4,7 +4,7 @@ import { Text } from "tamagui";
 import { Separator } from "tamagui";
 import { useRouter } from "expo-router";
 import { useUser } from "src/hooks/useUser";
-import { LeagueCard } from "../LeaguesCard";
+import { LeagueCard } from "./LeagueCard/index";
 
 export function LeaguesDashboard({
   setSelectedLeague,

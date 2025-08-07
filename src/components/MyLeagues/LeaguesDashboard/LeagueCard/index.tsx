@@ -1,6 +1,6 @@
 import { YStack, Text, XStack } from "tamagui";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
-import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { ChevronRight } from "@tamagui/lucide-icons";
 
 export function LeagueCard({ league }: { league: any }) {

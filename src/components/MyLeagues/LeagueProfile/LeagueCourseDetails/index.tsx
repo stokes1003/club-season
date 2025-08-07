@@ -5,7 +5,6 @@ import { getLeagueCourses } from "src/api/getLeagueCourses";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { useEffect, useState } from "react";
 import { Location } from "src/types/golfCourse";
-import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 
 type LeagueCourse = {
   id: string;

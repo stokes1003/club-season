@@ -4,13 +4,16 @@ import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { League } from "../..";
+import { Player } from "src/types/player";
 
 export function LeaguePlayerDetails({
   selectedLeague,
   isCommissioner,
+  setSelectedPlayer = () => {},
 }: {
   selectedLeague: League;
   isCommissioner: boolean;
+  setSelectedPlayer?: (player: Player | null) => void;
 }) {
   const players = useGetPlayers(selectedLeague.id);
   return (
@@ -28,7 +31,12 @@ export function LeaguePlayerDetails({
                   if (!isCommissioner) {
                     Alert.alert("Only commissioner can edit player details");
                     return;
+                  } else {
+                    setSelectedPlayer(player);
                   }
+                }}
+                style={{
+                  opacity: isCommissioner ? 1 : 0.6,
                 }}
               >
                 <XStack
@@ -49,15 +57,18 @@ export function LeaguePlayerDetails({
                       <Text fontSize="$6" fontWeight="400">
                         {player.name}
                       </Text>
+
                       <Text fontSize="$4" fontWeight="400">
                         {player.invite_email}
                       </Text>
                     </YStack>
                   </XStack>
 
-                  <View>
-                    <ChevronRight />
-                  </View>
+                  {isCommissioner && (
+                    <View>
+                      <ChevronRight />
+                    </View>
+                  )}
                 </XStack>
               </Pressable>
 

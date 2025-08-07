@@ -51,6 +51,9 @@ export type LeagueStats = {
   best_net_score: LeagueStatsScore;
   worst_net_score: LeagueStatsScore;
   most_wins: LeagueStatsWins;
+  most_net_wins: LeagueStatsWins;
   most_major_wins: LeagueStatsWins;
+  most_net_major_wins: LeagueStatsWins;
   best_average: LeagueStatsAverage;
+  best_net_average: LeagueStatsAverage;
 };

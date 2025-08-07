@@ -4,16 +4,16 @@ export const getPlayerScores = async (leagueId: string) => {
   // Get all rounds for this league
   const { data: rounds, error: roundsError } = await supabase
     .from("rounds")
-    .select("id")
+    .select("id, is_major")
     .eq("league_id", leagueId);
 
   if (roundsError) {
     console.error("Error fetching rounds:", roundsError);
-    return null;
+    return { scores: null, rounds: null };
   }
 
   if (!rounds || rounds.length === 0) {
-    return [];
+    return { scores: [], rounds: [] };
   }
 
   const roundIds = rounds.map((r) => r.id);
@@ -26,8 +26,8 @@ export const getPlayerScores = async (leagueId: string) => {
 
   if (scoresError) {
     console.error("Error fetching scores:", scoresError);
-    return null;
+    return { scores: null, rounds: null };
   }
 
-  return scores;
+  return { scores, rounds };
 };

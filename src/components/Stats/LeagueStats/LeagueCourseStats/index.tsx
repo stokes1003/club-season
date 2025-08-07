@@ -18,8 +18,8 @@ export function LeagueCourseStats({ stat }: { stat: any }) {
   };
 
   return (
-    <YStack key={stat.title} gap="$4">
-      <Label fontSize="$8" fontWeight="bold">
+    <YStack key={stat.title} gap="$1">
+      <Label fontSize="$6" fontWeight="bold">
         {stat.title}
       </Label>
       <XStack style={{ alignItems: "center" }} gap="$4">
@@ -31,19 +31,19 @@ export function LeagueCourseStats({ stat }: { stat: any }) {
         />
         <XStack style={{ alignItems: "center" }}>
           <YStack gap="$1" width="$16">
-            <Text fontSize="$6" fontWeight="bold">
+            <Text fontSize="$5" fontWeight="500">
               {stat.score?.player?.name}
             </Text>
-            <Text fontSize="$5" fontWeight="400">
+            <Text fontSize="$4" fontWeight="400">
               {stat.score?.course?.course_name}
             </Text>
-            <Text fontSize="$5" color="$black10">
+            <Text fontSize="$4" color="$black10">
               {formatDate(stat.score?.date)}
             </Text>
           </YStack>
           <View
-            width="$5"
-            height="$5"
+            width="$4"
+            height="$4"
             borderColor="$black10"
             borderWidth="$0.25"
             style={{
@@ -52,7 +52,7 @@ export function LeagueCourseStats({ stat }: { stat: any }) {
             }}
           >
             <Text
-              fontSize="$5"
+              fontSize="$4"
               fontWeight="bold"
               style={{ textAlign: "center" }}
             >

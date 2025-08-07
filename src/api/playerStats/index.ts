@@ -12,7 +12,7 @@ export async function getPlayersByLeague(leagueId: string) {
   try {
     // Get all data
     const players = await getPlayers(leagueId);
-    const scores = await getPlayerScores(leagueId);
+    const { scores, rounds } = await getPlayerScores(leagueId);
 
     if (!players || players.length === 0) {
       return [];
@@ -34,6 +34,8 @@ export async function getPlayersByLeague(leagueId: string) {
         gross_points: player.gross_points || 0,
         net_wins: 0,
         gross_wins: 0,
+        major_wins: 0,
+        net_major_wins: 0,
       }));
     }
 
@@ -58,11 +60,18 @@ export async function getPlayersByLeague(leagueId: string) {
           gross_points: player.gross_points || 0,
           net_wins: 0,
           gross_wins: 0,
+          major_wins: 0,
+          net_major_wins: 0,
         };
       }
 
       const averages = calculatePlayerAverages(playerScores);
-      const wins = calculatePlayerWins(playerScores, player.id);
+      const wins = calculatePlayerWins(
+        playerScores,
+        player.id,
+        rounds || [],
+        scores || []
+      );
 
       return formatPlayerStats(player, playerScores, averages, wins);
     });

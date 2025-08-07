@@ -29,13 +29,20 @@ type PlayerStats = {
   gross_points: number;
   net_wins: number;
   gross_wins: number;
+  major_wins: number;
+  net_major_wins: number;
 };
 
 export const formatPlayerStats = (
   player: Player,
   playerScores: PlayerScore[],
   averages: { avgNet: number; avgGross: number },
-  wins: { netWins: number; grossWins: number }
+  wins: {
+    netWins: number;
+    grossWins: number;
+    majorWins: number;
+    netMajorWins: number;
+  }
 ): PlayerStats => {
   // Calculate best scores
   const netScores = playerScores
@@ -62,5 +69,7 @@ export const formatPlayerStats = (
     gross_points: player.gross_points || 0,
     net_wins: wins.netWins,
     gross_wins: wins.grossWins,
+    major_wins: wins.majorWins,
+    net_major_wins: wins.netMajorWins,
   };
 };

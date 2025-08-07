@@ -1,4 +1,4 @@
-import { getPlayersByLeague } from "../getPlayersByLeague";
+import { getPlayersByLeague } from "../playerStats";
 import { getLeagueCourses } from "../getLeagueCourses";
 import { getLeagueRounds } from "./getLeagueRounds";
 import { getLeagueScores } from "./getLeagueScores";
@@ -75,14 +75,46 @@ export async function getLeagueStats(leagueId: string) {
     players[0]
   );
 
+  const bestNetAverage = players.reduce(
+    (best, current) => (current.avg_net < best.avg_net ? current : best),
+    players[0]
+  );
+
   const mostWins = players.reduce(
     (most, current) => (current.gross_wins > most.gross_wins ? current : most),
     players[0]
   );
 
-  const mostMajorWins = players.reduce(
-    (most, current) => (current.gross_wins > most.gross_wins ? current : most),
+  const mostNetWins = players.reduce(
+    (most, current) => (current.net_wins > most.net_wins ? current : most),
     players[0]
+  );
+
+  // Debug major wins calculation
+  console.log(
+    "Players with major wins:",
+    players.map((p) => ({ name: p.name, major_wins: p.major_wins }))
+  );
+
+  const mostMajorWins = players.reduce((most, current) => {
+    console.log(
+      `Comparing ${current.name} (${current.major_wins}) vs ${most.name} (${most.major_wins})`
+    );
+    return current.major_wins > most.major_wins ? current : most;
+  }, players[0]);
+
+  const mostNetMajorWins = players.reduce(
+    (most, current) =>
+      current.net_major_wins > most.net_major_wins ? current : most,
+    players[0]
+  );
+
+  console.log(
+    "Most major wins player:",
+    mostMajorWins.name,
+    "with",
+    mostMajorWins.major_wins,
+    "wins"
   );
 
   return {
@@ -98,13 +130,29 @@ export async function getLeagueStats(leagueId: string) {
       },
       wins: mostWins.gross_wins,
     },
+    most_net_wins: {
+      player: {
+        name: mostNetWins.name,
+        avatar_url: mostNetWins.avatar_url,
+        color: mostNetWins.player_color,
+      },
+      wins: mostNetWins.net_wins,
+    },
     most_major_wins: {
       player: {
         name: mostMajorWins.name,
         avatar_url: mostMajorWins.avatar_url,
         color: mostMajorWins.player_color,
       },
-      wins: mostMajorWins.gross_wins,
+      wins: mostMajorWins.major_wins,
+    },
+    most_net_major_wins: {
+      player: {
+        name: mostNetMajorWins.name,
+        avatar_url: mostNetMajorWins.avatar_url,
+        color: mostNetMajorWins.player_color,
+      },
+      wins: mostNetMajorWins.net_major_wins,
     },
     best_average: {
       player: {
@@ -113,6 +161,14 @@ export async function getLeagueStats(leagueId: string) {
         color: bestAverage.player_color,
       },
       score: bestAverage.avg_gross,
+    },
+    best_net_average: {
+      player: {
+        name: bestNetAverage.name,
+        avatar_url: bestNetAverage.avatar_url,
+        color: bestNetAverage.player_color,
+      },
+      score: bestNetAverage.avg_net,
     },
   };
 }
