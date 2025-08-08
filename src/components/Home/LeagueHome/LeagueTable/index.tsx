@@ -1,15 +1,12 @@
 import { Text, XStack, YStack, Separator, Card } from "tamagui";
 import { Player } from "src/types/player";
 import { getPlayerDisplayNames } from "src/utils/playerNameUtils";
-import { League } from "../../../../context/SelectedLeagueContext";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 
 export function LeagueTable({
   isNet,
   players,
-  league,
 }: {
-  league: League;
   isNet: boolean;
   players: Player[];
 }) {
@@ -20,6 +17,7 @@ export function LeagueTable({
     return b.gross_points - a.gross_points;
   });
   const playerDisplayNames = getPlayerDisplayNames(players);
+  console.log(players);
   return (
     <YStack gap="$4" style={{ alignItems: "center" }}>
       <YStack>
@@ -59,20 +57,27 @@ export function LeagueTable({
               </Text>
               <Text
                 fontWeight="bold"
-                width="$8"
+                width="$5"
                 style={{ textAlign: "center" }}
               >
                 Points
               </Text>
               <Text
                 fontWeight="bold"
-                width="$8"
+                width="$5"
                 style={{ textAlign: "center" }}
               >
                 Wins
               </Text>
+              <Text
+                fontWeight="bold"
+                width="$5"
+                style={{ textAlign: "center" }}
+              >
+                AVG
+              </Text>
             </XStack>
-            <Separator width={330} borderColor="$black10" />
+            <Separator width={300} borderColor="$black11" />
             {sortedPlayers.map((playerData: Player, index: number) => (
               <XStack
                 key={playerData.player_id}
@@ -92,15 +97,18 @@ export function LeagueTable({
                   </Text>
                 </XStack>
 
-                <Text width="$8" style={{ textAlign: "center" }}>
+                <Text width="$5" style={{ textAlign: "center" }}>
                   {isNet
                     ? playerData.net_points || 0
                     : playerData.gross_points || 0}
                 </Text>
-                <Text width="$8" style={{ textAlign: "center" }}>
+                <Text width="$5" style={{ textAlign: "center" }}>
                   {isNet
                     ? playerData.net_wins || 0
                     : playerData.gross_wins || 0}
+                </Text>
+                <Text width="$5" style={{ textAlign: "center" }}>
+                  {isNet ? playerData.avg_net || 0 : playerData.avg_gross || 0}
                 </Text>
               </XStack>
             ))}

@@ -1,5 +1,5 @@
 import { YStack, XStack, Text, Separator, View } from "tamagui";
-import { Alert, Pressable } from "react-native";
+import { Pressable } from "react-native";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { useGetPlayers } from "src/hooks/useGetPlayers";

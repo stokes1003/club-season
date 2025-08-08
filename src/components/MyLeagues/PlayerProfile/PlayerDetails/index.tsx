@@ -1,0 +1,170 @@
+import { ArrowLeft } from "@tamagui/lucide-icons";
+import { Alert, Pressable } from "react-native";
+import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
+import { Player } from "src/types/player";
+import { League } from "src/components/MyLeagues";
+import {
+  YStack,
+  Text,
+  Label,
+  XStack,
+  Separator,
+  Button,
+  Spinner,
+} from "tamagui";
+import { ChevronRight } from "@tamagui/lucide-icons";
+import { useNavigation } from "../../NavigationContext";
+import { sendEmail } from "src/api/sendEmail";
+import { useState } from "react";
+import { useUser } from "src/context/UserContext";
+
+export function PlayerDetails({
+  setMode,
+  selectedPlayer,
+  setSelectedPlayer,
+  selectedLeague,
+}: {
+  setMode: (
+    mode: "change-name" | "change-email" | "change-role" | "profile"
+  ) => void;
+  selectedPlayer: Player;
+  setSelectedPlayer: (player: Player | null) => void;
+  selectedLeague: League;
+}) {
+  const { canGoBack, navigateBack } = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+
+  const handleBackPress = () => {
+    if (canGoBack) {
+      navigateBack();
+    } else {
+      // Fallback - go to dashboard or league
+      setSelectedPlayer(null);
+    }
+  };
+
+  const handleResendInvite = async () => {
+    setLoading(true);
+    try {
+      await sendEmail({
+        to: selectedPlayer.invite_email,
+        subject: `You've been added to ${selectedLeague.name}`,
+        html: `
+        <p>You've been added to ${selectedLeague.name} by ${user?.name}.</p>
+        <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
+        `,
+      });
+      Alert.alert("Success", "Invite has been resent to the player");
+    } catch (error) {
+      console.error("Failed to send email:", error);
+
+      let errorMessage = "Failed to send invite email. Please try again later.";
+
+      if (error.message?.includes("invalid")) {
+        errorMessage =
+          "Invalid email address. Please check the email and try again.";
+      } else if (error.message?.includes("rate limit")) {
+        errorMessage =
+          "Too many emails sent. Please wait a few minutes and try again.";
+      } else if (error.message?.includes("network")) {
+        errorMessage =
+          "Network error. Please check your connection and try again.";
+      }
+
+      Alert.alert("Error", errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <YStack gap="$8" style={{ width: "100%" }}>
+      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
+        <Pressable onPress={handleBackPress}>
+          <ArrowLeft />
+        </Pressable>
+      </XStack>
+      <YStack style={{ alignItems: "center" }} gap="$6">
+        <Text fontSize="$8" fontWeight="bold">
+          Player Profile
+        </Text>
+        <YStack gap="$2">
+          <PlayerAvatar
+            name={selectedPlayer.name}
+            avatarUrl={selectedPlayer.avatar_url}
+            size="$10"
+            color={selectedPlayer.player_color || undefined}
+          />
+        </YStack>
+
+        <Text fontSize="$5" fontWeight="400">
+          Customize player details for {selectedLeague.name}. These details will
+          only affect {selectedLeague.name}.
+        </Text>
+      </YStack>
+
+      <YStack gap="$4">
+        <Pressable onPress={() => setMode("change-name")}>
+          <XStack
+            style={{ alignItems: "center", justifyContent: "space-between" }}
+          >
+            <YStack gap="$1">
+              <Label fontSize="$6" fontWeight="600">
+                Display Name
+              </Label>
+              <Text fontSize="$5">{selectedPlayer.name}</Text>
+            </YStack>
+            <ChevronRight />
+          </XStack>
+        </Pressable>
+
+        <Separator width={320} borderColor="$black10" />
+        <Pressable onPress={() => setMode("change-email")}>
+          <XStack
+            style={{ alignItems: "center", justifyContent: "space-between" }}
+          >
+            <YStack gap="$1">
+              <Label fontSize="$6" fontWeight="600">
+                Invitation Email
+              </Label>
+              <Text fontSize="$5" fontWeight="400">
+                {selectedPlayer.invite_email}
+              </Text>
+            </YStack>
+            <ChevronRight />
+          </XStack>
+        </Pressable>
+        <Separator width={320} borderColor="$black10" />
+        <Pressable onPress={() => setMode("change-role")}>
+          <XStack
+            style={{ alignItems: "center", justifyContent: "space-between" }}
+          >
+            <YStack gap="$1">
+              <Label fontSize="$6" fontWeight="600">
+                Role
+              </Label>
+              <Text fontSize="$5" fontWeight="400">
+                Player
+              </Text>
+            </YStack>
+            <ChevronRight />
+          </XStack>
+        </Pressable>
+      </YStack>
+      <YStack gap="$4">
+        <Button
+          bg="$blue10"
+          color="$white1"
+          fontSize="$5"
+          fontWeight="bold"
+          style={{ width: "100%" }}
+          onPress={handleResendInvite}
+          disabled={loading}
+        >
+          {loading ? <Spinner /> : "Resend Invite"}
+        </Button>
+      </YStack>
+    </YStack>
+  );
+}

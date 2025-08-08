@@ -6,6 +6,7 @@ import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 import { useLeaderboard } from "src/context/LeaderboardContext";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 import { sendEmail } from "src/api/sendEmail";
+import { useUser } from "src/context/UserContext";
 
 type Player = {
   name: string;
@@ -18,6 +19,7 @@ export const useCreateLeague = () => {
   const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();
   const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
   const { triggerRefresh: triggerRoundsRefresh } = useOfficalRounds();
+  const { user } = useUser();
   const createLeague = async ({
     leagueName,
     leagueAvatar,
@@ -45,8 +47,7 @@ export const useCreateLeague = () => {
       setIsSubmitting(true);
 
       // Check if user is authenticated
-      const { data: user, error: userError } = await supabase.auth.getUser();
-      if (userError || !user?.user) {
+      if (!user) {
         Alert.alert("Error", "You must be logged in to create a league");
         setIsSubmitting(false);
         return;
@@ -108,7 +109,7 @@ export const useCreateLeague = () => {
         .from("leagues")
         .insert({
           name: leagueName,
-          created_by: user.user.id,
+          created_by: user.id,
           image_url: uploadedLeagueAvatar,
           avatar_color: leagueAvatarColor,
         })
@@ -148,10 +149,10 @@ export const useCreateLeague = () => {
 
           // Update user_id if this is the current user's email and it's missing
           if (
-            normalizedEmail === user.user.email?.toLowerCase() &&
+            normalizedEmail === user.email?.toLowerCase() &&
             !existingLeaguePlayer.user_id
           ) {
-            updates.user_id = user.user.id;
+            updates.user_id = user.id;
           }
 
           // Update avatar_url if player has a new image
@@ -178,9 +179,9 @@ export const useCreateLeague = () => {
           // Check if this email is associated with any existing user account
           let userIdToLink: string | null = null;
 
-          if (normalizedEmail === user.user.email?.toLowerCase()) {
+          if (normalizedEmail === user.email?.toLowerCase()) {
             // Current user
-            userIdToLink = user.user.id;
+            userIdToLink = user.id;
           } else {
             // Check if this email exists in any league_players with a user_id
             const { data: existingUserPlayer, error: userCheckError } =
@@ -220,26 +221,55 @@ export const useCreateLeague = () => {
         }
       }
       // Send welcome emails to players
-      const emailPromises = players
-        .filter((player) => player.email)
-        .map(async (player) => {
-          try {
-            await sendEmail({
-              to: player.email,
-              subject: `You've been added to ${leagueName}`,
-              html: `
-              <p>You've been added to ${leagueName} by ${user.user.email}.</p>
-              <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
-              `,
-            });
-          } catch (error) {
-            console.error(`Failed to send email to ${player.email}:`, error);
-            // Don't fail the entire operation if email fails
-          }
-        });
+      const emailResults = await Promise.allSettled(
+        players
+          .filter((player) => player.email)
+          .map(async (player) => {
+            try {
+              await sendEmail({
+                to: player.email,
+                subject: `You've been added to ${leagueName}`,
+                html: `
+                <p>You've been added to ${leagueName} by ${user?.name || user?.email}.</p>
+                <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
+                `,
+              });
+              return { success: true, email: player.email };
+            } catch (error) {
+              console.error(`Failed to send email to ${player.email}:`, error);
+              return {
+                success: false,
+                email: player.email,
+                error: error.message,
+              };
+            }
+          })
+      );
 
-      // Wait for all emails to be sent (but don't fail if some fail)
-      await Promise.allSettled(emailPromises);
+      // Analyze results and provide user feedback
+      const successfulEmails = emailResults.filter(
+        (result) => result.status === "fulfilled" && result.value.success
+      );
+      const failedEmails = emailResults.filter(
+        (result) => result.status === "fulfilled" && !result.value.success
+      );
+
+      // Show appropriate feedback to user
+      if (failedEmails.length > 0) {
+        const failedEmailList = failedEmails
+          .map((result) => (result as PromiseFulfilledResult<any>).value.email)
+          .join(", ");
+
+        Alert.alert(
+          "League Created with Warnings",
+          `League created successfully! However, failed to send invites to: ${failedEmailList}\n\nYou can resend invites later from the league settings.`
+        );
+      } else if (successfulEmails.length > 0) {
+        Alert.alert(
+          "League Created Successfully",
+          `League created and invites sent to ${successfulEmails.length} players!`
+        );
+      }
 
       setPlayers([]);
       setLeagueAvatar("");
@@ -251,7 +281,6 @@ export const useCreateLeague = () => {
       triggerLeaderboardRefresh();
       triggerRoundsRefresh();
 
-      Alert.alert("Success", "League created successfully");
       handleHome();
     } catch (error) {
       console.error("Error creating league:", error);

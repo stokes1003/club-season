@@ -128,31 +128,39 @@ export async function getPlayersByLeague(leagueId: string) {
         return groups;
       }, {});
 
-      Object.values(roundGroups).forEach((roundScores: any) => {
-        if (roundScores.length > 0) {
-          // Find best net score in this round
-          const bestNetScore = roundScores.reduce(
-            (best: any, current: any) =>
-              current.net_score < best.net_score ? current : best,
-            roundScores[0]
-          );
+      Object.entries(roundGroups).forEach(
+        ([roundId, roundScores]: [string, any]) => {
+          if (roundScores.length > 0) {
+            // Get ALL scores for this round (not just current player's)
+            const allRoundScores =
+              scores?.filter((s) => s.round_id === roundId) || [];
 
-          // Find best gross score in this round
-          const bestGrossScore = roundScores.reduce(
-            (best: any, current: any) =>
-              current.gross_score < best.gross_score ? current : best,
-            roundScores[0]
-          );
+            if (allRoundScores.length === 0) return;
 
-          // Check if this player won
-          if (bestNetScore.league_player_id === player.id) {
-            netWins++;
-          }
-          if (bestGrossScore.league_player_id === player.id) {
-            grossWins++;
+            // Find best net score in this round (across all players)
+            const bestNetScore = allRoundScores.reduce(
+              (best: any, current: any) =>
+                current.net_score < best.net_score ? current : best,
+              allRoundScores[0]
+            );
+
+            // Find best gross score in this round (across all players)
+            const bestGrossScore = allRoundScores.reduce(
+              (best: any, current: any) =>
+                current.gross_score < best.gross_score ? current : best,
+              allRoundScores[0]
+            );
+
+            // Check if this player won
+            if (bestNetScore.league_player_id === player.id) {
+              netWins++;
+            }
+            if (bestGrossScore.league_player_id === player.id) {
+              grossWins++;
+            }
           }
         }
-      });
+      );
 
       return {
         player_id: player.id,

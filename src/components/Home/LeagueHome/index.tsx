@@ -11,7 +11,7 @@ export function LeagueHome({ selectedLeague }: { selectedLeague: League }) {
   return (
     <>
       <TopThree league={selectedLeague} isNet={isNet} setIsNet={setIsNet} />
-      <LeagueTable league={selectedLeague} isNet={isNet} players={players} />
+      <LeagueTable isNet={isNet} players={players} />
       <OfficialRounds league={selectedLeague} />
     </>
   );
