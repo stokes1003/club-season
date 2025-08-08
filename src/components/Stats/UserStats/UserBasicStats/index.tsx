@@ -13,11 +13,11 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
   const basicStats = [
     {
       value: userStats?.avg_gross_score,
-      label: "AVG Gross",
+      label: "AVG",
     },
     {
       value: userStats?.rounds_played,
-      label: "Rounds Played",
+      label: "Rounds",
     },
     {
       value: userStats?.avg_net_score,
@@ -27,19 +27,22 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
 
   return (
     <>
-      <YStack gap="$4" style={{ alignItems: "center" }}>
-        <PlayerAvatar
-          name={user?.name || "Unknown Player"}
-          avatarUrl={user?.avatar_url || ""}
-          size="$10"
-          color={user?.player_color || "#6B7280"}
-        />
-        <Text fontSize="$8" fontWeight="bold">
-          {user?.name || "Unknown Player"}
-        </Text>
+      <YStack gap="$6" style={{ alignItems: "center" }}>
+        <YStack gap="$2" style={{ alignItems: "center" }}>
+          <PlayerAvatar
+            name={user?.name || "Unknown Player"}
+            avatarUrl={user?.avatar_url || ""}
+            size="$10"
+            color={user?.player_color || "#6B7280"}
+          />
+          <Text fontSize="$8" fontWeight="bold">
+            {user?.name || "Unknown Player"}
+          </Text>
+        </YStack>
       </YStack>
-      <XStack style={{ justifyContent: "space-evenly" }}>
-        {basicStats.map((stat, index) => (
+
+      <XStack gap="$4" style={{ justifyContent: "center" }}>
+        {basicStats.map((stat) => (
           <YStack
             key={stat.label}
             gap="$3"
@@ -47,18 +50,17 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
             width="$8"
           >
             <View
-              width="$7"
-              height="$7"
+              width="$4"
+              height="$4"
               borderColor="$black10"
               borderWidth="$0.25"
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: "100%",
               }}
             >
               <Text
-                fontSize="$8"
+                fontSize="$4"
                 fontWeight="bold"
                 style={{ textAlign: "center" }}
               >
@@ -66,8 +68,8 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
               </Text>
             </View>
             <Text
-              fontSize="$6"
-              fontWeight="bold"
+              fontSize="$5"
+              fontWeight="500"
               style={{ textAlign: "center" }}
             >
               {stat.label}
@@ -75,7 +77,6 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
           </YStack>
         ))}
       </XStack>
-      <Separator width="100%" borderColor="$black10" />
     </>
   );
 }

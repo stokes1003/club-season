@@ -4,13 +4,16 @@ import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { Player } from "src/types/player";
 import { YStack, Text, Label, XStack, Separator, Button } from "tamagui";
 import { ChevronRight } from "@tamagui/lucide-icons";
+import { League } from "..";
 
 export function PlayerProfile({
   selectedPlayer,
   setSelectedPlayer,
+  selectedLeague,
 }: {
   selectedPlayer: Player;
   setSelectedPlayer: (player: Player | null) => void;
+  selectedLeague: League;
 }) {
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
@@ -32,6 +35,10 @@ export function PlayerProfile({
       </YStack>
 
       <YStack gap="$4">
+        <Text fontSize="$5" fontWeight="400">
+          Customize player details for {selectedLeague.name}. These details will
+          only affect {selectedLeague.name}.
+        </Text>
         <XStack
           style={{ alignItems: "center", justifyContent: "space-between" }}
         >

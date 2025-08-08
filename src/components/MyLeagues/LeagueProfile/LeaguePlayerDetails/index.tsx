@@ -28,12 +28,7 @@ export function LeaguePlayerDetails({
             <YStack key={player.player_id} gap="$4">
               <Pressable
                 onPress={() => {
-                  if (!isCommissioner) {
-                    Alert.alert("Only commissioner can edit player details");
-                    return;
-                  } else {
-                    setSelectedPlayer(player);
-                  }
+                  setSelectedPlayer(player);
                 }}
                 style={{
                   opacity: isCommissioner ? 1 : 0.6,

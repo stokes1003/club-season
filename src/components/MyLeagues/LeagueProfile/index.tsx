@@ -12,10 +12,12 @@ export function LeagueProfile({
   selectedLeague,
   setSelectedLeague,
   setSelectedPlayer,
+  setSelectedCourse,
 }: {
   selectedLeague: League;
   setSelectedLeague: (league: League | null) => void;
   setSelectedPlayer: (player: Player | null) => void;
+  setSelectedCourse: (course: any) => void;
 }) {
   const { user } = useUser();
   const isCommissioner = user?.id === selectedLeague?.created_by;
@@ -46,6 +48,7 @@ export function LeagueProfile({
         <LeagueCourseDetails
           selectedLeague={selectedLeague}
           isCommissioner={isCommissioner}
+          setSelectedCourse={setSelectedCourse}
         />
       </YStack>
     </YStack>

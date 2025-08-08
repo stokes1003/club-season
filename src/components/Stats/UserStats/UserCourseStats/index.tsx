@@ -15,27 +15,33 @@ export function UserCourseStats({
   };
 
   return (
-    <YStack>
-      <Label fontSize="$8" fontWeight="bold">
+    <YStack gap="$1">
+      <Label fontSize="$6" fontWeight="bold">
         {title}
       </Label>
       <XStack style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <YStack gap="$2" width="$20">
-          <Text fontSize="$5" fontWeight="bold">
+        <YStack gap="$1" width="$20">
+          <Text fontSize="$5" fontWeight="500">
             {course?.course_name}
           </Text>
           {showDate ? (
-            <Text fontSize="$5">{course?.date?.toLocaleDateString()}</Text>
+            <Text fontSize="$4" fontWeight="400">
+              {course?.date?.toLocaleDateString()}
+            </Text>
           ) : (
             <XStack gap="$2">
-              <Text fontSize="$5">Rounds:</Text>
-              <Text fontSize="$5">{course?.times_played}</Text>
+              <Text fontSize="$4" fontWeight="400">
+                Rounds:
+              </Text>
+              <Text fontSize="$4" fontWeight="400">
+                {course?.times_played}
+              </Text>
             </XStack>
           )}
         </YStack>
         <View
-          width="$6"
-          height="$6"
+          width="$4"
+          height="$4"
           borderColor="$black10"
           borderWidth="$0.25"
           style={{
@@ -43,7 +49,7 @@ export function UserCourseStats({
             justifyContent: "center",
           }}
         >
-          <Text fontSize="$8" fontWeight="bold" style={{ textAlign: "center" }}>
+          <Text fontSize="$4" fontWeight="bold" style={{ textAlign: "center" }}>
             {formatScore(course?.score || course?.avg_score)}
           </Text>
         </View>

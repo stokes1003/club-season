@@ -20,40 +20,39 @@ export function UserStats() {
       showDate: true,
     },
     {
-      title: "Best Course",
+      title: "Best Course AVG",
       course: userStats?.best_course,
       showDate: false,
     },
     {
-      title: "Worst Course",
+      title: "Worst Course AVG",
       course: userStats?.worst_course,
       showDate: false,
     },
     {
-      title: "Most Played Course",
+      title: "Most Played Course AVG",
       course: userStats?.most_played_course,
       showDate: false,
     },
   ];
 
   return (
-    <>
-      <YStack gap="$6" width="100%">
-        <UserBasicStats user={user} />
-
+    <YStack gap="$4" width="100%">
+      <UserBasicStats user={user} />
+      <YStack>
         {coursePlayerStats.map((stat, index) => (
-          <YStack key={stat.title} gap="$6">
+          <YStack key={stat.title} gap="$4">
             <UserCourseStats
               title={stat.title}
               course={stat.course}
               showDate={stat.showDate}
             />
             {index < coursePlayerStats.length - 1 && (
-              <Separator width="100%" borderColor="$black10" />
+              <Separator width="100%" borderColor="$black11" />
             )}
           </YStack>
         ))}
       </YStack>
-    </>
+    </YStack>
   );
 }

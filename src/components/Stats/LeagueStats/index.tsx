@@ -83,7 +83,7 @@ export function LeagueStats() {
         {leagueBasicStats.map((stat) => (
           <YStack key={stat.title} gap="$4">
             <LeagueBasicStats key={stat.title} stat={stat} />
-            <Separator width="100%" borderColor="$black10" />
+            <Separator width="100%" borderColor="$black11" />
           </YStack>
         ))}
 
@@ -92,7 +92,7 @@ export function LeagueStats() {
             <LeagueCourseStats key={stat.title} stat={stat} />
 
             {index < courseLeagueStats.length - 1 && (
-              <Separator width="100%" borderColor="$black10" />
+              <Separator width="100%" borderColor="$black11" />
             )}
           </YStack>
         ))}

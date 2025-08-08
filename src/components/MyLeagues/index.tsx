@@ -1,9 +1,11 @@
 import { YStack } from "tamagui";
 import { LeaguesDashboard } from "./LeaguesDashboard/index";
-import { useState } from "react";
 import { LeagueProfile } from "./LeagueProfile";
-import { Player } from "src/types/player";
 import { PlayerProfile } from "./PlayerProfile";
+import { CourseProfile } from "./CourseProfile";
+import { NavigationProvider, useNavigation } from "./NavigationContext";
+import { navigationAnalytics } from "./NavigationAnalytics";
+import { NavigationGuards } from "./NavigationGuards";
 
 export type League = {
   id: string;
@@ -15,56 +17,78 @@ export type League = {
   isCreator: boolean;
 };
 
-type NavigationState =
-  | { type: "dashboard" }
-  | { type: "league"; league: League }
-  | { type: "player"; player: Player; league: League };
-
-export function MyLeagues() {
-  const [navigationState, setNavigationState] = useState<NavigationState>({
-    type: "dashboard",
-  });
-
-  const navigateToDashboard = () => setNavigationState({ type: "dashboard" });
-  const navigateToLeague = (league: League) =>
-    setNavigationState({ type: "league", league });
-  const navigateToPlayer = (player: Player | null, league?: League) => {
-    if (player && league) {
-      setNavigationState({ type: "player", player, league });
-    } else {
-      navigateToDashboard();
-    }
-  };
-
-  const navigateBackToLeague = () => {
-    if (navigationState.type === "player") {
-      setNavigationState({ type: "league", league: navigationState.league });
-    } else {
-      navigateToDashboard();
-    }
-  };
+function MyLeaguesContent() {
+  const {
+    currentState,
+    navigateToDashboard,
+    navigateToLeague,
+    navigateToPlayer,
+    navigateToCourse,
+    navigateBack,
+    canGoBack,
+  } = useNavigation();
 
   const renderCurrentScreen = () => {
-    switch (navigationState.type) {
+    const fromScreen = currentState.type;
+
+    switch (currentState.type) {
       case "dashboard":
+        navigationAnalytics.trackNavigation("previous", "dashboard");
         return <LeaguesDashboard setSelectedLeague={navigateToLeague} />;
 
       case "league":
+        navigationAnalytics.trackNavigation("previous", "league", {
+          leagueId: currentState.league.id,
+        });
         return (
           <LeagueProfile
-            selectedLeague={navigationState.league}
+            selectedLeague={currentState.league}
             setSelectedLeague={navigateToDashboard}
-            setSelectedPlayer={(player) =>
-              navigateToPlayer(player, navigationState.league)
-            }
+            setSelectedPlayer={(player) => {
+              if (
+                NavigationGuards.canNavigateToPlayer(
+                  player,
+                  currentState.league
+                )
+              ) {
+                navigateToPlayer(player, currentState.league);
+              }
+            }}
+            setSelectedCourse={(course) => {
+              if (
+                NavigationGuards.canNavigateToCourse(
+                  course,
+                  currentState.league
+                )
+              ) {
+                navigateToCourse(course, currentState.league);
+              }
+            }}
           />
         );
 
       case "player":
+        navigationAnalytics.trackNavigation("previous", "player", {
+          playerId: currentState.player.player_id,
+          leagueId: currentState.league.id,
+        });
         return (
           <PlayerProfile
-            selectedPlayer={navigationState.player}
-            setSelectedPlayer={navigateBackToLeague}
+            selectedPlayer={currentState.player}
+            setSelectedPlayer={navigateBack}
+            selectedLeague={currentState.league}
+          />
+        );
+
+      case "course":
+        navigationAnalytics.trackNavigation("previous", "course", {
+          courseId: currentState.course.id,
+          leagueId: currentState.league.id,
+        });
+        return (
+          <CourseProfile
+            selectedCourse={currentState.course}
+            setSelectedCourse={navigateBack}
           />
         );
 
@@ -77,5 +101,13 @@ export function MyLeagues() {
     <YStack gap="$8" style={{ alignItems: "center" }} width={320} mb="$8">
       {renderCurrentScreen()}
     </YStack>
+  );
+}
+
+export function MyLeagues() {
+  return (
+    <NavigationProvider>
+      <MyLeaguesContent />
+    </NavigationProvider>
   );
 }

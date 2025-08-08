@@ -1,38 +1,20 @@
 import { YStack, Text, Separator, XStack, Button } from "tamagui";
 import { League } from "../..";
 import { Alert, Pressable, View } from "react-native";
-import { getLeagueCourses } from "src/api/getLeagueCourses";
 import { ChevronRight } from "@tamagui/lucide-icons";
-import { useEffect, useState } from "react";
-import { Location } from "src/types/golfCourse";
-
-type LeagueCourse = {
-  id: string;
-  club_name: string;
-  course_name: string;
-  external_course_id: number;
-  location: Location;
-  tees: any | null;
-  times_played: number;
-  photo_url: string;
-};
+import { useGetLeagueCourses } from "src/hooks/useGetLeagueCourses";
 
 export function LeagueCourseDetails({
   selectedLeague,
   isCommissioner,
+  setSelectedCourse,
 }: {
   selectedLeague: League;
   isCommissioner: boolean;
+  setSelectedCourse: (course: any) => void;
 }) {
-  const [courses, setCourses] = useState<LeagueCourse[]>([]);
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      const courses = await getLeagueCourses(selectedLeague.id);
-      setCourses(courses);
-    };
-    fetchCourses();
-  }, [selectedLeague.id]);
+  const courses = useGetLeagueCourses(selectedLeague.id);
+  console.log(courses);
 
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
@@ -55,10 +37,7 @@ export function LeagueCourseDetails({
               <YStack key={course.id} gap="$4">
                 <Pressable
                   onPress={() => {
-                    if (!isCommissioner) {
-                      Alert.alert("Only commissioner can edit course details");
-                      return;
-                    }
+                    setSelectedCourse(course);
                   }}
                 >
                   <XStack
