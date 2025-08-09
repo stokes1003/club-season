@@ -10,7 +10,7 @@ export async function getPlayersByLeague(leagueId: string) {
     const { data: players, error: playersError } = await supabase
       .from("league_players")
       .select(
-        "id, display_name, avatar_url, player_color, invite_email, net_points, gross_points"
+        "id, display_name, avatar_url, player_color, invite_email, net_points, gross_points, player_role"
       )
       .eq("league_id", leagueId);
 
@@ -50,6 +50,7 @@ export async function getPlayersByLeague(leagueId: string) {
         gross_points: player.gross_points || 0,
         net_wins: 0,
         gross_wins: 0,
+        player_role: player.player_role || "",
       }));
     }
 
@@ -78,6 +79,7 @@ export async function getPlayersByLeague(leagueId: string) {
           avatar_url: player.avatar_url || "",
           player_color: player.player_color || "#6B7280",
           invite_email: player.invite_email || "",
+          player_role: player.player_role || "",
           avg_net: 0,
           best_net: 0,
           avg_gross: 0,
@@ -168,6 +170,7 @@ export async function getPlayersByLeague(leagueId: string) {
         avatar_url: player.avatar_url || "",
         player_color: player.player_color || "#6B7280",
         invite_email: player.invite_email || "",
+        player_role: player.player_role || "",
         avg_net: avgNet,
         best_net: bestNet,
         avg_gross: avgGross,

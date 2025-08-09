@@ -4,15 +4,18 @@ import { YStack, Text, Input, XStack, Spinner, Button } from "tamagui";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import { Player } from "src/types/player";
 import { League } from "src/components/MyLeagues";
+import { updatePlayerRole } from "src/api/players/updatePlayerRole";
 
 export function ChangePlayerRole({
   setMode,
   selectedPlayer,
   selectedLeague,
+  setSelectedPlayer,
 }: {
   setMode: (mode: "change-role" | "profile") => void;
   selectedPlayer: Player;
   selectedLeague: League;
+  setSelectedPlayer: (player: Player) => void;
 }) {
   const [newRole, setNewRole] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,11 +26,16 @@ export function ChangePlayerRole({
       Alert.alert("Error", "New role cannot be empty");
       return;
     }
-    // if (newRole === selectedPlayer.role) {
-    //   Alert.alert("Error", "New role cannot be the same as the current role");
-    //   return;
-    // }
-    // TODO: Implement API call to change role
+    if (newRole === selectedPlayer.player_role) {
+      Alert.alert("Error", "New role cannot be the same as the current role");
+      return;
+    }
+    await updatePlayerRole(selectedPlayer.player_id, newRole);
+    Alert.alert("Success", "Player role changed successfully");
+    setSelectedPlayer({
+      ...selectedPlayer,
+      player_role: newRole,
+    });
     setLoading(false);
     setMode("profile");
   };
@@ -52,7 +60,7 @@ export function ChangePlayerRole({
             Current Role
           </Text>
           <Text fontSize="$5" fontWeight="400">
-            Player
+            {selectedPlayer.player_role}
           </Text>
         </YStack>
         <YStack gap="$3">

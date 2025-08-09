@@ -53,6 +53,7 @@ export function PlayerProfile({
             selectedPlayer={selectedPlayer}
             selectedLeague={selectedLeague}
             setMode={setMode}
+            setSelectedPlayer={setSelectedPlayer}
           />
         );
 

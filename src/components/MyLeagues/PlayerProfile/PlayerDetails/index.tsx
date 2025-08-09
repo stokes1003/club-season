@@ -145,7 +145,7 @@ export function PlayerDetails({
                 Role
               </Label>
               <Text fontSize="$5" fontWeight="400">
-                Player
+                {selectedPlayer.player_role}
               </Text>
             </YStack>
             <ChevronRight />
