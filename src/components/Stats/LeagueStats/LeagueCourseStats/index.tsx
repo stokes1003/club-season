@@ -1,7 +1,13 @@
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
-import { Label, Text, View, XStack, YStack } from "tamagui";
+import { Label, Spinner, Text, View, XStack, YStack } from "tamagui";
 
-export function LeagueCourseStats({ stat }: { stat: any }) {
+export function LeagueCourseStats({
+  stat,
+  loading,
+}: {
+  stat: any;
+  loading?: boolean;
+}) {
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "-";
     try {
@@ -56,7 +62,7 @@ export function LeagueCourseStats({ stat }: { stat: any }) {
               fontWeight="bold"
               style={{ textAlign: "center" }}
             >
-              {formatScore(stat.score?.score)}
+              {loading ? <Spinner /> : formatScore(stat.score?.score)}
             </Text>
           </View>
         </XStack>

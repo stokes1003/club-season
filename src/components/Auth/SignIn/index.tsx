@@ -65,42 +65,42 @@ export function SignIn({ onToggleMode }: SignInProps) {
     setLoading(false);
   }
 
-  async function signInWithGoogle() {
-    setLoading(true);
+  // async function signInWithGoogle() {
+  //   setLoading(true);
 
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "club-season://auth/callback",
-        },
-      });
+  //   try {
+  //     const { data, error } = await supabase.auth.signInWithOAuth({
+  //       provider: "google",
+  //       options: {
+  //         redirectTo: "club-season://auth/callback",
+  //       },
+  //     });
 
-      if (error) {
-        console.error("Google sign in error:", error);
-        Alert.alert("Sign In Error", "Failed to sign in with Google");
-      } else {
-        console.log("OAuth initiated:", data);
-        // Open the OAuth URL in a web browser
-        const result = await WebBrowser.openAuthSessionAsync(
-          data.url,
-          "club-season://auth/callback"
-        );
+  //     if (error) {
+  //       console.error("Google sign in error:", error);
+  //       Alert.alert("Sign In Error", "Failed to sign in with Google");
+  //     } else {
+  //       console.log("OAuth initiated:", data);
+  //       // Open the OAuth URL in a web browser
+  //       const result = await WebBrowser.openAuthSessionAsync(
+  //         data.url,
+  //         "club-season://auth/callback"
+  //       );
 
-        if (result.type === "success") {
-          // Handle successful authentication
-          console.log("OAuth successful:", result.url);
-        } else {
-          console.log("OAuth cancelled or failed:", result.type);
-        }
-      }
-    } catch (error) {
-      console.error("Google sign in error:", error);
-      Alert.alert("Sign In Error", "An unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }
+  //       if (result.type === "success") {
+  //         // Handle successful authentication
+  //         console.log("OAuth successful:", result.url);
+  //       } else {
+  //         console.log("OAuth cancelled or failed:", result.type);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Google sign in error:", error);
+  //     Alert.alert("Sign In Error", "An unexpected error occurred");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   const handleEmailChange = (text: string) => {
     setEmail(text);
@@ -188,12 +188,12 @@ export function SignIn({ onToggleMode }: SignInProps) {
             Sign In
           </Button>
         </View>
-        <XStack style={{ alignItems: "center" }} gap="$2" mx="$10">
+        {/* <XStack style={{ alignItems: "center" }} gap="$2" mx="$10">
           <Separator borderColor="$black10" />
           <Text>Or</Text>
           <Separator borderColor="$black10" />
-        </XStack>
-        <View>
+        </XStack> */}
+        {/* <View>
           <Button
             onPress={() => signInWithGoogle()}
             fontSize="$5"
@@ -203,7 +203,7 @@ export function SignIn({ onToggleMode }: SignInProps) {
           >
             Sign In with Google
           </Button>
-        </View>
+        </View> */}
       </YStack>
 
       <XStack gap="$2">

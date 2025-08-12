@@ -6,7 +6,7 @@ import { UserBasicStats } from "./UserBasicStats";
 
 export function UserStats() {
   const { user } = useUser();
-  const { userStats } = useGetUserStats(user);
+  const { userStats, loading } = useGetUserStats(user);
 
   const coursePlayerStats = [
     {
@@ -46,6 +46,7 @@ export function UserStats() {
               title={stat.title}
               course={stat.course}
               showDate={stat.showDate}
+              loading={loading}
             />
             {index < coursePlayerStats.length - 1 && (
               <Separator width="100%" borderColor="$black11" />

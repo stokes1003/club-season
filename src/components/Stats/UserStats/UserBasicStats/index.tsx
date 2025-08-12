@@ -1,4 +1,4 @@
-import { YStack, XStack, View, Text, Separator } from "tamagui";
+import { YStack, XStack, View, Text, Spinner } from "tamagui";
 import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 import { User } from "src/types/user";
 import { useGetUserStats } from "src/hooks/useGetUserStats";
@@ -8,7 +8,7 @@ type UserBasicStatsProps = {
 };
 
 export function UserBasicStats({ user }: UserBasicStatsProps) {
-  const { userStats } = useGetUserStats(user);
+  const { userStats, loading } = useGetUserStats(user);
 
   const basicStats = [
     {
@@ -64,7 +64,7 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
                 fontWeight="bold"
                 style={{ textAlign: "center" }}
               >
-                {stat.value}
+                {loading ? <Spinner /> : stat.value}
               </Text>
             </View>
             <Text

@@ -1,4 +1,4 @@
-import { YStack, Text, Separator, View } from "tamagui";
+import { YStack, Separator, View } from "tamagui";
 import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 import { LeagueCourseStats } from "./LeagueCourseStats";
 import { LeagueBasicStats } from "./LeagueBasicStats/index";
@@ -9,10 +9,8 @@ import { useState } from "react";
 
 export function LeagueStats() {
   const { selectedLeague } = useSelectedLeague();
-  const leagueStats = useGetLeagueStats(selectedLeague?.id || "");
+  const { leagueStats, loading } = useGetLeagueStats(selectedLeague?.id || "");
   const [isNet, setIsNet] = useState(true);
-
-  console.log("leagueStats:", leagueStats);
 
   const courseLeagueStats = [
     {
@@ -61,20 +59,10 @@ export function LeagueStats() {
     },
   ];
 
-  console.log("leagueBasicStats:", leagueBasicStats);
-
-  if (!leagueStats || !leagueStats.best_score) {
-    return (
-      <YStack gap="$8">
-        <Text>Loading league stats...</Text>
-      </YStack>
-    );
-  }
-
   return (
     <YStack gap="$4">
       <YStack gap="$4">
-        <LeagueSummaryStats />
+        <LeagueSummaryStats loading={loading} />
         <View style={{ alignItems: "center" }}>
           <NetGrossTabs isNet={isNet} setIsNet={setIsNet} />
         </View>
@@ -82,14 +70,14 @@ export function LeagueStats() {
       <YStack>
         {leagueBasicStats.map((stat) => (
           <YStack key={stat.title} gap="$4">
-            <LeagueBasicStats key={stat.title} stat={stat} />
+            <LeagueBasicStats key={stat.title} stat={stat} loading={loading} />
             <Separator width="100%" borderColor="$black11" />
           </YStack>
         ))}
 
         {courseLeagueStats.map((stat, index) => (
           <YStack key={stat.title} gap="$4">
-            <LeagueCourseStats key={stat.title} stat={stat} />
+            <LeagueCourseStats key={stat.title} stat={stat} loading={loading} />
 
             {index < courseLeagueStats.length - 1 && (
               <Separator width="100%" borderColor="$black11" />

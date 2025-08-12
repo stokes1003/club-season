@@ -9,7 +9,6 @@ export function CourseProfile({
   selectedCourse: any;
   setSelectedCourse: (course: any) => void;
 }) {
-  console.log(selectedCourse);
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
       <XStack style={{ alignItems: "flex-start", width: "100%" }}>

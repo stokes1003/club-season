@@ -24,6 +24,7 @@ export function AddPlayers({
     image: string;
     email: string;
     color: string;
+    role: string;
   }>;
   setPlayers: (
     players: Array<{
@@ -31,6 +32,7 @@ export function AddPlayers({
       image: string;
       email: string;
       color: string;
+      role: string;
     }>
   ) => void;
   numberOfPlayers: string;
@@ -49,6 +51,7 @@ export function AddPlayers({
         name: user.name || "",
         email: user.email || "",
         image: user.avatar_url || "",
+        role: "commissioner",
       };
       setPlayers(updatedPlayers);
     }
@@ -232,6 +235,7 @@ export function AddPlayers({
                 updatedPlayers[currentPlayerIndex] = {
                   ...updatedPlayers[currentPlayerIndex],
                   name: text,
+                  role: "player",
                 };
                 setPlayers(updatedPlayers);
               }}

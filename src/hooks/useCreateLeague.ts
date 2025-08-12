@@ -13,6 +13,7 @@ type Player = {
   image: string;
   email: string;
   color: string;
+  role: string;
 };
 
 export const useCreateLeague = () => {
@@ -207,6 +208,7 @@ export const useCreateLeague = () => {
               avatar_url: player.image || null,
               player_color: player.color || "#6B7280",
               user_id: userIdToLink,
+              player_role: player.role,
             })
             .select()
             .single();

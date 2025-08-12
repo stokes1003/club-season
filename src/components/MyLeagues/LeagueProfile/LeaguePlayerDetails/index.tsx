@@ -1,10 +1,11 @@
-import { YStack, XStack, Text, Separator, View } from "tamagui";
-import { Pressable } from "react-native";
+import { YStack, XStack, Text, Separator, View, Button } from "tamagui";
+import { Alert, Pressable } from "react-native";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
-import { ChevronRight } from "@tamagui/lucide-icons";
+import { ChevronDown, ChevronRight } from "@tamagui/lucide-icons";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { League } from "../..";
 import { Player } from "src/types/player";
+import { useState } from "react";
 
 export function LeaguePlayerDetails({
   selectedLeague,
@@ -16,61 +17,70 @@ export function LeaguePlayerDetails({
   setSelectedPlayer?: (player: Player | null) => void;
 }) {
   const players = useGetPlayers(selectedLeague.id);
+  const [showPlayers, setShowPlayers] = useState(true);
   return (
     <YStack gap="$6" style={{ alignItems: "center", width: "100%" }}>
       <YStack gap="$6">
-        <Text fontSize="$8" fontWeight="bold">
-          Players
-        </Text>
-        <YStack gap="$4">
-          <Separator width={320} borderColor="$black10" />
-          {players?.map((player) => (
-            <YStack key={player.player_id} gap="$4">
-              <Pressable
-                onPress={() => {
-                  setSelectedPlayer(player);
-                }}
-                style={{
-                  opacity: isCommissioner ? 1 : 0.6,
-                }}
-              >
-                <XStack
-                  gap="$4"
+        <XStack style={{ justifyContent: "space-between" }} width={320}>
+          <Text fontSize="$8" fontWeight="bold">
+            Players
+          </Text>
+          <Pressable onPress={() => setShowPlayers(!showPlayers)}>
+            {showPlayers ? <ChevronDown /> : <ChevronRight />}
+          </Pressable>
+        </XStack>
+
+        {showPlayers && (
+          <YStack gap="$4">
+            <Separator width={320} borderColor="$black11" />
+            {players?.map((player) => (
+              <YStack key={player.player_id} gap="$4">
+                <Pressable
+                  onPress={() => {
+                    setSelectedPlayer(player);
+                  }}
                   style={{
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    opacity: isCommissioner ? 1 : 0.6,
                   }}
                 >
-                  <XStack gap="$4">
-                    <PlayerAvatar
-                      name={player.name}
-                      avatarUrl={player.avatar_url}
-                      size="$5"
-                      color={player.player_color || undefined}
-                    />
-                    <YStack gap="$2">
-                      <Text fontSize="$6" fontWeight="400">
-                        {player.name}
-                      </Text>
+                  <XStack
+                    gap="$4"
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <XStack gap="$4">
+                      <PlayerAvatar
+                        name={player.name}
+                        avatarUrl={player.avatar_url}
+                        size="$5"
+                        color={player.player_color || undefined}
+                      />
+                      <YStack gap="$2">
+                        <Text fontSize="$6" fontWeight="400">
+                          {player.name}
+                        </Text>
 
-                      <Text fontSize="$4" fontWeight="400">
-                        {player.invite_email}
-                      </Text>
-                    </YStack>
+                        <Text fontSize="$4" fontWeight="400">
+                          {player.invite_email}
+                        </Text>
+                      </YStack>
+                    </XStack>
+
+                    {isCommissioner && (
+                      <View>
+                        <ChevronRight />
+                      </View>
+                    )}
                   </XStack>
+                </Pressable>
 
-                  {isCommissioner && (
-                    <View>
-                      <ChevronRight />
-                    </View>
-                  )}
-                </XStack>
-              </Pressable>
-
-              <Separator width={320} borderColor="$black10" />
-            </YStack>
-          ))}
-        </YStack>
+                <Separator width={320} borderColor="$black11" />
+              </YStack>
+            ))}
+          </YStack>
+        )}
       </YStack>
     </YStack>
   );

@@ -1,13 +1,15 @@
-import { Label, Text, View, XStack, YStack } from "tamagui";
+import { Label, Spinner, Text, View, XStack, YStack } from "tamagui";
 
 export function UserCourseStats({
   title,
   course,
   showDate = false,
+  loading = false,
 }: {
   title: string;
   course: any;
   showDate?: boolean;
+  loading?: boolean;
 }) {
   const formatScore = (score: number | undefined) => {
     if (score === undefined || score === null) return "-";
@@ -50,7 +52,11 @@ export function UserCourseStats({
           }}
         >
           <Text fontSize="$4" fontWeight="bold" style={{ textAlign: "center" }}>
-            {formatScore(course?.score || course?.avg_score)}
+            {loading ? (
+              <Spinner />
+            ) : (
+              formatScore(course?.score || course?.avg_score)
+            )}
           </Text>
         </View>
       </XStack>

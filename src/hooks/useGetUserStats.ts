@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getUserStats } from "../api/userStats";
 
 export function useGetUserStats(user: User | null) {
+  const [loading, setLoading] = useState(true);
   const [userStats, setUserStats] = useState<{
     rounds_played: number;
     avg_net_score: number;
@@ -46,7 +47,6 @@ export function useGetUserStats(user: User | null) {
     net_wins: number;
     gross_wins: number;
   } | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUserStats() {

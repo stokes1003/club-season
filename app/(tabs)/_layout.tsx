@@ -12,6 +12,7 @@ import {
 import { useUser } from "../../src/context/UserContext";
 import { useState } from "react";
 import { useSelectedLeague } from "../../src/context/SelectedLeagueContext";
+import { usePathname } from "expo-router";
 
 export type League = {
   id: string;
@@ -26,11 +27,13 @@ export default function TabLayout() {
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const { selectedLeague, setSelectedLeague } = useSelectedLeague();
+  const currentRoute = usePathname();
 
   const handleSelectLeague = (league: League | null) => {
     setSelectedLeague(league as League);
     setIsOpen(false);
   };
+  console.log(currentRoute);
 
   return (
     <>
@@ -55,7 +58,7 @@ export default function TabLayout() {
             pressStyle={{ background: "$gray5" }}
           >
             <Text fontSize="$6" style={{ textAlign: "center" }}>
-              My Career
+              {currentRoute === "/Stats" ? "My Stats" : "My Career"}
             </Text>
           </View>
 
@@ -84,32 +87,30 @@ export default function TabLayout() {
             borderBottomColor: theme?.borderColor?.val || "#e0e0e0",
           },
           headerTintColor: theme?.color?.val || "#000000",
-
-          headerTitle: () => (
-            <YStack style={{ alignItems: "center" }}>
-              <XStack
-                gap="$2"
-                style={{ alignItems: "center" }}
-                onPress={() => setIsOpen(!isOpen)}
-                pressStyle={{ background: "$gray5" }}
-              >
-                <Text
-                  fontSize="$7"
-                  fontWeight="bold"
-                  style={{ textAlign: "center" }}
-                >
-                  {selectedLeague?.name || "My Career"}
-                </Text>
-                {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
-              </XStack>
-            </YStack>
-          ),
         }}
       >
         <Tabs.Screen
           name="index"
           options={{
-            title: "Home",
+            headerTitle: () => (
+              <YStack style={{ alignItems: "center" }}>
+                <XStack
+                  gap="$2"
+                  style={{ alignItems: "center" }}
+                  onPress={() => setIsOpen(!isOpen)}
+                  pressStyle={{ background: "$gray5" }}
+                >
+                  <Text
+                    fontSize="$5"
+                    fontWeight="bold"
+                    style={{ textAlign: "center" }}
+                  >
+                    {selectedLeague?.name || "My Career"}
+                  </Text>
+                  {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
+                </XStack>
+              </YStack>
+            ),
 
             tabBarIcon: ({ color }) => <House color={color as any} />,
           }}
@@ -118,7 +119,25 @@ export default function TabLayout() {
         <Tabs.Screen
           name="Stats"
           options={{
-            title: "Stats",
+            headerTitle: () => (
+              <YStack style={{ alignItems: "center" }}>
+                <XStack
+                  gap="$2"
+                  style={{ alignItems: "center" }}
+                  onPress={() => setIsOpen(!isOpen)}
+                  pressStyle={{ background: "$gray5" }}
+                >
+                  <Text
+                    fontWeight="bold"
+                    fontSize="$5"
+                    style={{ textAlign: "center" }}
+                  >
+                    {selectedLeague?.name || "My Stats"}
+                  </Text>
+                  {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
+                </XStack>
+              </YStack>
+            ),
 
             tabBarIcon: ({ color }) => (
               <ChartNoAxesCombined color={color as any} />
@@ -145,7 +164,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="Profile"
           options={{
-            title: "",
+            title: "Profile",
 
             tabBarIcon: ({ color }) =>
               user ? (

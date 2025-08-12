@@ -1,11 +1,11 @@
-import { YStack, XStack, View, Text } from "tamagui";
+import { YStack, XStack, View, Text, Spinner } from "tamagui";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 import { useUser } from "src/hooks/useUser";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useGetLeagueCourses } from "src/hooks/useGetLeagueCourses";
 
-export function LeagueSummaryStats() {
+export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
   const { selectedLeague } = useSelectedLeague();
   const user = useUser();
   const leagues = user?.leagues;
@@ -42,7 +42,7 @@ export function LeagueSummaryStats() {
               fontWeight="500"
               style={{ textAlign: "center" }}
             >
-              {rounds?.length}
+              {loading ? <Spinner /> : rounds?.length}
             </Text>
           </View>
           <Text fontSize="$5" fontWeight="500" style={{ textAlign: "center" }}>
@@ -65,7 +65,7 @@ export function LeagueSummaryStats() {
               fontWeight="500"
               style={{ textAlign: "center" }}
             >
-              {majorRounds?.length}
+              {loading ? <Spinner /> : majorRounds?.length}
             </Text>
           </View>
           <Text fontSize="$5" fontWeight="500" style={{ textAlign: "center" }}>
@@ -88,7 +88,7 @@ export function LeagueSummaryStats() {
               fontWeight="500"
               style={{ textAlign: "center" }}
             >
-              {courses?.length}
+              {loading ? <Spinner /> : courses?.length}
             </Text>
           </View>
           <Text fontSize="$5" fontWeight="500" style={{ textAlign: "center" }}>

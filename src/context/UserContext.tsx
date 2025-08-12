@@ -3,11 +3,13 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { getUser } from "../api/user";
 import { User } from "../types/user";
+import { linkUserToInvites } from "../api/linkUserToInvites";
 
 type UserContextType = {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  refreshTrigger: number;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -16,6 +18,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,14 +33,28 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (session?.user) {
-      getUser().then(setUser);
+      getUser().then(async (user) => {
+        setUser(user);
+        if (user?.email && user?.id) {
+          try {
+            const inviteResult = await linkUserToInvites(user.email, user.id);
+            if (inviteResult.claimedCount > 0) {
+              console.log(`Claimed ${inviteResult.claimedCount} invites`);
+              // Increment trigger to notify other contexts
+              setRefreshTrigger((prev) => prev + 1);
+            }
+          } catch (error) {
+            console.error("Failed to claim pending invites:", error);
+          }
+        }
+      });
     } else {
       setUser(null);
     }
   }, [session]);
 
   return (
-    <UserContext.Provider value={{ user, session, loading }}>
+    <UserContext.Provider value={{ user, session, loading, refreshTrigger }}>
       {children}
     </UserContext.Provider>
   );
