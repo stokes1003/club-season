@@ -23,6 +23,25 @@ export function SelectLeague({
     [user?.leagues, search]
   );
 
+  const leagueCommissioner = user?.leagues?.find(
+    (league) => league.id === leagueId
+  )?.created_by;
+
+  console.log(leagueCommissioner);
+  console.log(user?.id);
+
+  const handleSubmitLeague = () => {
+    if (leagueCommissioner !== user?.id) {
+      Alert.alert("You are not the commissioner of this league");
+      return;
+    }
+    if (leagueId) {
+      setCurrentStep("select-golf-course");
+    } else {
+      Alert.alert("Please select a league");
+    }
+  };
+
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack style={{ alignItems: "center" }}>
@@ -33,17 +52,17 @@ export function SelectLeague({
       <YStack gap="$2">
         <Input
           placeholder="Search for a league"
-          width="$18"
+          width="$20"
           value={search}
           onChangeText={setSearch}
           onFocus={() => setIsSearching(true)}
           onBlur={() => setIsSearching(false)}
         />
         {isSearching && (
-          <ScrollView width="$18">
+          <ScrollView width="$20">
             <YStack
               gap="$4"
-              width="$18"
+              width="$20"
               borderWidth={1}
               borderColor="$black11"
               p="$3"
@@ -71,14 +90,8 @@ export function SelectLeague({
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$18"
-        onPress={() => {
-          if (leagueId) {
-            setCurrentStep("select-golf-course");
-          } else {
-            Alert.alert("Please select a league");
-          }
-        }}
+        width="$20"
+        onPress={handleSubmitLeague}
       >
         Submit League
       </Button>

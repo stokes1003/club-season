@@ -3,7 +3,7 @@ import { Pressable } from "react-native";
 import { Text } from "tamagui";
 import { Separator } from "tamagui";
 import { useRouter } from "expo-router";
-import { useUser } from "src/hooks/useUser";
+import { useUser } from "src/context/UserContext";
 import { LeagueCard } from "./LeagueCard/index";
 
 export function LeaguesDashboard({
@@ -12,7 +12,7 @@ export function LeaguesDashboard({
   setSelectedLeague: any;
 }) {
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
   const leagues = user?.leagues;
 
   if (leagues?.length === 0) {

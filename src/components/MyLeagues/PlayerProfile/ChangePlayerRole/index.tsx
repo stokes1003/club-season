@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Alert, Pressable } from "react-native";
-import { YStack, Text, Input, XStack, Spinner, Button } from "tamagui";
-import { ArrowLeft } from "@tamagui/lucide-icons";
+import { Alert } from "react-native";
+import { YStack, Text, Spinner, Button, RadioGroup } from "tamagui";
 import { Player } from "src/types/player";
 import { League } from "src/components/MyLeagues";
 import { updatePlayerRole } from "src/api/players/updatePlayerRole";
+import { RadioGroupItemWithLabel } from "src/components/UI/RadioGroup";
 
 export function ChangePlayerRole({
   setMode,
@@ -39,13 +39,9 @@ export function ChangePlayerRole({
     setLoading(false);
     setMode("profile");
   };
+
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
-      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
-        <Pressable onPress={() => setMode("profile")}>
-          <ArrowLeft />
-        </Pressable>
-      </XStack>
       <YStack gap="$4">
         <Text fontSize="$8" fontWeight="bold">
           Change Player Role
@@ -67,11 +63,14 @@ export function ChangePlayerRole({
           <Text fontSize="$6" fontWeight="bold">
             New Role
           </Text>
-          <Input
-            placeholder="Enter new role"
-            value={newRole}
-            onChangeText={setNewRole}
-          />
+          <RadioGroup value={newRole} onValueChange={setNewRole}>
+            <RadioGroupItemWithLabel
+              size="$5"
+              value="commissioner"
+              label="Commissioner"
+            />
+            <RadioGroupItemWithLabel size="$5" value="player" label="Player" />
+          </RadioGroup>
         </YStack>
       </YStack>
       <YStack gap="$4">

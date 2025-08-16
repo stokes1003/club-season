@@ -1,13 +1,13 @@
 import { ScrollView, View, Spinner } from "tamagui";
 import { Profile } from "src/components/Profile";
-import { useUser } from "src/hooks/useUser";
+import { useUser } from "src/context/UserContext";
 import { useState } from "react";
 import { ChangeEmail } from "src/components/Profile/ChangeEmail";
 import { ChangeName } from "src/components/Profile/ChangeName";
 import { ChangePassword } from "src/components/Profile/ChangePassword";
 
 export default function ProfileScreen() {
-  const user = useUser();
+  const { user } = useUser();
   const [mode, setMode] = useState<"name" | "email" | "password" | "profile">(
     "profile"
   );

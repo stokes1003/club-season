@@ -57,7 +57,15 @@ export function LeagueStats() {
           : leagueStats?.best_average?.score,
       },
     },
-  ];
+  ].filter((stat) => {
+    // Filter out "Most Major Wins" if wins <= 0
+    if (stat.title === "Most Major Wins") {
+      return isNet
+        ? (leagueStats?.most_net_major_wins?.wins || 0) > 0
+        : (leagueStats?.most_major_wins?.wins || 0) > 0;
+    }
+    return true; // Keep all other stats
+  });
 
   return (
     <YStack gap="$4">

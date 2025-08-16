@@ -18,6 +18,7 @@ import Auth from "../src/components/Auth";
 import { LeaderboardProvider } from "../src/context/LeaderboardContext";
 import { OfficalRoundsProvider } from "../src/context/OfficalRoundsContext";
 import { SelectedLeagueProvider } from "../src/context/SelectedLeagueContext";
+import { NavigationProvider } from "../src/context/NavigationContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -60,11 +61,13 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider>
       <UserProvider>
-        <LeaderboardProvider>
-          <OfficalRoundsProvider>
-            <SelectedLeagueProvider>{children}</SelectedLeagueProvider>
-          </OfficalRoundsProvider>
-        </LeaderboardProvider>
+        <NavigationProvider>
+          <LeaderboardProvider>
+            <OfficalRoundsProvider>
+              <SelectedLeagueProvider>{children}</SelectedLeagueProvider>
+            </OfficalRoundsProvider>
+          </LeaderboardProvider>
+        </NavigationProvider>
       </UserProvider>
     </Provider>
   );

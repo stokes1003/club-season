@@ -1,34 +1,14 @@
 import { supabase } from "src/lib/supabase";
 
 export const linkUserToInvites = async (userEmail: string, userId: string) => {
-  // First, check if there are any pending invites
-  const { data: pendingInvites, error: checkError } = await supabase
-    .from("league_players")
-    .select("id, league_id")
-    .eq("invite_email", userEmail.toLowerCase())
-    .is("user_id", null);
+  const { data, error } = await supabase.rpc("claim_pending_invites", {
+    user_email: userEmail.toLowerCase(),
+    user_uuid: userId, // Changed from user_id to user_uuid
+  });
 
-  if (checkError) {
-    throw checkError;
+  if (error) {
+    throw error;
   }
 
-  if (!pendingInvites || pendingInvites.length === 0) {
-    return { claimedCount: 0, leagues: [] };
-  }
-
-  // Update the invites to link them to the user
-  const { error: updateError } = await supabase
-    .from("league_players")
-    .update({ user_id: userId })
-    .eq("invite_email", userEmail.toLowerCase())
-    .is("user_id", null);
-
-  if (updateError) {
-    throw updateError;
-  }
-
-  return {
-    claimedCount: pendingInvites.length,
-    leagues: pendingInvites.map((invite) => invite.league_id),
-  };
+  return data;
 };

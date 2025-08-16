@@ -31,6 +31,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  // This is used to link users to their invites. It is called when the user is logged in.
   useEffect(() => {
     if (session?.user) {
       getUser().then(async (user) => {

@@ -7,6 +7,7 @@ type AddScoresData = {
     id: string;
     display_name: string;
     avatar_url: string;
+    player_color: string;
   }[];
 };
 
@@ -29,6 +30,7 @@ export function EnterPlayerScores({
       gross: number;
       avatar_url: string;
       display_name: string;
+      player_color: string;
     };
   }) => void;
   scoresByPlayer: {
@@ -37,6 +39,7 @@ export function EnterPlayerScores({
       gross: number;
       avatar_url: string;
       display_name: string;
+      player_color: string;
     };
   };
   isMajor: string;
@@ -73,6 +76,7 @@ export function EnterPlayerScores({
         gross: Number(grossInput),
         avatar_url: playerAvatarUrl,
         display_name: playerName,
+        player_color: playerAvatarColor,
       },
     });
   };
@@ -81,15 +85,7 @@ export function EnterPlayerScores({
   const currentPlayer = addScoresData.players[currentPlayerIndex];
   const playerName = currentPlayer?.display_name || "Unknown Player";
   const playerAvatarUrl = currentPlayer?.avatar_url || "";
-
-  console.log("EnterPlayerScores debug:", {
-    currentPlayerIndex,
-    totalPlayers: addScoresData.players.length,
-    currentPlayer,
-    playerName,
-    playerAvatarUrl,
-    currentPlayerId: currentPlayer?.id,
-  });
+  const playerAvatarColor = currentPlayer?.player_color || "";
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
@@ -105,6 +101,7 @@ export function EnterPlayerScores({
             name={playerName}
             avatarUrl={playerAvatarUrl}
             size="$4"
+            color={playerAvatarColor}
           />
           <Text fontSize="$6" fontWeight="bold">
             {playerName}
@@ -114,7 +111,7 @@ export function EnterPlayerScores({
         <YStack gap="$4">
           <Input
             placeholder={`${playerName}'s HCP`}
-            width="$18"
+            width="$20"
             value={handicapInput}
             onChangeText={setHandicapInput}
             fontSize="$5"
@@ -126,7 +123,7 @@ export function EnterPlayerScores({
           />
           <Input
             placeholder={`${playerName}'s Gross`}
-            width="$18"
+            width="$20"
             value={grossInput}
             onChangeText={setGrossInput}
             fontSize="$5"
@@ -140,7 +137,7 @@ export function EnterPlayerScores({
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$18"
+        width="$20"
         onPress={handleSubmitScores}
       >
         {currentPlayerIndex === addScoresData.players.length - 1

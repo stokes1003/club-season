@@ -1,4 +1,3 @@
-import { ArrowLeft } from "@tamagui/lucide-icons";
 import { Alert, Pressable } from "react-native";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { Player } from "src/types/player";
@@ -13,10 +12,12 @@ import {
   Spinner,
 } from "tamagui";
 import { ChevronRight } from "@tamagui/lucide-icons";
-import { useNavigation } from "../../NavigationContext";
 import { sendEmail } from "src/api/sendEmail";
 import { useState } from "react";
 import { useUser } from "src/context/UserContext";
+import { useGetPlayerRole } from "src/hooks/useGetPlayerRole";
+import { useUploadImage } from "src/hooks/useUploadImage";
+import { supabase } from "src/lib/supabase";
 
 export function PlayerDetails({
   setMode,
@@ -31,18 +32,11 @@ export function PlayerDetails({
   setSelectedPlayer: (player: Player | null) => void;
   selectedLeague: League;
 }) {
-  const { canGoBack, navigateBack } = useNavigation();
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const [playerAvatar, setPlayerAvatar] = useState(selectedPlayer.avatar_url);
 
-  const handleBackPress = () => {
-    if (canGoBack) {
-      navigateBack();
-    } else {
-      // Fallback - go to dashboard or league
-      setSelectedPlayer(null);
-    }
-  };
+  const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
 
   const handleResendInvite = async () => {
     setLoading(true);
@@ -78,25 +72,56 @@ export function PlayerDetails({
     }
   };
 
+  const handleChangeRole = () => {
+    if (playerRole?.toLowerCase() === "commissioner") {
+      setMode("change-role");
+    } else {
+      Alert.alert(
+        "Error",
+        "Only the commissioner can change the role of a player."
+      );
+    }
+  };
+  const { pickImage } = useUploadImage();
+  const handleImageUpload = async () => {
+    const uploadedUrl = await pickImage(
+      "league_players",
+      selectedPlayer.player_id
+    );
+
+    if (uploadedUrl) {
+      const { error } = await supabase
+        .from("league_players")
+        .update({ avatar_url: uploadedUrl })
+        .eq("id", selectedPlayer.player_id);
+
+      if (error) {
+        console.error("Database update error:", error);
+        Alert.alert("Error", "Failed to save to database");
+      } else {
+        console.log("Database updated successfully");
+        setPlayerAvatar(uploadedUrl);
+        setSelectedPlayer({
+          ...selectedPlayer,
+          avatar_url: uploadedUrl,
+        });
+      }
+    }
+  };
+
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
-      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
-        <Pressable onPress={handleBackPress}>
-          <ArrowLeft />
-        </Pressable>
-      </XStack>
       <YStack style={{ alignItems: "center" }} gap="$6">
-        <Text fontSize="$8" fontWeight="bold">
-          Player Profile
-        </Text>
-        <YStack gap="$2">
-          <PlayerAvatar
-            name={selectedPlayer.name}
-            avatarUrl={selectedPlayer.avatar_url}
-            size="$10"
-            color={selectedPlayer.player_color || undefined}
-          />
-        </YStack>
+        <Pressable onPress={handleImageUpload}>
+          <YStack gap="$2">
+            <PlayerAvatar
+              name={selectedPlayer.name}
+              avatarUrl={playerAvatar}
+              size="$10"
+              color={selectedPlayer.player_color || undefined}
+            />
+          </YStack>
+        </Pressable>
 
         <Text fontSize="$5" fontWeight="400">
           Customize player details for {selectedLeague.name}. These details will
@@ -136,7 +161,7 @@ export function PlayerDetails({
           </XStack>
         </Pressable>
         <Separator width={320} borderColor="$black10" />
-        <Pressable onPress={() => setMode("change-role")}>
+        <Pressable onPress={handleChangeRole}>
           <XStack
             style={{ alignItems: "center", justifyContent: "space-between" }}
           >
@@ -148,7 +173,7 @@ export function PlayerDetails({
                 {selectedPlayer.player_role}
               </Text>
             </YStack>
-            <ChevronRight />
+            {playerRole?.toLowerCase() === "commissioner" && <ChevronRight />}
           </XStack>
         </Pressable>
       </YStack>

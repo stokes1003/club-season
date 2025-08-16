@@ -91,7 +91,12 @@ export function LeagueTable({
                   {index + 1}
                 </Text>
                 <XStack style={{ alignItems: "center" }} gap="$2" width="$10">
-                  <PlayerAvatar avatarUrl={playerData.avatar_url} size="$2" />
+                  <PlayerAvatar
+                    avatarUrl={playerData.avatar_url}
+                    size="$2"
+                    color={playerData.player_color}
+                    name={playerDisplayNames[index]}
+                  />
                   <Text fontWeight="bold" style={{ textAlign: "center" }}>
                     {playerDisplayNames[index]}
                   </Text>

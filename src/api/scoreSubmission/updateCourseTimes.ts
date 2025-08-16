@@ -1,10 +1,14 @@
 import { supabase } from "../../lib/supabase";
 
-export async function updateCourseTimes(externalCourseId: number) {
+export async function updateCourseTimes(
+  externalCourseId: number,
+  leagueId: string
+) {
   const { data, error } = await supabase
     .from("league_courses")
     .select("id, times_played")
     .eq("external_course_id", externalCourseId)
+    .eq("league_id", leagueId)
     .single();
 
   if (error) {

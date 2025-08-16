@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { League } from "./index";
+import { League } from "../components/MyLeagues/index";
 import { Player } from "src/types/player";
+import { useRouter } from "expo-router";
 
 type NavigationState =
   | { type: "dashboard" }
@@ -33,6 +34,7 @@ export const useNavigation = () => {
 };
 
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [currentState, setCurrentState] = useState<NavigationState>({
     type: "dashboard",
   });
@@ -50,6 +52,8 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
       const previousState = navigationHistory[navigationHistory.length - 1];
       setCurrentState(previousState);
       setNavigationHistory((prev) => prev.slice(0, -1));
+    } else {
+      navigateToDashboard();
     }
   };
 

@@ -1,13 +1,13 @@
 import { YStack, XStack, View, Text, Spinner } from "tamagui";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { useSelectedLeague } from "src/context/SelectedLeagueContext";
-import { useUser } from "src/hooks/useUser";
+import { useUser } from "src/context/UserContext";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useGetLeagueCourses } from "src/hooks/useGetLeagueCourses";
 
 export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
   const { selectedLeague } = useSelectedLeague();
-  const user = useUser();
+  const { user } = useUser();
   const leagues = user?.leagues;
   const rounds = useGetOfficalRounds(selectedLeague?.id || "");
   const majorRounds = rounds?.filter((round) => round.isMajor);
@@ -20,6 +20,7 @@ export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
           leagues?.find((league) => league.id === selectedLeague?.id)?.image_url
         }
         size="$10"
+        name={selectedLeague?.name}
         color={
           leagues?.find((league) => league.id === selectedLeague?.id)
             ?.avatar_color

@@ -8,11 +8,14 @@ import {
   User,
   ChevronUp,
   ChartNoAxesCombined,
+  ArrowLeft,
 } from "@tamagui/lucide-icons";
 import { useUser } from "../../src/context/UserContext";
 import { useState } from "react";
 import { useSelectedLeague } from "../../src/context/SelectedLeagueContext";
 import { usePathname } from "expo-router";
+import { Pressable } from "react-native";
+import { useNavigation } from "../../src/context/NavigationContext";
 
 export type League = {
   id: string;
@@ -28,12 +31,12 @@ export default function TabLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const { selectedLeague, setSelectedLeague } = useSelectedLeague();
   const currentRoute = usePathname();
+  const { navigateBack } = useNavigation();
 
   const handleSelectLeague = (league: League | null) => {
     setSelectedLeague(league as League);
     setIsOpen(false);
   };
-  console.log(currentRoute);
 
   return (
     <>
@@ -105,13 +108,13 @@ export default function TabLayout() {
                     fontWeight="bold"
                     style={{ textAlign: "center" }}
                   >
-                    {selectedLeague?.name || "My Career"}
+                    {selectedLeague?.name || "Home"}
                   </Text>
                   {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
                 </XStack>
               </YStack>
             ),
-
+            tabBarLabel: "Home",
             tabBarIcon: ({ color }) => <House color={color as any} />,
           }}
         />
@@ -157,6 +160,19 @@ export default function TabLayout() {
           options={{
             title: "My Leagues",
 
+            headerLeft: () => (
+              <View pl="$7">
+                <Pressable
+                  onPress={() => {
+                    navigateBack();
+                  }}
+                >
+                  <ArrowLeft size={22} />
+                </Pressable>
+              </View>
+            ),
+            headerTitle: "My Leagues",
+
             tabBarIcon: ({ color }) => <LandPlot color={color as any} />,
           }}
         />
@@ -164,7 +180,12 @@ export default function TabLayout() {
         <Tabs.Screen
           name="Profile"
           options={{
-            title: "Profile",
+            headerTitle: () => (
+              <Text fontWeight="bold" fontSize="$5">
+                Profile
+              </Text>
+            ),
+            tabBarLabel: "",
 
             tabBarIcon: ({ color }) =>
               user ? (

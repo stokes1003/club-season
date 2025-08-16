@@ -1,7 +1,7 @@
 import { YStack, XStack, Button, View, Text, Spinner } from "tamagui";
 import { Alert, Modal } from "react-native";
 import type { League } from "..";
-import { ArrowLeft, X } from "@tamagui/lucide-icons";
+import { X } from "@tamagui/lucide-icons";
 import { Pressable } from "react-native";
 import { LeaguePlayerDetails } from "./LeaguePlayerDetails";
 import { useUser } from "src/context/UserContext";
@@ -16,6 +16,8 @@ import {
   deleteLeaguePlayers,
   deleteLeagueCourses,
 } from "src/api/deleteLeague";
+import { useSelectedLeague } from "src/context/SelectedLeagueContext";
+import { useGetPlayerRole } from "src/hooks/useGetPlayerRole";
 
 export function LeagueProfile({
   selectedLeague,
@@ -29,9 +31,12 @@ export function LeagueProfile({
   setSelectedCourse: (course: any) => void;
 }) {
   const { user } = useUser();
-  const isCommissioner = user?.id === selectedLeague?.created_by;
+  const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
+  const isCommissioner = playerRole?.toLowerCase() === "commissioner";
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();
+
   // Early return if selectedLeague is not available
   if (!selectedLeague) {
     return null;
@@ -45,30 +50,26 @@ export function LeagueProfile({
       await deleteLeaguePlayers(selectedLeague.id);
       await deleteLeagueCourses(selectedLeague.id);
       await deleteLeague(selectedLeague.id);
+
+      setSelectedLeague(null);
+      setConfirmationModal(false);
+      triggerSelectedLeagueRefresh();
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to delete league");
       setIsDeleting(false);
       return;
     } finally {
-      setSelectedLeague(null);
-      setConfirmationModal(false);
       setIsDeleting(false);
     }
   };
 
   return (
     <YStack gap="$6" style={{ alignItems: "center", width: "100%" }}>
-      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
-        <Pressable
-          onPress={() => {
-            setSelectedLeague(null);
-          }}
-        >
-          <ArrowLeft />
-        </Pressable>
-      </XStack>
-      <LeagueDetails selectedLeague={selectedLeague} />
+      <LeagueDetails
+        selectedLeague={selectedLeague}
+        setSelectedLeague={setSelectedLeague}
+      />
       <YStack gap="$8">
         <LeaguePlayerDetails
           selectedLeague={selectedLeague}

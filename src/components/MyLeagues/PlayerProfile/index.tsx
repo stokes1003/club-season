@@ -5,7 +5,7 @@ import { ChangeDisplayName } from "./ChangeDisplayName";
 import { ChangeInviteEmail } from "./ChangeInviteEmail";
 import { ChangePlayerRole } from "./ChangePlayerRole";
 import { useState } from "react";
-import { useNavigation } from "../NavigationContext";
+import { useNavigation } from "../../../context/NavigationContext";
 
 type PlayerProfileMode =
   | "profile"

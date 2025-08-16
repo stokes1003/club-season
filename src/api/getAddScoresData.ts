@@ -9,6 +9,7 @@ type AddScoresPlayer = {
   id: string;
   display_name: string;
   avatar_url: string;
+  player_color: string;
 };
 
 type AddScoresData = {
@@ -23,7 +24,7 @@ export async function getAddScoresData(
     // Get players directly from league_players table
     const { data: playersData, error: playersError } = await supabase
       .from("league_players")
-      .select("id, display_name, avatar_url")
+      .select("id, display_name, avatar_url, player_color")
       .eq("league_id", leagueId);
 
     if (playersError) {
@@ -43,6 +44,7 @@ export async function getAddScoresData(
       id: player.id,
       display_name: player.display_name || "Unknown Player",
       avatar_url: player.avatar_url || "",
+      player_color: player.player_color || "",
     }));
 
     // Return empty courses array since we're using external golf API

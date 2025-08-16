@@ -1,14 +1,14 @@
 import { SignIn } from "./SignIn";
 import { SignUp } from "./SignUp";
 import { YStack } from "tamagui";
-import { useUser } from "src/hooks/useUser";
+import { useUser } from "src/context/UserContext";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ForgotPassword } from "./ForgotPassword";
 
 export default function Auth() {
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
   const [mode, setMode] = useState<"signIn" | "signUp" | "forgotPassword">(
     "signIn"
   );
@@ -22,11 +22,19 @@ export default function Auth() {
   return (
     <YStack gap="$8" mt="$15" style={{ alignItems: "center" }} bg="$background">
       {mode === "signIn" ? (
-        <SignIn mode={mode} setMode={setMode} />
+        <SignIn
+          onToggleMode={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
+        />
       ) : mode === "signUp" ? (
-        <SignUp mode={mode} setMode={setMode} />
+        <SignUp
+          onToggleMode={() => setMode(mode === "signUp" ? "signIn" : "signUp")}
+        />
       ) : (
-        <ForgotPassword mode={mode} setMode={setMode} />
+        <ForgotPassword
+          onToggleMode={() =>
+            setMode(mode === "forgotPassword" ? "signIn" : "forgotPassword")
+          }
+        />
       )}
     </YStack>
   );

@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
-import { useUser } from "src/hooks/useUser";
+import { useUser } from "src/context/UserContext";
 import { useEffect } from "react";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { avatarColors } from "src/constants/Colors";
@@ -40,7 +40,7 @@ export function AddPlayers({
   setCurrentPlayerIndex: (index: number) => void;
   setCurrentStep: (step: string) => void;
 }) {
-  const user = useUser();
+  const { user } = useUser();
 
   // Initialize first player with user data when component mounts
   useEffect(() => {

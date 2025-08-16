@@ -1,4 +1,4 @@
-import { YStack, XStack, Text, Separator, View, Button } from "tamagui";
+import { YStack, XStack, Text, Separator, View } from "tamagui";
 import { Alert, Pressable } from "react-native";
 import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
 import { ChevronDown, ChevronRight } from "@tamagui/lucide-icons";
@@ -6,6 +6,7 @@ import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { League } from "../..";
 import { Player } from "src/types/player";
 import { useState } from "react";
+import { useUser } from "src/context/UserContext";
 
 export function LeaguePlayerDetails({
   selectedLeague,
@@ -17,6 +18,12 @@ export function LeaguePlayerDetails({
   setSelectedPlayer?: (player: Player | null) => void;
 }) {
   const players = useGetPlayers(selectedLeague.id);
+  const { user } = useUser();
+  console.log(isCommissioner);
+
+  const isPlayer =
+    players?.some((player) => player.user_id === user?.id) || false;
+
   const [showPlayers, setShowPlayers] = useState(true);
   return (
     <YStack gap="$6" style={{ alignItems: "center", width: "100%" }}>
@@ -37,10 +44,13 @@ export function LeaguePlayerDetails({
               <YStack key={player.player_id} gap="$4">
                 <Pressable
                   onPress={() => {
-                    setSelectedPlayer(player);
-                  }}
-                  style={{
-                    opacity: isCommissioner ? 1 : 0.6,
+                    if (isCommissioner || player.user_id === user?.id) {
+                      setSelectedPlayer(player);
+                    } else {
+                      Alert.alert(
+                        "You do not have permission to view this player's details."
+                      );
+                    }
                   }}
                 >
                   <XStack
@@ -50,25 +60,26 @@ export function LeaguePlayerDetails({
                       justifyContent: "space-between",
                     }}
                   >
-                    <XStack gap="$4">
+                    <XStack gap="$4" style={{ alignItems: "center" }}>
                       <PlayerAvatar
                         name={player.name}
                         avatarUrl={player.avatar_url}
                         size="$5"
                         color={player.player_color || undefined}
                       />
-                      <YStack gap="$2">
+                      <YStack gap="$1">
                         <Text fontSize="$6" fontWeight="400">
                           {player.name}
                         </Text>
 
-                        <Text fontSize="$4" fontWeight="400">
-                          {player.invite_email}
+                        <Text fontSize="$4" color="$black10">
+                          {player.player_role.charAt(0).toUpperCase() +
+                            player.player_role.slice(1)}
                         </Text>
                       </YStack>
                     </XStack>
 
-                    {isCommissioner && (
+                    {(isCommissioner || player.user_id === user?.id) && (
                       <View>
                         <ChevronRight />
                       </View>

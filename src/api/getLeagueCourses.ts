@@ -7,12 +7,12 @@ export async function getLeagueCourses(
   const { data, error } = await supabase
     .from("league_courses")
     .select(
-      "id, course_name, club_name, times_played, external_course_id, city, state, country, tees, photo_url"
+      "id, course_name, club_name, times_played, external_course_id, location, tees, photo_url"
     )
     .eq("league_id", leagueId);
 
   if (error) {
-    console.error("Error fetching league courses:", error);
+    console.error("❌ getLeagueCourses API: Error:", error);
     return [];
   }
 
@@ -23,12 +23,12 @@ export async function getLeagueCourses(
     times_played: course.times_played,
     external_course_id: course.external_course_id,
     location: {
-      address: "",
-      city: course.city || "",
-      state: course.state || "",
-      country: course.country || "",
-      latitude: 0,
-      longitude: 0,
+      address: course.location.address || "",
+      city: course.location.city || "",
+      state: course.location.state || "",
+      country: course.location.country || "",
+      latitude: course.location.latitude || 0,
+      longitude: course.location.longitude || 0,
     },
     tees: course.tees,
     photo_url:

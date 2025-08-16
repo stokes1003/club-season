@@ -13,4 +13,5 @@ export type Player = {
   player_color: string;
   invite_email: string;
   player_role: string;
+  user_id: string;
 };

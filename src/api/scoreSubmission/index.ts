@@ -47,7 +47,10 @@ export async function submitScores({
       return { success: false, error: roundResult.error };
     }
 
-    const courseTimesResult = await updateCourseTimes(courseResult.course_id);
+    const courseTimesResult = await updateCourseTimes(
+      courseResult.course_id,
+      league_id
+    );
 
     if (!courseTimesResult.success) {
       return { success: false, error: courseTimesResult.error };

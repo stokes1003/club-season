@@ -1,3 +1,5 @@
+import { useUser } from "../context/UserContext";
+
 import { useState, useEffect } from "react";
 import { getUserRounds } from "../api/userRounds";
 
@@ -20,6 +22,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
   const [rounds, setRounds] = useState<UserRound[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { refreshTrigger: refreshTriggerUser } = useUser();
 
   useEffect(() => {
     if (!userId) {
@@ -33,7 +36,11 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
         setLoading(true);
         setError(null);
         const data = await getUserRounds(userId, limit);
-        setRounds(data);
+
+        const sortedRounds = data.sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+        setRounds(sortedRounds);
       } catch (err) {
         console.error("Error fetching user rounds:", err);
         setError("Failed to load recent rounds");
@@ -43,7 +50,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
     };
 
     fetchRounds();
-  }, [userId, limit]);
+  }, [userId, limit, refreshTriggerUser]);
 
   const refresh = async () => {
     if (!userId) return;

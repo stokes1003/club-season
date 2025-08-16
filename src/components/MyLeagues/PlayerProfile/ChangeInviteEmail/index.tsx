@@ -46,11 +46,6 @@ export function ChangeInviteEmail({
   };
   return (
     <YStack gap="$8" style={{ width: "100%" }}>
-      <XStack style={{ alignItems: "flex-start", width: "100%" }}>
-        <Pressable onPress={() => setMode("profile")}>
-          <ArrowLeft />
-        </Pressable>
-      </XStack>
       <YStack gap="$4">
         <Text fontSize="$8" fontWeight="bold">
           Change Invite Email

@@ -7,11 +7,10 @@ import { useRouter } from "expo-router";
 import { getAddScoresData } from "../../api/getAddScoresData";
 import { ScoresFormHeader } from "./ScoresFormHeader";
 import { SelectLeague } from "./SelectLeague";
-import { submitScores } from "../../api/scoreSubmission/index";
-import { useCalculateGrossNetPoints } from "../../hooks/useCalculateGrossNetPoints";
+import { CourseSelection } from "src/types/courseSelection";
+import { useSubmitScores } from "../../hooks/useSubmitScores";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
-import { CourseSelection } from "src/types/courseSelection";
 
 type AddScoresData = {
   courses: {
@@ -22,16 +21,15 @@ type AddScoresData = {
     id: string;
     display_name: string;
     avatar_url: string;
+    player_color: string;
   }[];
 };
 
 export function AddScores() {
   const router = useRouter();
-  const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
-  const { triggerRefresh: triggerOfficalRoundsRefresh } = useOfficalRounds();
+  const { submitRound, isSubmitting } = useSubmitScores();
   const [currentStep, setCurrentStep] = useState("select-league");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [leagueId, setLeagueId] = useState<string>("");
   const [addScoresData, setAddScoresData] = useState<AddScoresData | null>(
     null
@@ -41,12 +39,15 @@ export function AddScores() {
   const [selectedCourse, setSelectedCourse] = useState<CourseSelection | null>(
     null
   );
+  const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
+  const { triggerRefresh: triggerOfficalRoundsRefresh } = useOfficalRounds();
   const [scoresByPlayer, setScoresByPlayer] = useState<{
     [key: string]: {
       hcp: number;
       gross: number;
       avatar_url: string;
       display_name: string;
+      player_color: string;
     };
   }>({});
   const handleHome = () => {
@@ -57,71 +58,21 @@ export function AddScores() {
     setMajorName("");
   };
 
-  const submitRound = async () => {
-    if (!selectedCourse?.id) {
-      console.error("No course selected");
-      setIsSubmitting(false);
-      return;
-    }
-
-    const scoreList = Object.entries(scoresByPlayer).map(
-      ([playerId, data]) => ({
-        player: playerId,
-        gross: data.gross,
-        net: data.gross - data.hcp,
-      })
-    );
-
-    const { gross: grossPoints, net: netPoints } = useCalculateGrossNetPoints(
-      scoreList,
-      isMajor === "yes"
-    );
-
-    setIsSubmitting(true);
-
-    const scoresData = Object.keys(scoresByPlayer).map((playerId) => ({
-      league_player_id: playerId,
-      gross: scoresByPlayer[playerId].gross,
-      hcp: scoresByPlayer[playerId].hcp,
-      net: scoresByPlayer[playerId].gross - scoresByPlayer[playerId].hcp,
-      gross_points: grossPoints[playerId] || 0,
-      net_points: netPoints[playerId] || 0,
-    }));
-
-    console.log("Submitting scores data:", {
-      league_id: leagueId,
-      course_id: selectedCourse.id,
-      date: new Date().toISOString(),
-      is_major: isMajor === "yes",
-      major_name: isMajor === "yes" ? majorName : null,
-      scores: scoresData,
+  const handleSubmitRound = () => {
+    submitRound({
+      leagueId,
+      selectedCourse,
+      isMajor,
+      majorName,
+      scoresByPlayer,
+      onSuccess: () => {
+        handleHome();
+        setScoresByPlayer({});
+        setSelectedCourse(null);
+        triggerLeaderboardRefresh();
+        triggerOfficalRoundsRefresh();
+      },
     });
-
-    const { success, error } = await submitScores({
-      league_id: leagueId,
-      golfCourse: selectedCourse!,
-      date: new Date().toISOString(),
-      is_major: isMajor === "yes",
-      major_name: isMajor === "yes" ? majorName : null,
-      scores: scoresData,
-    });
-
-    if (success) {
-      console.log("Scores submitted successfully");
-      setCurrentStep("select-golf-course");
-      setCurrentPlayerIndex(0);
-      handleHome();
-      triggerLeaderboardRefresh();
-      triggerOfficalRoundsRefresh();
-    } else {
-      console.error("Failed to submit scores:", error);
-    }
-
-    setIsSubmitting(false);
-    setScoresByPlayer({});
-    setSelectedCourse(null);
-    setIsMajor("no");
-    setMajorName("");
   };
 
   useEffect(() => {
@@ -134,8 +85,6 @@ export function AddScores() {
       fetchAddScoresData();
     }
   }, [leagueId]);
-
-  console.log("selectedCourse", selectedCourse);
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
@@ -187,7 +136,7 @@ export function AddScores() {
             leagueId={leagueId}
             isMajor={isMajor}
             majorName={majorName}
-            submitRound={submitRound}
+            handleSubmitRound={handleSubmitRound}
           />
         )}
       </YStack>

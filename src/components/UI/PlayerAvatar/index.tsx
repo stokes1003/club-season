@@ -47,7 +47,11 @@ export function PlayerAvatar({
             alignItems: "center",
           }}
         >
-          <Text fontSize="$6" color="white" fontWeight="bold">
+          <Text
+            fontSize={size === "$2" ? "$3" : "$6"}
+            color="white"
+            fontWeight="bold"
+          >
             {nameToDisplay}
           </Text>
         </Avatar.Fallback>

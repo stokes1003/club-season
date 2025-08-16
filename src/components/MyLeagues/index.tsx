@@ -3,7 +3,7 @@ import { LeaguesDashboard } from "./LeaguesDashboard/index";
 import { LeagueProfile } from "./LeagueProfile";
 import { PlayerProfile } from "./PlayerProfile";
 import { CourseProfile } from "./CourseProfile";
-import { NavigationProvider, useNavigation } from "./NavigationContext";
+import { useNavigation } from "../../context/NavigationContext";
 import { navigationAnalytics } from "./NavigationAnalytics";
 import { NavigationGuards } from "./NavigationGuards";
 
@@ -105,9 +105,5 @@ function MyLeaguesContent() {
 }
 
 export function MyLeagues() {
-  return (
-    <NavigationProvider>
-      <MyLeaguesContent />
-    </NavigationProvider>
-  );
+  return <MyLeaguesContent />;
 }

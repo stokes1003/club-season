@@ -18,7 +18,7 @@ export async function checkLeagueCourse(
     .select("id, external_course_id, times_played")
     .eq("league_id", leagueId)
     .eq("external_course_id", externalCourseId)
-    .single();
+    .maybeSingle();
 
   console.log("Course lookup result:", { data, error, exists: !!data });
 

@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Alert } from "react-native";
+import { Alert, Pressable } from "react-native";
 import { Button, Input, ScrollView, Text, YStack, Tabs, View } from "tamagui";
 import { searchCourses } from "../../../api/getGolfCourses";
 import { GolfCourse } from "../../../types/golfCourse";
 import { getLeagueCourses } from "../../../api/getLeagueCourses";
-import { useNearbyCourses, NearbyCourse } from "src/hooks/useNearbyCourses";
-import { useLocation } from "src/hooks/useLocation";
 import { CourseSelection, LeagueCourse } from "src/types/courseSelection";
 
 export function SelectGolfCourse({
@@ -32,23 +30,6 @@ export function SelectGolfCourse({
   const [isSearching, setIsSearching] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [courses, setCourses] = useState<GolfCourse[]>([]);
-  const {
-    courses: nearbyCourses,
-    loading: nearbyCoursesLoading,
-    fetchNearbyCourses,
-  } = useNearbyCourses();
-  const { location, requestLocationPermission, getCurrentLocation } =
-    useLocation();
-
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  useEffect(() => {
-    if (location && leagueCourses.length === 0) {
-      fetchNearbyCourses(location);
-    }
-  }, [location, leagueCourses.length]);
 
   useEffect(() => {
     if (leagueId) {
@@ -71,10 +52,6 @@ export function SelectGolfCourse({
   }, [search]);
 
   async function handleSearch(query: string) {
-    if (query.length === 0 && location) {
-      fetchNearbyCourses(location);
-      return;
-    }
     if (query.length < 2) {
       setCourses([]);
       return;
@@ -97,7 +74,6 @@ export function SelectGolfCourse({
       course.course_name.toLowerCase().includes(search.toLowerCase()) ||
       course.club_name.toLowerCase().includes(search.toLowerCase())
   );
-  
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
@@ -128,50 +104,31 @@ export function SelectGolfCourse({
                 style={{ borderRadius: 8 }}
               >
                 {leagueCourses.map((course) => (
-                  <Text
+                  <Pressable
                     key={course.id}
-                    fontSize="$5"
                     onPress={() => {
                       setSearch(course.course_name);
                       setSelectedCourse(course);
                       setIsFocused(false);
                     }}
+                    style={{ opacity: 0.7 }}
                   >
-                    {course.club_name === course.course_name
-                      ? course.course_name
-                      : `${course.club_name} - ${course.course_name}`}
-                  </Text>
+                    <YStack gap="$1">
+                      <Text fontSize="$5">
+                        {course.club_name === course.course_name
+                          ? course.course_name
+                          : `${course.club_name} - ${course.course_name}`}
+                      </Text>
+                      <Text fontSize="$3" color="$black11">
+                        {course.location.city}, {course.location.state}
+                      </Text>
+                    </YStack>
+                  </Pressable>
                 ))}
               </YStack>
             </ScrollView>
           )}
-          {search.length < 2 && isFocused && leagueCourses.length === 0 && (
-            <ScrollView width="$20">
-              <YStack
-                gap="$4"
-                borderWidth={1}
-                borderColor="$black11"
-                p="$3"
-                style={{ borderRadius: 8 }}
-              >
-                {nearbyCourses.map((course) => (
-                  <Text
-                    key={course.id}
-                    fontSize="$5"
-                    onPress={() => {
-                      setSearch(course.course_name);
-                      setSelectedCourse(course);
-                      setIsFocused(false);
-                    }}
-                  >
-                    {course.club_name === course.course_name
-                      ? course.course_name
-                      : `${course.club_name} - ${course.course_name}`}
-                  </Text>
-                ))}
-              </YStack>
-            </ScrollView>
-          )}
+
           {search.length > 0 && isFocused && (
             <ScrollView width="$20">
               <YStack
@@ -188,9 +145,8 @@ export function SelectGolfCourse({
                 ) : filteredCourses.length > 0 ? (
                   filteredCourses
                     .map((course) => (
-                      <Text
+                      <Pressable
                         key={course.id}
-                        fontSize="$5"
                         onPress={() => {
                           const displayName =
                             course.club_name === course.course_name
@@ -200,12 +156,19 @@ export function SelectGolfCourse({
                           setSelectedCourse(course);
                           setIsFocused(false);
                         }}
-                        pressStyle={{ opacity: 0.7 }}
+                        style={{ opacity: 0.7 }}
                       >
-                        {course.club_name === course.course_name
-                          ? course.course_name
-                          : `${course.club_name} - ${course.course_name}`}
-                      </Text>
+                        <YStack gap="$1">
+                          <Text fontSize="$5">
+                            {course.club_name === course.course_name
+                              ? course.course_name
+                              : `${course.club_name} - ${course.course_name}`}
+                          </Text>
+                          <Text fontSize="$3" color="$black11">
+                            {course.location.city}, {course.location.state}
+                          </Text>
+                        </YStack>
+                      </Pressable>
                     ))
                     .slice(0, 6)
                 ) : (
@@ -257,7 +220,7 @@ export function SelectGolfCourse({
         {isMajor === "yes" && (
           <YStack>
             <Input
-              width="$18"
+              width="$20"
               borderWidth={2}
               placeholder="Enter Major Name"
               value={majorName}
@@ -273,7 +236,7 @@ export function SelectGolfCourse({
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$18"
+        width="$20"
         onPress={() => {
           if (isMajor === "yes" && majorName === "") {
             Alert.alert("Please enter a major name");
