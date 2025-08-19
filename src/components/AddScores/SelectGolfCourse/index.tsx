@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Alert, Pressable } from "react-native";
-import { Button, Input, ScrollView, Text, YStack, Tabs, View } from "tamagui";
+import { Button, Input, ScrollView, Text, YStack } from "tamagui";
 import { searchCourses } from "../../../api/getGolfCourses";
 import { GolfCourse } from "../../../types/golfCourse";
 import { getLeagueCourses } from "../../../api/getLeagueCourses";
 import { CourseSelection, LeagueCourse } from "src/types/courseSelection";
+import { SelectDate } from "./SelectDate";
+import { MajorTournamentSelector } from "./MajorTournamentSelector";
 
 export function SelectGolfCourse({
   setCurrentStep,
@@ -15,6 +17,8 @@ export function SelectGolfCourse({
   majorName,
   setMajorName,
   leagueId,
+  date,
+  setDate,
 }: {
   setCurrentStep: (step: string) => void;
   setSelectedCourse: (course: CourseSelection) => void;
@@ -24,6 +28,8 @@ export function SelectGolfCourse({
   majorName: string;
   setMajorName: (majorName: string) => void;
   leagueId: string;
+  date: Date;
+  setDate: (date: Date) => void;
 }) {
   const [leagueCourses, setLeagueCourses] = useState<LeagueCourse[]>([]);
   const [search, setSearch] = useState("");
@@ -183,52 +189,13 @@ export function SelectGolfCourse({
             </ScrollView>
           )}
         </YStack>
-
-        <YStack gap="$4" style={{ alignItems: "center" }}>
-          <Text fontSize="$7" fontWeight="bold">
-            Is this round a Major?
-          </Text>
-          <YStack>
-            <Tabs value={isMajor} onValueChange={setIsMajor}>
-              <Tabs.List>
-                <Tabs.Tab value="yes">
-                  <View
-                    width="$4"
-                    borderBottomWidth={4}
-                    borderColor={
-                      isMajor === "yes" ? "$green10" : "$borderColor"
-                    }
-                    style={{ alignItems: "center" }}
-                  >
-                    <Text fontSize="$7">Yes</Text>
-                  </View>
-                </Tabs.Tab>
-                <Tabs.Tab value="no">
-                  <View
-                    width="$4"
-                    borderBottomWidth={4}
-                    borderColor={isMajor === "no" ? "$blue10" : "$borderColor"}
-                    style={{ alignItems: "center" }}
-                  >
-                    <Text fontSize="$7">No</Text>
-                  </View>
-                </Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-          </YStack>
-        </YStack>
-        {isMajor === "yes" && (
-          <YStack>
-            <Input
-              width="$20"
-              borderWidth={2}
-              placeholder="Enter Major Name"
-              value={majorName}
-              onChangeText={setMajorName}
-              fontSize="$5"
-            />
-          </YStack>
-        )}
+        <MajorTournamentSelector
+          isMajor={isMajor}
+          setIsMajor={setIsMajor}
+          majorName={majorName}
+          setMajorName={setMajorName}
+        />
+        <SelectDate date={date} setDate={setDate} />
       </YStack>
 
       <Button

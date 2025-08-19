@@ -7,20 +7,20 @@ import { League } from "../..";
 import { Player } from "src/types/player";
 import { useState } from "react";
 import { useUser } from "src/context/UserContext";
+import { useGetPlayerRole } from "src/hooks/useGetPlayerRole";
 
 export function LeaguePlayerDetails({
   selectedLeague,
-  isCommissioner,
   setSelectedPlayer = () => {},
 }: {
   selectedLeague: League;
-  isCommissioner: boolean;
   setSelectedPlayer?: (player: Player | null) => void;
 }) {
   const players = useGetPlayers(selectedLeague.id);
   const { user } = useUser();
-  console.log(isCommissioner);
 
+  const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
+  const isCommissioner = playerRole?.toLowerCase() === "commissioner";
   const isPlayer =
     players?.some((player) => player.user_id === user?.id) || false;
 

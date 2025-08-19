@@ -73,12 +73,10 @@ export function LeagueProfile({
       <YStack gap="$8">
         <LeaguePlayerDetails
           selectedLeague={selectedLeague}
-          isCommissioner={isCommissioner}
           setSelectedPlayer={setSelectedPlayer}
         />
         <LeagueCourseDetails
           selectedLeague={selectedLeague}
-          isCommissioner={isCommissioner}
           setSelectedCourse={setSelectedCourse}
         />
       </YStack>

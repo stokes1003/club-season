@@ -31,6 +31,7 @@ export function AddScores() {
   const [currentStep, setCurrentStep] = useState("select-league");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [leagueId, setLeagueId] = useState<string>("");
+  const [date, setDate] = useState(new Date());
   const [addScoresData, setAddScoresData] = useState<AddScoresData | null>(
     null
   );
@@ -38,6 +39,10 @@ export function AddScores() {
   const [majorName, setMajorName] = useState("");
   const [selectedCourse, setSelectedCourse] = useState<CourseSelection | null>(
     null
+  );
+  const [coursePhotoUrl, setCoursePhotoUrl] = useState<string>(
+    selectedCourse?.photo_url ||
+      "https://www.golfcoursearchitecture.net/Portals/0/EasyDNNNews/Portals/0/EasyDNNNews/12339/images/generic-golf-image-950-534-p-L-95.webp"
   );
   const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
   const { triggerRefresh: triggerOfficalRoundsRefresh } = useOfficalRounds();
@@ -56,15 +61,20 @@ export function AddScores() {
     setCurrentPlayerIndex(0);
     setIsMajor("no");
     setMajorName("");
+    setDate(new Date());
   };
 
   const handleSubmitRound = () => {
+    if (!selectedCourse) return;
+
     submitRound({
       leagueId,
       selectedCourse,
       isMajor,
       majorName,
       scoresByPlayer,
+      coursePhotoUrl,
+      date,
       onSuccess: () => {
         handleHome();
         setScoresByPlayer({});
@@ -85,6 +95,16 @@ export function AddScores() {
       fetchAddScoresData();
     }
   }, [leagueId]);
+
+  useEffect(() => {
+    if (selectedCourse?.photo_url) {
+      setCoursePhotoUrl(selectedCourse.photo_url);
+    } else {
+      setCoursePhotoUrl(
+        "https://www.golfcoursearchitecture.net/Portals/0/EasyDNNNews/12339/images/generic-golf-image-950-534-p-L-95.webp"
+      );
+    }
+  }, [selectedCourse]);
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
@@ -114,6 +134,8 @@ export function AddScores() {
             majorName={majorName}
             setMajorName={setMajorName}
             leagueId={leagueId}
+            date={date}
+            setDate={setDate}
           />
         )}
         {currentStep === "enter-player-scores" && addScoresData && (
@@ -127,16 +149,18 @@ export function AddScores() {
             isMajor={isMajor}
           />
         )}
-        {currentStep === "confirm-round-submit" && (
+        {currentStep === "confirm-round-submit" && selectedCourse && (
           <ConfirmRoundSubmit
             isSubmitting={isSubmitting}
             handleHome={handleHome}
             scoresByPlayer={scoresByPlayer}
             selectedCourse={selectedCourse}
-            leagueId={leagueId}
             isMajor={isMajor}
             majorName={majorName}
             handleSubmitRound={handleSubmitRound}
+            date={date}
+            coursePhotoUrl={coursePhotoUrl}
+            setCoursePhotoUrl={setCoursePhotoUrl}
           />
         )}
       </YStack>

@@ -12,6 +12,8 @@ export function useSubmitScores() {
     isMajor: string;
     majorName: string;
     scoresByPlayer: { [key: string]: { gross: number; hcp: number } };
+    coursePhotoUrl: string;
+    date: Date;
     onSuccess: () => void;
   }) => {
     const {
@@ -20,6 +22,8 @@ export function useSubmitScores() {
       isMajor,
       majorName,
       scoresByPlayer,
+      coursePhotoUrl,
+      date,
       onSuccess,
     } = submissionData;
 
@@ -56,10 +60,11 @@ export function useSubmitScores() {
       const { success, error } = await submitScores({
         league_id: leagueId,
         golfCourse: selectedCourse,
-        date: new Date().toISOString(),
+        date: date.toISOString(),
         is_major: isMajor === "yes",
         major_name: isMajor === "yes" ? majorName : null,
         scores: scoresData,
+        coursePhotoUrl,
       });
 
       if (success) {

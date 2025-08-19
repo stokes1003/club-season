@@ -37,6 +37,7 @@ export function PlayerDetails({
   const [playerAvatar, setPlayerAvatar] = useState(selectedPlayer.avatar_url);
 
   const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
+  console.log(playerRole);
 
   const handleResendInvite = async () => {
     setLoading(true);
@@ -177,19 +178,21 @@ export function PlayerDetails({
           </XStack>
         </Pressable>
       </YStack>
-      <YStack gap="$4">
-        <Button
-          bg="$blue10"
-          color="$white1"
-          fontSize="$5"
-          fontWeight="bold"
-          style={{ width: "100%" }}
-          onPress={handleResendInvite}
-          disabled={loading}
-        >
-          {loading ? <Spinner /> : "Resend Invite"}
-        </Button>
-      </YStack>
+      {playerRole?.toLowerCase() === "commissioner" && (
+        <YStack gap="$4">
+          <Button
+            bg="$blue10"
+            color="$white1"
+            fontSize="$5"
+            fontWeight="bold"
+            style={{ width: "100%" }}
+            onPress={handleResendInvite}
+            disabled={loading}
+          >
+            {loading ? <Spinner /> : "Resend Invite"}
+          </Button>
+        </YStack>
+      )}
     </YStack>
   );
 }

@@ -1,5 +1,4 @@
 import { GolfCourse } from "./golfCourse";
-import { NearbyCourse } from "../hooks/useNearbyCourses";
 import { Location, Tees } from "./golfCourse";
 
 export type LeagueCourse = {
@@ -13,4 +12,4 @@ export type LeagueCourse = {
   photo_url: string;
 };
 
-export type CourseSelection = GolfCourse | LeagueCourse | NearbyCourse;
+export type CourseSelection = GolfCourse | LeagueCourse;

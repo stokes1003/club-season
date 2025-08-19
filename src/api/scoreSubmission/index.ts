@@ -3,6 +3,7 @@ import { insertScores } from "./insertScores";
 import { updatePlayerPoints } from "./updatePlayerPoints";
 import { updateCourseTimes } from "./updateCourseTimes";
 import { getOrCreateLeagueCourse } from "../leagueCourses";
+import { updateLeagueCoursePhoto } from "../leagueCourses/updateLeagueCoursePhoto";
 import { CourseSelection } from "src/types/courseSelection";
 
 export async function submitScores({
@@ -12,6 +13,7 @@ export async function submitScores({
   is_major,
   major_name,
   scores,
+  coursePhotoUrl,
 }: {
   league_id: string;
   golfCourse: CourseSelection;
@@ -26,6 +28,7 @@ export async function submitScores({
     gross_points: number;
     net_points: number;
   }[];
+  coursePhotoUrl?: string;
 }) {
   try {
     const courseResult = await getOrCreateLeagueCourse(league_id, golfCourse);
@@ -66,6 +69,11 @@ export async function submitScores({
 
     if (!playerPointsResult.success) {
       return { success: false, error: playerPointsResult.error };
+    }
+
+    // Update the course photo if it changed
+    if (coursePhotoUrl && coursePhotoUrl !== golfCourse.photo_url) {
+      await updateLeagueCoursePhoto(league_id, golfCourse, coursePhotoUrl);
     }
 
     return { success: true };

@@ -2,6 +2,8 @@ import { Text, YStack, XStack, Button, View, Spinner, Image } from "tamagui";
 import { Trophy } from "@tamagui/lucide-icons";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { GolfCourse } from "src/types/golfCourse";
+import { Pressable } from "react-native";
+import { useUploadImage } from "src/hooks/useUploadImage";
 
 type LeagueCourse = {
   id: string;
@@ -9,7 +11,7 @@ type LeagueCourse = {
   club_name: string;
   times_played: number;
   external_course_id: number;
-  img_url: string;
+  photo_url: string;
 };
 
 type CourseSelection = GolfCourse | LeagueCourse;
@@ -19,9 +21,12 @@ export function ConfirmRoundSubmit({
   handleHome,
   scoresByPlayer,
   selectedCourse,
+  coursePhotoUrl,
   isMajor,
   majorName,
   handleSubmitRound,
+  date,
+  setCoursePhotoUrl,
 }: {
   isSubmitting: boolean;
   handleSubmitRound: () => void;
@@ -35,16 +40,24 @@ export function ConfirmRoundSubmit({
       player_color: string;
     };
   };
-  selectedCourse: CourseSelection | null;
-  leagueId: string;
+  selectedCourse: CourseSelection;
+  coursePhotoUrl: string;
   isMajor: string;
   majorName: string;
+  date: Date;
+  setCoursePhotoUrl: (url: string) => void;
 }) {
-  console.log("ConfirmRoundSubmit scoresByPlayer:", scoresByPlayer);
-  console.log("ConfirmRoundSubmit Object.keys:", Object.keys(scoresByPlayer));
+  const { pickImage, isUploading } = useUploadImage();
+
+  const handleImageUpload = async () => {
+    const imageUrl = await pickImage("courses", selectedCourse.id.toString());
+    if (imageUrl) {
+      setCoursePhotoUrl(imageUrl);
+    }
+  };
 
   return (
-    <YStack gap="$8" style={{ alignItems: "center" }}>
+    <YStack gap="$6" style={{ alignItems: "center" }}>
       <YStack gap="$4" style={{ alignItems: "center" }}>
         <YStack gap="$6" style={{ alignItems: "center" }}>
           <YStack>
@@ -53,6 +66,22 @@ export function ConfirmRoundSubmit({
             </Text>
           </YStack>
           <YStack gap="$4">
+            <Pressable onPress={handleImageUpload} disabled={isUploading}>
+              <YStack gap="$2" style={{ alignItems: "center" }}>
+                <Image
+                  source={{
+                    uri:
+                      coursePhotoUrl ||
+                      "https://www.golfcoursearchitecture.net/Portals/0/EasyDNNNews/12339/images/generic-golf-image-950-534-p-L-95.webp",
+                  }}
+                  style={{ width: 300, height: 150, borderRadius: 2 }}
+                />
+                <Text fontSize="$4" color="$blue10">
+                  {isUploading ? "Uploading..." : "Change Photo"}
+                </Text>
+              </YStack>
+            </Pressable>
+
             <YStack style={{ alignItems: "center" }}>
               {isMajor === "yes" && (
                 <View
@@ -84,7 +113,7 @@ export function ConfirmRoundSubmit({
                     : `${selectedCourse?.club_name} - ${selectedCourse?.course_name}`}
                 </Text>
                 <Text fontSize="$5" color="$black11">
-                  {new Date().toLocaleDateString()}
+                  {date.toLocaleDateString()}
                 </Text>
               </YStack>
             </YStack>

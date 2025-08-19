@@ -1,4 +1,4 @@
-import { YStack, Text, Separator, XStack, Button } from "tamagui";
+import { YStack, Text, Separator, XStack } from "tamagui";
 import { League } from "../..";
 import { Pressable, View } from "react-native";
 import { ChevronDown, ChevronRight } from "@tamagui/lucide-icons";
@@ -7,11 +7,9 @@ import { useState } from "react";
 
 export function LeagueCourseDetails({
   selectedLeague,
-  isCommissioner,
   setSelectedCourse,
 }: {
   selectedLeague: League;
-  isCommissioner: boolean;
   setSelectedCourse: (course: any) => void;
 }) {
   const courses = useGetLeagueCourses(selectedLeague.id);

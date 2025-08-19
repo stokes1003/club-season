@@ -1,7 +1,7 @@
+import { CourseSelection } from "../../types/courseSelection";
 import { checkLeagueCourse } from "./checkLeagueCourse";
 import { createLeagueCourse } from "./createLeagueCourse";
 import { updateLeagueCourse } from "./updateLeagueCourse";
-import { CourseSelection } from "../../types/courseSelection";
 
 export async function getOrCreateLeagueCourse(
   leagueId: string,

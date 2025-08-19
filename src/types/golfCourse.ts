@@ -42,4 +42,5 @@ export type GolfCourse = {
   course_name: string;
   location: Location;
   tees: Tees;
+  photo_url: string;
 };
