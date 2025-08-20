@@ -20,7 +20,7 @@ export const useCreateLeague = () => {
   const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();
   const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
   const { triggerRefresh: triggerRoundsRefresh } = useOfficalRounds();
-  const { user } = useUser();
+  const { user, refreshUser } = useUser();
   const createLeague = async ({
     leagueName,
     leagueAvatar,
@@ -282,7 +282,7 @@ export const useCreateLeague = () => {
       triggerSelectedLeagueRefresh();
       triggerLeaderboardRefresh();
       triggerRoundsRefresh();
-
+      refreshUser();
       handleHome();
     } catch (error) {
       console.error("Error creating league:", error);

@@ -56,9 +56,15 @@ export function LeagueCourseDetails({
                         >
                           <XStack gap="$4">
                             <YStack gap="$2">
-                              <Text fontSize="$6" fontWeight="400">
-                                {course.course_name}
-                              </Text>
+                              {course.club_name === course.course_name ? (
+                                <Text fontSize="$5" fontWeight="400">
+                                  {course.course_name}
+                                </Text>
+                              ) : (
+                                <Text fontSize="$5" fontWeight="400">
+                                  {course.course_name} at {course.club_name}
+                                </Text>
+                              )}
                               <Text fontSize="$4" fontWeight="400">
                                 {course.location.city}, {course.location.state}
                               </Text>

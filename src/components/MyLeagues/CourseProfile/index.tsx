@@ -47,9 +47,19 @@ export function CourseProfile({
           </Pressable>
 
           <YStack gap="$2">
-            <Text fontSize="$6" fontWeight="bold">
-              {selectedCourse.course_name}
-            </Text>
+            {selectedCourse.club_name === selectedCourse.course_name ? (
+              <YStack gap="$1">
+                <Text fontSize="$6" fontWeight="bold">
+                  {selectedCourse.course_name}
+                </Text>
+              </YStack>
+            ) : (
+              <YStack gap="$1">
+                <Text fontSize="$6" fontWeight="bold">
+                  {selectedCourse.course_name} at {selectedCourse.club_name}
+                </Text>
+              </YStack>
+            )}
 
             <Text fontSize="$4" fontWeight="400">
               {selectedCourse.location.address}

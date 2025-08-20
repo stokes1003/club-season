@@ -14,11 +14,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
-    },
-    "infoPlist": {
-      "NSCameraUsageDescription": "This app uses the camera to take profile pictures.",
-      "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload images."
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ClubSeason",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload golf course photos and player avatars.",
+        "NSCameraUsageDescription": "This app needs access to your camera to take photos for golf courses and player profiles.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -49,6 +51,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e86e1703-6d6c-49ca-b5f0-c7942ca7dafc"
+      }
     }
   }
 }

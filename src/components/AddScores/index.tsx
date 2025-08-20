@@ -11,6 +11,9 @@ import { CourseSelection } from "src/types/courseSelection";
 import { useSubmitScores } from "../../hooks/useSubmitScores";
 import { useLeaderboard } from "../../context/LeaderboardContext";
 import { useOfficalRounds } from "../../context/OfficalRoundsContext";
+import { useSelectedLeague } from "../../context/SelectedLeagueContext";
+import { getLeagueById } from "../../api/getLeagueById";
+import { useUser } from "../../context/UserContext";
 
 type AddScoresData = {
   courses: {
@@ -27,6 +30,8 @@ type AddScoresData = {
 
 export function AddScores() {
   const router = useRouter();
+  const { refreshUser } = useUser();
+  const { setSelectedLeague } = useSelectedLeague();
   const { submitRound, isSubmitting } = useSubmitScores();
   const [currentStep, setCurrentStep] = useState("select-league");
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -55,6 +60,16 @@ export function AddScores() {
       player_color: string;
     };
   }>({});
+
+  useEffect(() => {
+    if (leagueId) {
+      const fetchLeague = async () => {
+        const league = await getLeagueById(leagueId);
+        setSelectedLeague(league);
+      };
+      fetchLeague();
+    }
+  }, [leagueId]);
   const handleHome = () => {
     router.push("/");
     setCurrentStep("select-league");
@@ -81,6 +96,7 @@ export function AddScores() {
         setSelectedCourse(null);
         triggerLeaderboardRefresh();
         triggerOfficalRoundsRefresh();
+        refreshUser();
       },
     });
   };

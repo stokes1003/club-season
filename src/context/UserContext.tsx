@@ -10,6 +10,7 @@ type UserContextType = {
   session: Session | null;
   loading: boolean;
   refreshTrigger: number;
+  refreshUser: () => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -19,6 +20,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refreshUser = async () => {
+    if (session?.user) {
+      const user = await getUser();
+      setUser(user);
+      // Increment trigger to notify other contexts
+      setRefreshTrigger((prev) => prev + 1);
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -55,7 +65,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [session]);
 
   return (
-    <UserContext.Provider value={{ user, session, loading, refreshTrigger }}>
+    <UserContext.Provider
+      value={{ user, session, loading, refreshTrigger, refreshUser }}
+    >
       {children}
     </UserContext.Provider>
   );

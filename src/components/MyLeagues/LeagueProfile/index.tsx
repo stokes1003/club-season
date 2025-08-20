@@ -30,7 +30,7 @@ export function LeagueProfile({
   setSelectedPlayer: (player: Player | null) => void;
   setSelectedCourse: (course: any) => void;
 }) {
-  const { user } = useUser();
+  const { user, refreshUser } = useUser();
   const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
   const isCommissioner = playerRole?.toLowerCase() === "commissioner";
   const [confirmationModal, setConfirmationModal] = useState(false);
@@ -54,6 +54,7 @@ export function LeagueProfile({
       setSelectedLeague(null);
       setConfirmationModal(false);
       triggerSelectedLeagueRefresh();
+      refreshUser();
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to delete league");

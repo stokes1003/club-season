@@ -27,9 +27,6 @@ export function SelectLeague({
     (league) => league.id === leagueId
   )?.created_by;
 
-  console.log(leagueCommissioner);
-  console.log(user?.id);
-
   const handleSubmitLeague = () => {
     if (leagueCommissioner !== user?.id) {
       Alert.alert("You are not the commissioner of this league");
