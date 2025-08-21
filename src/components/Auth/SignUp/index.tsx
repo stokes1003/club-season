@@ -20,10 +20,10 @@ import {
 } from "src/utils/validation";
 
 type SignUpProps = {
-  onToggleMode: () => void;
+  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
 };
 
-export function SignUp({ onToggleMode }: SignUpProps) {
+export function SignUp({ setMode }: SignUpProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -105,7 +105,7 @@ export function SignUp({ onToggleMode }: SignUpProps) {
         "Check your email",
         "We've sent you a verification email. Please check your inbox and spam folder."
       );
-      onToggleMode();
+      setMode("signIn");
       setName("");
       setEmail("");
       setPassword("");
@@ -280,7 +280,7 @@ export function SignUp({ onToggleMode }: SignUpProps) {
         <View>
           <Text>Already have an account?</Text>
         </View>
-        <View onPress={onToggleMode}>
+        <View onPress={() => setMode("signIn")}>
           <Text fontSize="$5" color="$blue10">
             Sign In
           </Text>

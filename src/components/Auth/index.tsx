@@ -22,19 +22,11 @@ export default function Auth() {
   return (
     <YStack gap="$8" mt="$15" style={{ alignItems: "center" }} bg="$background">
       {mode === "signIn" ? (
-        <SignIn
-          onToggleMode={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
-        />
+        <SignIn setMode={setMode} />
       ) : mode === "signUp" ? (
-        <SignUp
-          onToggleMode={() => setMode(mode === "signUp" ? "signIn" : "signUp")}
-        />
+        <SignUp setMode={setMode} />
       ) : (
-        <ForgotPassword
-          onToggleMode={() =>
-            setMode(mode === "forgotPassword" ? "signIn" : "forgotPassword")
-          }
-        />
+        <ForgotPassword setMode={setMode} />
       )}
     </YStack>
   );

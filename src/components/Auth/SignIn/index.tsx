@@ -1,25 +1,14 @@
 import { useState } from "react";
 import { Alert } from "react-native";
-import { makeRedirectUri } from "expo-auth-session";
 import { supabase } from "src/lib/supabase";
-import * as WebBrowser from "expo-web-browser";
-import {
-  Button,
-  Input,
-  Label,
-  Separator,
-  Text,
-  View,
-  XStack,
-  YStack,
-} from "tamagui";
+import { Button, Input, Label, Text, View, XStack, YStack } from "tamagui";
 import { getEmailValidationMessage } from "src/utils/validation";
 
 type SignInProps = {
-  onToggleMode: () => void;
+  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
 };
 
-export function SignIn({ onToggleMode }: SignInProps) {
+export function SignIn({ setMode }: SignInProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -136,6 +125,8 @@ export function SignIn({ onToggleMode }: SignInProps) {
             placeholder="email@address.com"
             autoCapitalize={"none"}
             width="$20"
+            autoComplete="email"
+            autoCorrect={false}
             borderColor={emailError ? "#ff4444" : undefined}
           />
           {emailError && (
@@ -151,7 +142,7 @@ export function SignIn({ onToggleMode }: SignInProps) {
             <View>
               <Label fontSize="$5">Password</Label>
             </View>
-            <View onPress={() => onToggleMode()}>
+            <View onPress={() => setMode("forgotPassword")}>
               <Text fontSize="$4" color="$blue10">
                 Forgot Password?
               </Text>
@@ -210,7 +201,7 @@ export function SignIn({ onToggleMode }: SignInProps) {
         <Text fontSize="$5" color="$black10">
           Don't have an account?
         </Text>
-        <View onPress={() => onToggleMode()}>
+        <View onPress={() => setMode("signUp")}>
           <Text fontSize="$5" color="$blue10">
             Sign Up
           </Text>

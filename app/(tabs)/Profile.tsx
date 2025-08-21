@@ -20,8 +20,8 @@ export default function ProfileScreen() {
     );
   }
   return (
-    <View flex={1} items="center" bg="$background" py="$10" px="$4">
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <View flex={1} items="center" bg="$background">
+      <ScrollView showsVerticalScrollIndicator={false} py="$10" px="$4">
         {mode === "profile" && <Profile setMode={setMode} user={user} />}
         {mode === "name" && <ChangeName setMode={setMode} user={user} />}
         {mode === "email" && <ChangeEmail setMode={setMode} user={user} />}

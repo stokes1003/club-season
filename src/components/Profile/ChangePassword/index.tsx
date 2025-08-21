@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { supabase } from "src/lib/supabase";
-import { YStack, Text, Button, Input, Spinner } from "tamagui";
+import { YStack, Text, Button, Input, Spinner, View, XStack } from "tamagui";
 import { Alert } from "react-native";
 import { User } from "src/types/user";
 import { ArrowLeft } from "@tamagui/lucide-icons";
+import {
+  validatePassword,
+  getPasswordStrengthColor,
+  getPasswordStrengthText,
+  type PasswordValidation,
+} from "src/utils/validation";
 
 export function ChangePassword({
   setMode,
@@ -16,6 +22,34 @@ export function ChangePassword({
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordValidation, setPasswordValidation] =
+    useState<PasswordValidation>({
+      isValid: false,
+      errors: [],
+      strength: "weak",
+    });
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
+
+  const validatePasswordField = (password: string) => {
+    const validation = validatePassword(password);
+    setPasswordValidation(validation);
+    return validation.isValid;
+  };
+
+  const validateConfirmPassword = () => {
+    if (!confirmPassword) {
+      setConfirmPasswordError("Please confirm your password");
+      return false;
+    }
+    if (newPassword !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+      return false;
+    }
+    setConfirmPasswordError(null);
+    return true;
+  };
 
   async function handleChangePassword() {
     setLoading(true);
@@ -26,8 +60,13 @@ export function ChangePassword({
       return;
     }
 
-    if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "New passwords do not match");
+    if (!validatePasswordField(newPassword)) {
+      Alert.alert("Error", "Please fix password requirements");
+      setLoading(false);
+      return;
+    }
+
+    if (!validateConfirmPassword()) {
       setLoading(false);
       return;
     }
@@ -63,6 +102,8 @@ export function ChangePassword({
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        setPasswordValidation({ isValid: false, errors: [], strength: "weak" });
+        setConfirmPasswordError(null);
       }
     } catch (error) {
       Alert.alert("Error", "Failed to update password");
@@ -72,8 +113,25 @@ export function ChangePassword({
     }
   }
 
+  const handleNewPasswordChange = (text: string) => {
+    setNewPassword(text);
+    validatePasswordField(text);
+
+    // Clear confirm password error if passwords now match
+    if (confirmPassword && text === confirmPassword) {
+      setConfirmPasswordError(null);
+    }
+  };
+
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text);
+    if (confirmPasswordError) {
+      setConfirmPasswordError(null);
+    }
+  };
+
   return (
-    <YStack gap="$8" mb="$4" style={{ alignItems: "center" }}>
+    <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack
         onPress={() => setMode("profile")}
         style={{ alignSelf: "flex-start" }}
@@ -93,6 +151,9 @@ export function ChangePassword({
             placeholder="Enter your current password"
             value={currentPassword}
             onChangeText={setCurrentPassword}
+            secureTextEntry
+            autoComplete="password"
+            autoCorrect={false}
           />
         </YStack>
         <YStack gap="$4">
@@ -104,8 +165,59 @@ export function ChangePassword({
               width="$20"
               placeholder="Enter your new password"
               value={newPassword}
-              onChangeText={setNewPassword}
+              onChangeText={handleNewPasswordChange}
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              borderColor={
+                passwordValidation.errors.length > 0 ? "#ff4444" : undefined
+              }
             />
+            {newPassword && (
+              <YStack gap="$1" style={{ marginTop: 4 }}>
+                <XStack gap="$2" style={{ alignItems: "center" }}>
+                  <Text
+                    fontSize="$3"
+                    style={{
+                      color: getPasswordStrengthColor(
+                        passwordValidation.strength
+                      ),
+                    }}
+                  >
+                    {getPasswordStrengthText(passwordValidation.strength)}
+                  </Text>
+                  <View
+                    style={{
+                      flex: 1,
+                      height: 4,
+                      backgroundColor: "#e0e0e0",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: `${passwordValidation.strength === "weak" ? 33 : passwordValidation.strength === "medium" ? 66 : 100}%`,
+                        height: "100%",
+                        backgroundColor: getPasswordStrengthColor(
+                          passwordValidation.strength
+                        ),
+                        borderRadius: 2,
+                      }}
+                    />
+                  </View>
+                </XStack>
+                {passwordValidation.errors.length > 0 && (
+                  <YStack gap="$1">
+                    {passwordValidation.errors.map((error, index) => (
+                      <Text key={index} fontSize="$3" color="#ff4444">
+                        • {error}
+                      </Text>
+                    ))}
+                  </YStack>
+                )}
+              </YStack>
+            )}
           </YStack>
 
           <YStack gap="$2">
@@ -116,8 +228,18 @@ export function ChangePassword({
               width="$20"
               placeholder="Confirm your new password"
               value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              onChangeText={handleConfirmPasswordChange}
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              borderColor={confirmPasswordError ? "#ff4444" : undefined}
             />
+            {confirmPasswordError && (
+              <Text fontSize="$3" color="#ff4444" style={{ marginTop: 4 }}>
+                {confirmPasswordError}
+              </Text>
+            )}
           </YStack>
         </YStack>
       </YStack>
@@ -130,6 +252,7 @@ export function ChangePassword({
           fontWeight="bold"
           width="$20"
           onPress={handleChangePassword}
+          disabled={loading}
         >
           {loading ? <Spinner size="small" color="$white1" /> : "Submit"}
         </Button>

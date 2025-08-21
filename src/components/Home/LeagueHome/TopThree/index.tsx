@@ -42,7 +42,7 @@ export function TopThree({
 
   return (
     <YStack width="100%">
-      <YStack gap="$4" style={{ alignItems: "center" }} px="$4">
+      <YStack gap="$4" style={{ alignItems: "center" }}>
         <Text fontWeight="bold" fontSize="$8" style={{ textAlign: "center" }}>
           Top Three
         </Text>
@@ -53,6 +53,7 @@ export function TopThree({
           snapToInterval={280}
           decelerationRate="fast"
           snapToAlignment="center"
+          px="$3"
         >
           <XStack gap="$3">
             {sortedPlayers?.map((player, index) => (

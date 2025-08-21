@@ -6,10 +6,10 @@ import { ArrowLeft } from "@tamagui/lucide-icons";
 import { getEmailValidationMessage } from "src/utils/validation";
 
 type ForgotPasswordProps = {
-  onToggleMode: () => void;
+  setMode: (mode: "signIn" | "signUp" | "forgotPassword") => void;
 };
 
-export function ForgotPassword({ onToggleMode }: ForgotPasswordProps) {
+export function ForgotPassword({ setMode }: ForgotPasswordProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -98,7 +98,7 @@ export function ForgotPassword({ onToggleMode }: ForgotPasswordProps) {
           </Button>
         </View>
 
-        <View onPress={() => onToggleMode()}>
+        <View onPress={() => setMode("signIn")}>
           <XStack gap="$2" style={{ alignItems: "center" }}>
             <ArrowLeft size={16} color="#007AFF" />
             <Text color="$blue10" fontSize="$5">

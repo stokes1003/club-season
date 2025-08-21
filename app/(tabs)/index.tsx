@@ -3,7 +3,7 @@ import { Home } from "../../src/components/Home";
 
 export default function TabOneScreen() {
   return (
-    <YStack flex={1} style={{ alignItems: "center" }} bg="$background">
+    <YStack flex={1} items="center" bg="$background">
       <ScrollView showsVerticalScrollIndicator={false} py="$5">
         <Home />
       </ScrollView>

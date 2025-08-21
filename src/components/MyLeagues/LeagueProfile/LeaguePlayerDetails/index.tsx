@@ -21,8 +21,6 @@ export function LeaguePlayerDetails({
 
   const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
   const isCommissioner = playerRole?.toLowerCase() === "commissioner";
-  const isPlayer =
-    players?.some((player) => player.user_id === user?.id) || false;
 
   const [showPlayers, setShowPlayers] = useState(true);
   return (
