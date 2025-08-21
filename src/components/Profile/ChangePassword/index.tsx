@@ -3,21 +3,16 @@ import { supabase } from "src/lib/supabase";
 import { YStack, Text, Button, Input, Spinner, View, XStack } from "tamagui";
 import { Alert } from "react-native";
 import { User } from "src/types/user";
-import { ArrowLeft } from "@tamagui/lucide-icons";
 import {
   validatePassword,
   getPasswordStrengthColor,
   getPasswordStrengthText,
   type PasswordValidation,
 } from "src/utils/validation";
+import { useNavigation } from "src/context/NavigationContext";
 
-export function ChangePassword({
-  setMode,
-  user,
-}: {
-  setMode: (mode: "name" | "email" | "password" | "profile") => void;
-  user: User;
-}) {
+export function ChangePassword({ user }: { user: User }) {
+  const { setCurrentProfileState } = useNavigation();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -109,7 +104,7 @@ export function ChangePassword({
       Alert.alert("Error", "Failed to update password");
     } finally {
       setLoading(false);
-      setMode("profile");
+      setCurrentProfileState("profile");
     }
   }
 
@@ -132,12 +127,6 @@ export function ChangePassword({
 
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
-      <YStack
-        onPress={() => setMode("profile")}
-        style={{ alignSelf: "flex-start" }}
-      >
-        <ArrowLeft />
-      </YStack>
       <YStack gap="$6" style={{ alignItems: "flex-start" }}>
         <Text fontSize="$8" fontWeight="bold">
           Change Your Password
@@ -262,7 +251,7 @@ export function ChangePassword({
           fontSize="$5"
           fontWeight="bold"
           width="$20"
-          onPress={() => setMode("profile")}
+          onPress={() => setCurrentProfileState("profile")}
         >
           Cancel
         </Button>

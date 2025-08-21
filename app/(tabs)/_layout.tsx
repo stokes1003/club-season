@@ -31,7 +31,12 @@ export default function TabLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const { selectedLeague, setSelectedLeague } = useSelectedLeague();
   const currentRoute = usePathname();
-  const { navigateBack } = useNavigation();
+  const {
+    navigateBack,
+    setCurrentProfileState,
+    currentProfileState,
+    currentState,
+  } = useNavigation();
 
   const handleSelectLeague = (league: League | null) => {
     setSelectedLeague(league as League);
@@ -160,17 +165,20 @@ export default function TabLayout() {
           options={{
             title: "My Leagues",
 
-            headerLeft: () => (
-              <View pl="$7">
-                <Pressable
-                  onPress={() => {
-                    navigateBack();
-                  }}
-                >
-                  <ArrowLeft size={22} />
-                </Pressable>
-              </View>
-            ),
+            headerLeft:
+              currentState.type !== "dashboard"
+                ? () => (
+                    <View pl="$7">
+                      <Pressable
+                        onPress={() => {
+                          navigateBack();
+                        }}
+                      >
+                        <ArrowLeft size={22} />
+                      </Pressable>
+                    </View>
+                  )
+                : undefined,
             headerTitle: "My Leagues",
 
             tabBarIcon: ({ color }) => <LandPlot color={color as any} />,
@@ -186,6 +194,20 @@ export default function TabLayout() {
               </Text>
             ),
             tabBarLabel: "",
+            headerLeft:
+              currentProfileState !== "profile"
+                ? () => (
+                    <View pl="$7">
+                      <Pressable
+                        onPress={() => {
+                          setCurrentProfileState("profile");
+                        }}
+                      >
+                        <ArrowLeft size={22} />
+                      </Pressable>
+                    </View>
+                  )
+                : undefined,
 
             tabBarIcon: ({ color }) =>
               user ? (

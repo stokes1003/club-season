@@ -27,6 +27,7 @@ function MyLeaguesContent() {
     navigateBack,
     canGoBack,
   } = useNavigation();
+  console.log("currentState", currentState);
 
   const renderCurrentScreen = () => {
     const fromScreen = currentState.type;

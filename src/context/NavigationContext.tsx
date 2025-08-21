@@ -7,10 +7,22 @@ type NavigationState =
   | { type: "dashboard" }
   | { type: "league"; league: League }
   | { type: "player"; player: Player; league: League }
-  | { type: "course"; course: any; league: League };
+  | { type: "course"; course: any; league: League }
+  | { type: "profile" }
+  | { type: "changePassword" }
+  | { type: "changeEmail" }
+  | { type: "changeName" };
 
 type NavigationContextType = {
   currentState: NavigationState;
+  setCurrentProfileState: (
+    state: "profile" | "changePassword" | "changeEmail" | "changeName"
+  ) => void;
+  currentProfileState:
+    | "profile"
+    | "changePassword"
+    | "changeEmail"
+    | "changeName";
   navigationHistory: NavigationState[];
   navigateTo: (state: NavigationState) => void;
   navigateBack: () => void;
@@ -38,6 +50,9 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   const [currentState, setCurrentState] = useState<NavigationState>({
     type: "dashboard",
   });
+  const [currentProfileState, setCurrentProfileState] = useState<
+    "profile" | "changePassword" | "changeEmail" | "changeName"
+  >("profile");
   const [navigationHistory, setNavigationHistory] = useState<NavigationState[]>(
     []
   );
@@ -75,9 +90,11 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     currentState,
+    currentProfileState,
     navigationHistory,
     navigateTo,
     navigateBack,
+    setCurrentProfileState,
     navigateToDashboard,
     navigateToLeague,
     navigateToPlayer,

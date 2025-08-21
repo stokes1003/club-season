@@ -3,15 +3,10 @@ import { useState } from "react";
 import { User } from "src/types/user";
 import { Alert } from "react-native";
 import { supabase } from "src/lib/supabase";
-import { ArrowLeft } from "@tamagui/lucide-icons";
+import { useNavigation } from "src/context/NavigationContext";
 
-export function ChangeName({
-  setMode,
-  user,
-}: {
-  setMode: (mode: "name" | "email" | "password" | "profile") => void;
-  user: User;
-}) {
+export function ChangeName({ user }: { user: User }) {
+  const { setCurrentProfileState } = useNavigation();
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -38,18 +33,12 @@ export function ChangeName({
       Alert.alert("Error", "Failed to update name");
     } finally {
       setLoading(false);
-      setMode("profile");
+      setCurrentProfileState("profile");
     }
   };
 
   return (
     <YStack gap="$8" mb="$4" style={{ alignItems: "center" }}>
-      <YStack
-        onPress={() => setMode("profile")}
-        style={{ alignSelf: "flex-start" }}
-      >
-        <ArrowLeft />
-      </YStack>
       <YStack gap="$6" style={{ alignItems: "flex-start" }}>
         <Text fontSize="$8" fontWeight="bold">
           Change Your Name
@@ -91,7 +80,7 @@ export function ChangeName({
           fontSize="$5"
           fontWeight="bold"
           width="$20"
-          onPress={() => setMode("profile")}
+          onPress={() => setCurrentProfileState("profile")}
         >
           Cancel
         </Button>

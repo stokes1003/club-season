@@ -1,16 +1,14 @@
 import { ScrollView, View, Spinner } from "tamagui";
-import { Profile } from "src/components/Profile";
 import { useUser } from "src/context/UserContext";
-import { useState } from "react";
 import { ChangeEmail } from "src/components/Profile/ChangeEmail";
 import { ChangeName } from "src/components/Profile/ChangeName";
 import { ChangePassword } from "src/components/Profile/ChangePassword";
+import { Profile } from "src/components/Profile";
+import { useNavigation } from "src/context/NavigationContext";
 
 export default function ProfileScreen() {
   const { user } = useUser();
-  const [mode, setMode] = useState<"name" | "email" | "password" | "profile">(
-    "profile"
-  );
+  const { currentProfileState } = useNavigation();
 
   if (!user) {
     return (
@@ -22,12 +20,12 @@ export default function ProfileScreen() {
   return (
     <View flex={1} items="center" bg="$background">
       <ScrollView showsVerticalScrollIndicator={false} py="$10" px="$4">
-        {mode === "profile" && <Profile setMode={setMode} user={user} />}
-        {mode === "name" && <ChangeName setMode={setMode} user={user} />}
-        {mode === "email" && <ChangeEmail setMode={setMode} user={user} />}
-        {mode === "password" && (
-          <ChangePassword setMode={setMode} user={user} />
+        {currentProfileState === "profile" && <Profile user={user} />}
+        {currentProfileState === "changePassword" && (
+          <ChangePassword user={user} />
         )}
+        {currentProfileState === "changeEmail" && <ChangeEmail user={user} />}
+        {currentProfileState === "changeName" && <ChangeName user={user} />}
       </ScrollView>
     </View>
   );

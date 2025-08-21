@@ -1,41 +1,45 @@
-import { Text, YStack, XStack, View, Separator, Button } from "tamagui";
+import { YStack } from "@tamagui/stacks";
+import { Pressable } from "react-native";
+import { PlayerAvatar } from "src/components/UI/PlayerAvatar";
+import { Text, XStack, View, Separator, Button } from "tamagui";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { supabase } from "src/lib/supabase";
 import { User } from "src/types/user";
+import { useNavigation } from "src/context/NavigationContext";
 import * as ImagePicker from "expo-image-picker";
-import { uploadImage } from "src/api/uploadImage";
-import { Alert } from "react-native";
-import { v4 as uuidv4 } from "uuid";
-import { PlayerAvatar } from "../UI/PlayerAvatar";
 
-export function Profile({
-  setMode,
-  user,
-}: {
-  setMode: (mode: "name" | "email" | "password" | "profile") => void;
-  user: User;
-}) {
+export function Profile({ user }: { user: User }) {
+  const { setCurrentProfileState } = useNavigation();
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
+
     if (!result.canceled) {
-      const imageUrl = await uploadImage(
-        result.assets[0].uri,
-        user.id + uuidv4()
-      );
-      const { data, error } = await supabase.auth.updateUser({
-        data: {
-          avatar_url: imageUrl,
-        },
-      });
+      const { uri } = result.assets[0];
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(user.id, uri);
+
       if (error) {
-        Alert.alert("Error", error.message);
+        console.error("Error uploading avatar:", error);
+      } else {
+        const { data, error: updateError } = await supabase
+          .from("users")
+          .update({ avatar_url: uri })
+          .eq("id", user.id);
+
+        if (updateError) {
+          console.error("Error updating user avatar:", updateError);
+        }
       }
-      Alert.alert("Success", "Avatar updated successfully");
     }
   };
+
   return (
     <YStack gap="$8" style={{ alignItems: "center" }}>
       <YStack onPress={pickImage}>
@@ -46,58 +50,61 @@ export function Profile({
         />
       </YStack>
       <YStack gap="$6">
-        <XStack
-          style={{ justifyContent: "space-between" }}
+        <Pressable
           onPress={() => {
-            setMode("name");
+            setCurrentProfileState("changeName");
           }}
         >
-          <YStack gap="$2">
-            <Text fontSize="$6" fontWeight="bold">
-              NAME
-            </Text>
-            <Text fontSize="$5">{user.name}</Text>
-          </YStack>
-          <View mt="$3">
-            <ChevronRight color="$black10" size="$1" />
-          </View>
-        </XStack>
+          <XStack style={{ justifyContent: "space-between" }}>
+            <YStack gap="$2">
+              <Text fontSize="$6" fontWeight="bold">
+                NAME
+              </Text>
+              <Text fontSize="$5">{user.name}</Text>
+            </YStack>
+            <View mt="$3">
+              <ChevronRight color="$black10" size="$1" />
+            </View>
+          </XStack>
+        </Pressable>
 
         <Separator width="$20" borderColor="$black10" />
 
-        <XStack
-          style={{ justifyContent: "space-between" }}
+        <Pressable
           onPress={() => {
-            setMode("email");
+            setCurrentProfileState("changeEmail");
           }}
         >
-          <YStack gap="$2">
-            <Text fontSize="$6" fontWeight="bold">
-              EMAIL
-            </Text>
-            <Text fontSize="$5">{user.email}</Text>
-          </YStack>
-          <View mt="$3">
-            <ChevronRight color="$black10" size="$1" />
-          </View>
-        </XStack>
+          <XStack style={{ justifyContent: "space-between" }}>
+            <YStack gap="$2">
+              <Text fontSize="$6" fontWeight="bold">
+                EMAIL
+              </Text>
+              <Text fontSize="$5">{user.email}</Text>
+            </YStack>
+            <View mt="$3">
+              <ChevronRight color="$black10" size="$1" />
+            </View>
+          </XStack>
+        </Pressable>
         <Separator width="$20" borderColor="$black10" />
-        <XStack
-          style={{ justifyContent: "space-between" }}
+        <Pressable
           onPress={() => {
-            setMode("password");
+            setCurrentProfileState("changePassword");
           }}
         >
-          <YStack gap="$2">
-            <Text fontSize="$6" fontWeight="bold">
-              PASSWORD
-            </Text>
-            <Text fontSize="$5">************</Text>
-          </YStack>
-          <View mt="$3">
-            <ChevronRight color="$black10" size="$1" />
-          </View>
-        </XStack>
+          <XStack style={{ justifyContent: "space-between" }}>
+            <YStack gap="$2">
+              <Text fontSize="$6" fontWeight="bold">
+                PASSWORD
+              </Text>
+              <Text fontSize="$5">************</Text>
+            </YStack>
+            <View mt="$3">
+              <ChevronRight color="$black10" size="$1" />
+            </View>
+          </XStack>
+        </Pressable>
       </YStack>
 
       <Button
