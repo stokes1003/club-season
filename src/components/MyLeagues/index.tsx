@@ -19,7 +19,7 @@ export type League = {
 
 function MyLeaguesContent() {
   const {
-    currentState,
+    currentMyLeaguesState,
     navigateToDashboard,
     navigateToLeague,
     navigateToPlayer,
@@ -27,42 +27,42 @@ function MyLeaguesContent() {
     navigateBack,
     canGoBack,
   } = useNavigation();
-  console.log("currentState", currentState);
+  console.log("currentMyLeaguesState", currentMyLeaguesState);
 
   const renderCurrentScreen = () => {
-    const fromScreen = currentState.type;
+    const fromScreen = currentMyLeaguesState.type;
 
-    switch (currentState.type) {
+    switch (currentMyLeaguesState.type) {
       case "dashboard":
         navigationAnalytics.trackNavigation("previous", "dashboard");
         return <LeaguesDashboard setSelectedLeague={navigateToLeague} />;
 
       case "league":
         navigationAnalytics.trackNavigation("previous", "league", {
-          leagueId: currentState.league.id,
+          leagueId: currentMyLeaguesState.league.id,
         });
         return (
           <LeagueProfile
-            selectedLeague={currentState.league}
+            selectedLeague={currentMyLeaguesState.league}
             setSelectedLeague={navigateToDashboard}
             setSelectedPlayer={(player) => {
               if (
                 NavigationGuards.canNavigateToPlayer(
                   player,
-                  currentState.league
+                  currentMyLeaguesState.league
                 )
               ) {
-                navigateToPlayer(player, currentState.league);
+                navigateToPlayer(player, currentMyLeaguesState.league);
               }
             }}
             setSelectedCourse={(course) => {
               if (
                 NavigationGuards.canNavigateToCourse(
                   course,
-                  currentState.league
+                  currentMyLeaguesState.league
                 )
               ) {
-                navigateToCourse(course, currentState.league);
+                navigateToCourse(course, currentMyLeaguesState.league);
               }
             }}
           />
@@ -70,25 +70,25 @@ function MyLeaguesContent() {
 
       case "player":
         navigationAnalytics.trackNavigation("previous", "player", {
-          playerId: currentState.player.player_id,
-          leagueId: currentState.league.id,
+          playerId: currentMyLeaguesState.player.player_id,
+          leagueId: currentMyLeaguesState.league.id,
         });
         return (
           <PlayerProfile
-            selectedPlayer={currentState.player}
+            selectedPlayer={currentMyLeaguesState.player}
             setSelectedPlayer={navigateBack}
-            selectedLeague={currentState.league}
+            selectedLeague={currentMyLeaguesState.league}
           />
         );
 
       case "course":
         navigationAnalytics.trackNavigation("previous", "course", {
-          courseId: currentState.course.id,
-          leagueId: currentState.league.id,
+          courseId: currentMyLeaguesState.course.id,
+          leagueId: currentMyLeaguesState.league.id,
         });
         return (
           <CourseProfile
-            selectedCourse={currentState.course}
+            selectedCourse={currentMyLeaguesState.course}
             setSelectedCourse={navigateBack}
           />
         );

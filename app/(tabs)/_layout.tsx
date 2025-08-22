@@ -35,7 +35,7 @@ export default function TabLayout() {
     navigateBack,
     setCurrentProfileState,
     currentProfileState,
-    currentState,
+    currentMyLeaguesState,
   } = useNavigation();
 
   const handleSelectLeague = (league: League | null) => {
@@ -166,7 +166,7 @@ export default function TabLayout() {
             title: "My Leagues",
 
             headerLeft:
-              currentState.type !== "dashboard"
+              currentMyLeaguesState.type !== "dashboard"
                 ? () => (
                     <View pl="$7">
                       <Pressable

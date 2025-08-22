@@ -8,6 +8,7 @@ import { useUser } from "src/context/UserContext";
 import { useEffect } from "react";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { avatarColors } from "src/constants/Colors";
+import { useNavigation } from "src/context/NavigationContext";
 
 const colors = avatarColors;
 
@@ -15,9 +16,6 @@ export function AddPlayers({
   players,
   setPlayers,
   numberOfPlayers,
-  currentPlayerIndex,
-  setCurrentPlayerIndex,
-  setCurrentStep,
 }: {
   players: Array<{
     name: string;
@@ -36,15 +34,27 @@ export function AddPlayers({
     }>
   ) => void;
   numberOfPlayers: string;
-  currentPlayerIndex: number;
-  setCurrentPlayerIndex: (index: number) => void;
-  setCurrentStep: (step: string) => void;
 }) {
   const { user } = useUser();
+  const { setCreateLeagueState, createLeagueState } = useNavigation();
+
+  // Add this guard clause
+  if (!createLeagueState.playerIndex && createLeagueState.playerIndex !== 0) {
+    return (
+      <View gap="$8">
+        <Text fontSize="$6" style={{ textAlign: "center" }}>
+          Loading player index...
+        </Text>
+      </View>
+    );
+  }
+
+  // Now TypeScript knows playerIndex is defined
+  const playerIndex = createLeagueState.playerIndex;
 
   // Initialize first player with user data when component mounts
   useEffect(() => {
-    if (user && players.length > 0 && currentPlayerIndex === 0) {
+    if (user && players.length > 0 && playerIndex === 0) {
       const updatedPlayers = [...players];
       updatedPlayers[0] = {
         ...updatedPlayers[0],
@@ -55,7 +65,7 @@ export function AddPlayers({
       };
       setPlayers(updatedPlayers);
     }
-  }, [user, currentPlayerIndex]);
+  }, [user, playerIndex]);
 
   // Safety check to ensure players array exists and has the correct length
   if (!players || players.length === 0) {
@@ -87,8 +97,8 @@ export function AddPlayers({
 
       // Set local URI for immediate display
       const updatedPlayers = [...players];
-      updatedPlayers[currentPlayerIndex] = {
-        ...updatedPlayers[currentPlayerIndex],
+      updatedPlayers[playerIndex] = {
+        ...updatedPlayers[playerIndex],
         image: localUri,
       };
       setPlayers(updatedPlayers);
@@ -181,40 +191,43 @@ export function AddPlayers({
   };
 
   const handleSubmit = () => {
-    const nameValidation = validateName(
-      players[currentPlayerIndex].name,
-      currentPlayerIndex
-    );
+    const nameValidation = validateName(players[playerIndex].name, playerIndex);
     if (!nameValidation.isValid) {
       Alert.alert("Invalid Name", nameValidation.message);
       return;
     }
 
-    if (players[currentPlayerIndex].email === "") {
+    if (players[playerIndex].email === "") {
       Alert.alert("Please enter a player email");
       return;
     }
-    if (!validateEmail(players[currentPlayerIndex].email)) {
+    if (!validateEmail(players[playerIndex].email)) {
       Alert.alert("Please enter a valid email address");
       return;
     }
-    if (!players[currentPlayerIndex].color) {
+    if (!players[playerIndex].color) {
       Alert.alert("Please select a player color");
       return;
     }
-    if (currentPlayerIndex === Number(numberOfPlayers) - 1) {
-      setCurrentStep("confirm-create-league");
+    if (playerIndex === Number(numberOfPlayers) - 1) {
+      setCreateLeagueState({
+        step: "confirm-create-league",
+        playerIndex: playerIndex,
+      });
     } else {
-      setCurrentPlayerIndex(currentPlayerIndex + 1);
+      setCreateLeagueState({
+        step: "add-players",
+        playerIndex: playerIndex + 1,
+      });
     }
   };
 
   return (
-    <View gap="$8">
+    <View gap="$8" width="100%">
       <YStack gap="$4">
         <YStack>
           <Text fontSize="$8" fontWeight="bold" style={{ textAlign: "center" }}>
-            Add Player {currentPlayerIndex + 1}
+            Add Player {playerIndex + 1}
           </Text>
         </YStack>
         <YStack gap="$4">
@@ -224,16 +237,16 @@ export function AddPlayers({
             </Label>
 
             <Input
-              value={players[currentPlayerIndex].name}
+              value={players[playerIndex].name}
               autoCapitalize="words"
               autoComplete="name"
               autoCorrect={false}
-              placeholder={`Golfer ${currentPlayerIndex + 1}`}
+              placeholder={`Golfer ${playerIndex + 1}`}
               keyboardType="default"
               onChangeText={(text) => {
                 const updatedPlayers = [...players];
-                updatedPlayers[currentPlayerIndex] = {
-                  ...updatedPlayers[currentPlayerIndex],
+                updatedPlayers[playerIndex] = {
+                  ...updatedPlayers[playerIndex],
                   name: text,
                   role: "player",
                 };
@@ -251,10 +264,10 @@ export function AddPlayers({
             >
               <View style={{ alignItems: "center" }}>
                 <PlayerAvatar
-                  name={players[currentPlayerIndex].name}
-                  avatarUrl={players[currentPlayerIndex].image}
+                  name={players[playerIndex].name}
+                  avatarUrl={players[playerIndex].image}
                   size="$5"
-                  color={players[currentPlayerIndex].color}
+                  color={players[playerIndex].color}
                 />
               </View>
               <Button
@@ -266,35 +279,34 @@ export function AddPlayers({
                 fontWeight="bold"
               >
                 <Image size="$1" color="$blue10" />
-                {players[currentPlayerIndex].image
-                  ? "Change Photo"
-                  : "Upload Photo"}
+                {players[playerIndex].image ? "Change Photo" : "Upload Photo"}
               </Button>
             </XStack>
           </YStack>
-          <YStack>
+          <YStack width="100%">
             <Label fontSize="$4" fontWeight="bold">
               Player Color
             </Label>
             <XStack
               gap="$2"
               p="$2"
+              width="100%"
               style={{
                 alignItems: "space-between",
                 justifyContent: "space-between",
+                minWidth: "100%",
               }}
             >
-              {getAvailableColors(currentPlayerIndex).map((colorKey, index) => {
+              {getAvailableColors(playerIndex).map((colorKey, index) => {
                 const colorValue = colors[colorKey as keyof typeof colors];
-                const isSelected =
-                  players[currentPlayerIndex].color === colorValue;
+                const isSelected = players[playerIndex].color === colorValue;
                 return (
                   <View
                     key={index}
                     onPress={() => {
                       const updatedPlayers = [...players];
-                      updatedPlayers[currentPlayerIndex] = {
-                        ...updatedPlayers[currentPlayerIndex],
+                      updatedPlayers[playerIndex] = {
+                        ...updatedPlayers[playerIndex],
                         color: colorValue,
                       };
                       setPlayers(updatedPlayers);
@@ -317,7 +329,7 @@ export function AddPlayers({
             </Label>
 
             <Input
-              value={players[currentPlayerIndex].email}
+              value={players[playerIndex].email}
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
@@ -325,13 +337,13 @@ export function AddPlayers({
               autoFocus={false}
               onChangeText={(text) => {
                 const updatedPlayers = [...players];
-                updatedPlayers[currentPlayerIndex] = {
-                  ...updatedPlayers[currentPlayerIndex],
+                updatedPlayers[playerIndex] = {
+                  ...updatedPlayers[playerIndex],
                   email: text,
                 };
                 setPlayers(updatedPlayers);
               }}
-              placeholder={`golfer${currentPlayerIndex + 1}@example.com`}
+              placeholder={`golfer${playerIndex + 1}@example.com`}
             />
           </YStack>
         </YStack>
@@ -344,7 +356,7 @@ export function AddPlayers({
         width="100%"
         onPress={handleSubmit}
       >
-        {currentPlayerIndex === Number(numberOfPlayers) - 1
+        {playerIndex === Number(numberOfPlayers) - 1
           ? "Submit Players"
           : "Next Player"}
       </Button>

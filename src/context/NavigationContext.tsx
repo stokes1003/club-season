@@ -5,6 +5,11 @@ import { useRouter } from "expo-router";
 
 type NavigationState =
   | { type: "dashboard" }
+  | {
+      type: "createLeague";
+      step: "league-name" | "add-players" | "confirm-create-league";
+      playerIndex?: number;
+    }
   | { type: "league"; league: League }
   | { type: "player"; player: Player; league: League }
   | { type: "course"; course: any; league: League }
@@ -14,7 +19,11 @@ type NavigationState =
   | { type: "changeName" };
 
 type NavigationContextType = {
-  currentState: NavigationState;
+  currentMyLeaguesState: NavigationState;
+  setCreateLeagueState: (state: {
+    step: "league-name" | "add-players" | "confirm-create-league";
+    playerIndex?: number;
+  }) => void;
   setCurrentProfileState: (
     state: "profile" | "changePassword" | "changeEmail" | "changeName"
   ) => void;
@@ -30,6 +39,14 @@ type NavigationContextType = {
   navigateToLeague: (league: League) => void;
   navigateToPlayer: (player: Player | null, league?: League) => void;
   navigateToCourse: (course: any, league: League) => void;
+  navigateToCreateLeague: (
+    step: "league-name" | "add-players" | "confirm-create-league",
+    playerIndex?: number
+  ) => void;
+  createLeagueState: {
+    step: "league-name" | "add-players" | "confirm-create-league";
+    playerIndex?: number;
+  };
   canGoBack: boolean;
 };
 
@@ -47,25 +64,39 @@ export const useNavigation = () => {
 
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const [currentState, setCurrentState] = useState<NavigationState>({
-    type: "dashboard",
-  });
+  const [currentMyLeaguesState, setCurrentMyLeaguesState] =
+    useState<NavigationState>({
+      type: "dashboard",
+    });
   const [currentProfileState, setCurrentProfileState] = useState<
     "profile" | "changePassword" | "changeEmail" | "changeName"
   >("profile");
   const [navigationHistory, setNavigationHistory] = useState<NavigationState[]>(
     []
   );
+  const [createLeagueState, setCreateLeagueState] = useState<{
+    step: "league-name" | "add-players" | "confirm-create-league";
+    playerIndex?: number;
+  }>({
+    step: "league-name",
+  });
+  const navigateToCreateLeague = (
+    step: "league-name" | "add-players" | "confirm-create-league",
+    playerIndex?: number
+  ) => {
+    setCreateLeagueState({ step, playerIndex });
+    navigateTo({ type: "createLeague", step, playerIndex });
+  };
 
   const navigateTo = (newState: NavigationState) => {
-    setNavigationHistory((prev) => [...prev, currentState]);
-    setCurrentState(newState);
+    setNavigationHistory((prev) => [...prev, currentMyLeaguesState]);
+    setCurrentMyLeaguesState(newState);
   };
 
   const navigateBack = () => {
     if (navigationHistory.length > 0) {
       const previousState = navigationHistory[navigationHistory.length - 1];
-      setCurrentState(previousState);
+      setCurrentMyLeaguesState(previousState);
       setNavigationHistory((prev) => prev.slice(0, -1));
     } else {
       navigateToDashboard();
@@ -89,7 +120,10 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const value = {
-    currentState,
+    createLeagueState,
+    setCreateLeagueState,
+    navigateToCreateLeague,
+    currentMyLeaguesState,
     currentProfileState,
     navigationHistory,
     navigateTo,

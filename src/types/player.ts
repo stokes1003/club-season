@@ -14,4 +14,5 @@ export type Player = {
   invite_email: string;
   player_role: string;
   user_id: string;
+  avatar_blurhash?: string;
 };

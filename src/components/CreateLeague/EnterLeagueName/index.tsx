@@ -6,6 +6,7 @@ import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 import { avatarColors } from "src/constants/Colors";
+import { useNavigation } from "src/context/NavigationContext";
 
 export function EnterLeagueName({
   leagueName,
@@ -16,7 +17,7 @@ export function EnterLeagueName({
   leagueAvatar,
   leagueAvatarColor,
   setLeagueAvatarColor,
-  onNextStep,
+  setPlayers, // Add this prop
 }: {
   leagueName: string;
   setLeagueName: (text: string) => void;
@@ -26,8 +27,18 @@ export function EnterLeagueName({
   leagueAvatar: string;
   leagueAvatarColor: string;
   setLeagueAvatarColor: (color: string) => void;
-  onNextStep: () => void;
+  setPlayers: (
+    players: Array<{
+      name: string;
+      image: string;
+      email: string;
+      color: string;
+      role: string;
+    }>
+  ) => void;
 }) {
+  const { navigateToCreateLeague } = useNavigation();
+
   const pickImage = async () => {
     // Request permissions first
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -86,7 +97,16 @@ export function EnterLeagueName({
       Alert.alert("Please select a league avatar color");
       return;
     }
-    onNextStep();
+    const numPlayers = Number(numberOfPlayers);
+    const newPlayers = Array.from({ length: numPlayers }, () => ({
+      name: "",
+      image: "",
+      email: "",
+      color: "#6B7280",
+      role: "player",
+    }));
+    setPlayers(newPlayers);
+    navigateToCreateLeague("add-players", 0);
   };
 
   return (
