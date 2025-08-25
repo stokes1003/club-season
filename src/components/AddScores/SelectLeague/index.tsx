@@ -1,5 +1,5 @@
 import { YStack, Text, Button, Input, ScrollView } from "tamagui";
-import { Alert } from "react-native";
+import { Alert, Pressable } from "react-native";
 import { useUser } from "../../../context/UserContext";
 import { useMemo, useState } from "react";
 
@@ -66,17 +66,16 @@ export function SelectLeague({
               style={{ borderRadius: 8 }}
             >
               {filteredLeagues?.map((league) => (
-                <Text
+                <Pressable
                   key={league.id}
-                  fontSize="$5"
                   onPress={() => {
                     setLeagueId(league.id);
                     setSearch(league.name);
                     setIsSearching(false);
                   }}
                 >
-                  {league.name}
-                </Text>
+                  <Text fontSize="$5">{league.name}</Text>
+                </Pressable>
               ))}
             </YStack>
           </ScrollView>

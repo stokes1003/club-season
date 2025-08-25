@@ -41,7 +41,7 @@ export function Profile({ user }: { user: User }) {
   };
 
   return (
-    <YStack gap="$8" style={{ alignItems: "center" }}>
+    <YStack gap="$8" style={{ alignItems: "center" }} width={320}>
       <YStack onPress={pickImage}>
         <PlayerAvatar
           name={user.name || ""}
@@ -49,7 +49,7 @@ export function Profile({ user }: { user: User }) {
           size="$12"
         />
       </YStack>
-      <YStack gap="$6">
+      <YStack gap="$6" width="100%">
         <Pressable
           onPress={() => {
             setCurrentProfileState("changeName");
@@ -68,14 +68,14 @@ export function Profile({ user }: { user: User }) {
           </XStack>
         </Pressable>
 
-        <Separator width="$20" borderColor="$black10" />
+        <Separator width={320} borderColor="$black10" />
 
         <Pressable
           onPress={() => {
             setCurrentProfileState("changeEmail");
           }}
         >
-          <XStack style={{ justifyContent: "space-between" }}>
+          <XStack style={{ justifyContent: "space-between" }} width="100%">
             <YStack gap="$2">
               <Text fontSize="$6" fontWeight="bold">
                 EMAIL
@@ -87,13 +87,13 @@ export function Profile({ user }: { user: User }) {
             </View>
           </XStack>
         </Pressable>
-        <Separator width="$20" borderColor="$black10" />
+        <Separator width="100%" borderColor="$black10" />
         <Pressable
           onPress={() => {
             setCurrentProfileState("changePassword");
           }}
         >
-          <XStack style={{ justifyContent: "space-between" }}>
+          <XStack style={{ justifyContent: "space-between" }} width="100%">
             <YStack gap="$2">
               <Text fontSize="$6" fontWeight="bold">
                 PASSWORD
@@ -113,7 +113,7 @@ export function Profile({ user }: { user: User }) {
         color="$white1"
         fontSize="$5"
         fontWeight="bold"
-        width="$20"
+        width="100%"
       >
         Logout
       </Button>

@@ -36,24 +36,24 @@ export function ChangeEmail({ user }: { user: User }) {
   };
 
   return (
-    <YStack gap="$8" mb="$4" style={{ alignItems: "center" }}>
-      <YStack gap="$6" style={{ alignItems: "flex-start" }}>
+    <YStack gap="$8" mb="$4" style={{ alignItems: "center" }} width={320}>
+      <YStack gap="$6" style={{ alignItems: "flex-start" }} width="100%">
         <Text fontSize="$8" fontWeight="bold">
           Change Your Email
         </Text>
-        <YStack gap="$2">
+        <YStack gap="$2" width="100%">
           <Text fontSize="$6" fontWeight="bold">
             Current Email
           </Text>
           <Text fontSize="$5">{user.email}</Text>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$2" width="100%">
           <Text fontSize="$6" fontWeight="bold">
             New Email
           </Text>
           <Input
-            width="$20"
+            width="100%"
             placeholder="Enter your new email"
             value={newEmail}
             onChangeText={setNewEmail}
@@ -61,13 +61,13 @@ export function ChangeEmail({ user }: { user: User }) {
         </YStack>
       </YStack>
 
-      <YStack gap="$4">
+      <YStack gap="$4" width="100%">
         <Button
           bg="$blue10"
           color="$white1"
           fontSize="$5"
           fontWeight="bold"
-          width="$20"
+          width="100%"
           onPress={handleChangeEmail}
         >
           {loading ? <Spinner size="small" color="$white1" /> : "Submit"}
@@ -77,7 +77,7 @@ export function ChangeEmail({ user }: { user: User }) {
           color="$blue10"
           fontSize="$5"
           fontWeight="bold"
-          width="$20"
+          width="100%"
           onPress={() => setCurrentProfileState("profile")}
         >
           Cancel

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert, Pressable } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 import { Button, Input, ScrollView, Text, YStack } from "tamagui";
 import { searchCourses } from "../../../api/getGolfCourses";
 import { GolfCourse } from "../../../types/golfCourse";

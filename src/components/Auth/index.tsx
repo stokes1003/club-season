@@ -5,6 +5,7 @@ import { useUser } from "src/context/UserContext";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ForgotPassword } from "./ForgotPassword";
+import { Keyboard, Pressable } from "react-native";
 
 export default function Auth() {
   const router = useRouter();
@@ -22,11 +23,17 @@ export default function Auth() {
   return (
     <YStack gap="$8" mt="$15" style={{ alignItems: "center" }} bg="$background">
       {mode === "signIn" ? (
-        <SignIn setMode={setMode} />
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          <SignIn setMode={setMode} />
+        </Pressable>
       ) : mode === "signUp" ? (
-        <SignUp setMode={setMode} />
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          <SignUp setMode={setMode} />
+        </Pressable>
       ) : (
-        <ForgotPassword setMode={setMode} />
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          <ForgotPassword setMode={setMode} />
+        </Pressable>
       )}
     </YStack>
   );

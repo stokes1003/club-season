@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "src/lib/supabase";
-import { Alert } from "react-native";
+import { Alert, Keyboard } from "react-native";
 import {
   YStack,
   Text,
@@ -163,6 +163,9 @@ export function SignUp({ setMode }: SignUpProps) {
             value={name}
             placeholder="Enter Name"
             width="$20"
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
           />
         </View>
         <View>
@@ -189,6 +192,9 @@ export function SignUp({ setMode }: SignUpProps) {
             secureTextEntry={true}
             placeholder="Password"
             autoCapitalize={"none"}
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
             width="$20"
             borderColor={
               passwordValidation.errors.length > 0 ? "#ff4444" : undefined
@@ -247,6 +253,9 @@ export function SignUp({ setMode }: SignUpProps) {
             secureTextEntry={true}
             placeholder="Confirm Password"
             autoCapitalize={"none"}
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
             width="$20"
             borderColor={confirmPasswordError ? "#ff4444" : undefined}
           />

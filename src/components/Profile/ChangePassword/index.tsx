@@ -126,17 +126,17 @@ export function ChangePassword({ user }: { user: User }) {
   };
 
   return (
-    <YStack gap="$8" style={{ alignItems: "center" }}>
-      <YStack gap="$6" style={{ alignItems: "flex-start" }}>
+    <YStack gap="$8" style={{ alignItems: "center" }} width={320}>
+      <YStack gap="$6" style={{ alignItems: "flex-start" }} width="100%">
         <Text fontSize="$8" fontWeight="bold">
           Change Your Password
         </Text>
-        <YStack gap="$2">
+        <YStack gap="$2" width="100%">
           <Text fontSize="$6" fontWeight="bold">
             Enter Your Current Password
           </Text>
           <Input
-            width="$20"
+            width="100%"
             placeholder="Enter your current password"
             value={currentPassword}
             onChangeText={setCurrentPassword}
@@ -145,13 +145,13 @@ export function ChangePassword({ user }: { user: User }) {
             autoCorrect={false}
           />
         </YStack>
-        <YStack gap="$4">
-          <YStack gap="$2">
+        <YStack gap="$4" width="100%">
+          <YStack gap="$2" width="100%">
             <Text fontSize="$6" fontWeight="bold">
               Enter Your New Password
             </Text>
             <Input
-              width="$20"
+              width="100%"
               placeholder="Enter your new password"
               value={newPassword}
               onChangeText={handleNewPasswordChange}
@@ -164,7 +164,7 @@ export function ChangePassword({ user }: { user: User }) {
               }
             />
             {newPassword && (
-              <YStack gap="$1" style={{ marginTop: 4 }}>
+              <YStack gap="$1" style={{ marginTop: 4 }} width="100%">
                 <XStack gap="$2" style={{ alignItems: "center" }}>
                   <Text
                     fontSize="$3"
@@ -197,7 +197,7 @@ export function ChangePassword({ user }: { user: User }) {
                   </View>
                 </XStack>
                 {passwordValidation.errors.length > 0 && (
-                  <YStack gap="$1">
+                  <YStack gap="$1" width="100%">
                     {passwordValidation.errors.map((error, index) => (
                       <Text key={index} fontSize="$3" color="#ff4444">
                         • {error}
@@ -209,12 +209,12 @@ export function ChangePassword({ user }: { user: User }) {
             )}
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$2" width="100%">
             <Text fontSize="$6" fontWeight="bold">
               Confirm Your New Password
             </Text>
             <Input
-              width="$20"
+              width="100%"
               placeholder="Confirm your new password"
               value={confirmPassword}
               onChangeText={handleConfirmPasswordChange}
@@ -225,7 +225,12 @@ export function ChangePassword({ user }: { user: User }) {
               borderColor={confirmPasswordError ? "#ff4444" : undefined}
             />
             {confirmPasswordError && (
-              <Text fontSize="$3" color="#ff4444" style={{ marginTop: 4 }}>
+              <Text
+                fontSize="$3"
+                color="#ff4444"
+                style={{ marginTop: 4 }}
+                width="100%"
+              >
                 {confirmPasswordError}
               </Text>
             )}
@@ -233,13 +238,13 @@ export function ChangePassword({ user }: { user: User }) {
         </YStack>
       </YStack>
 
-      <YStack gap="$4">
+      <YStack gap="$4" width="100%">
         <Button
           bg="$blue10"
           color="$white1"
           fontSize="$5"
           fontWeight="bold"
-          width="$20"
+          width="100%"
           onPress={handleChangePassword}
           disabled={loading}
         >
@@ -250,7 +255,7 @@ export function ChangePassword({ user }: { user: User }) {
           color="$blue10"
           fontSize="$5"
           fontWeight="bold"
-          width="$20"
+          width="100%"
           onPress={() => setCurrentProfileState("profile")}
         >
           Cancel

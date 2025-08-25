@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Keyboard } from "react-native";
 import { Button, Input, Text, XStack, YStack } from "tamagui";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
@@ -120,6 +121,9 @@ export function EnterPlayerScores({
             autoComplete="off"
             autoCorrect={false}
             autoFocus={false}
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
           />
           <Input
             placeholder={`${playerName}'s Gross`}
@@ -128,6 +132,9 @@ export function EnterPlayerScores({
             onChangeText={setGrossInput}
             fontSize="$5"
             keyboardType="numeric"
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
           />
         </YStack>
       </YStack>

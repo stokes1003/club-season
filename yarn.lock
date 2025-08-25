@@ -5602,7 +5602,7 @@ __metadata:
     expo-build-properties: "npm:~0.14.6"
     expo-dev-client: "npm:~5.2.4"
     expo-font: "npm:~13.3.1"
-    expo-image: "npm:^2.4.0"
+    expo-image: "npm:~2.4.0"
     expo-image-manipulator: "npm:^13.1.7"
     expo-image-picker: "npm:~16.1.4"
     expo-linear-gradient: "npm:~14.1.5"
@@ -6615,7 +6615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image@npm:^2.4.0":
+"expo-image@npm:~2.4.0":
   version: 2.4.0
   resolution: "expo-image@npm:2.4.0"
   peerDependencies:

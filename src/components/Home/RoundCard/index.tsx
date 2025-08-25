@@ -1,5 +1,5 @@
-import { Card, XStack, YStack, Text, View } from "tamagui";
-import { Image } from "expo-image";
+import { Card, XStack, YStack, Text, View, Image } from "tamagui";
+
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 type Round = {
@@ -60,9 +60,10 @@ export function RoundCard({ roundData }: RoundCardProps) {
       >
         <YStack gap="$4" style={{ alignItems: "center" }} pb="$4">
           <Image
-            source={{ uri: roundData.course_img }}
-            style={{ width: 344, height: 200 }}
-            contentFit="cover"
+            width="344"
+            height="200"
+            src={roundData.course_img}
+            objectFit="cover"
           />
 
           {roundData.isMajor && (

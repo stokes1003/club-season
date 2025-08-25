@@ -5,6 +5,7 @@ import { ChangeName } from "src/components/Profile/ChangeName";
 import { ChangePassword } from "src/components/Profile/ChangePassword";
 import { Profile } from "src/components/Profile";
 import { useNavigation } from "src/context/NavigationContext";
+import { Keyboard, Pressable } from "react-native";
 
 export default function ProfileScreen() {
   const { user } = useUser();
@@ -20,12 +21,14 @@ export default function ProfileScreen() {
   return (
     <View flex={1} items="center" bg="$background">
       <ScrollView showsVerticalScrollIndicator={false} py="$10" px="$4">
-        {currentProfileState === "profile" && <Profile user={user} />}
-        {currentProfileState === "changePassword" && (
-          <ChangePassword user={user} />
-        )}
-        {currentProfileState === "changeEmail" && <ChangeEmail user={user} />}
-        {currentProfileState === "changeName" && <ChangeName user={user} />}
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          {currentProfileState === "profile" && <Profile user={user} />}
+          {currentProfileState === "changePassword" && (
+            <ChangePassword user={user} />
+          )}
+          {currentProfileState === "changeEmail" && <ChangeEmail user={user} />}
+          {currentProfileState === "changeName" && <ChangeName user={user} />}
+        </Pressable>
       </ScrollView>
     </View>
   );

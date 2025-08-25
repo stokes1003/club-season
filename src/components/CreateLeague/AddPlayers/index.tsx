@@ -1,7 +1,7 @@
 import { View, Text, YStack, Button, Input, Label, XStack } from "tamagui";
 import { Image } from "@tamagui/lucide-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
+import { Alert, Keyboard } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "src/context/UserContext";
@@ -334,6 +334,9 @@ export function AddPlayers({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect={false}
+              onBlur={() => {
+                Keyboard.dismiss();
+              }}
               autoFocus={false}
               onChangeText={(text) => {
                 const updatedPlayers = [...players];

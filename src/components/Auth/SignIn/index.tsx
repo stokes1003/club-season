@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Keyboard } from "react-native";
 import { supabase } from "src/lib/supabase";
 import { Button, Input, Label, Text, View, XStack, YStack } from "tamagui";
 import { getEmailValidationMessage } from "src/utils/validation";
@@ -125,6 +125,9 @@ export function SignIn({ setMode }: SignInProps) {
             placeholder="email@address.com"
             autoCapitalize={"none"}
             width="$20"
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
             autoComplete="email"
             autoCorrect={false}
             borderColor={emailError ? "#ff4444" : undefined}
@@ -155,6 +158,9 @@ export function SignIn({ setMode }: SignInProps) {
             secureTextEntry={true}
             placeholder="Password"
             autoCapitalize={"none"}
+            onBlur={() => {
+              Keyboard.dismiss();
+            }}
             width="$20"
             borderColor={passwordError ? "#ff4444" : undefined}
           />

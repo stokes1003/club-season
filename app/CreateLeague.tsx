@@ -1,7 +1,12 @@
 import { View } from "tamagui";
 import { Stack } from "expo-router";
 import { CreateLeague } from "src/components/CreateLeague";
-import { Pressable } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useNavigation } from "src/context/NavigationContext";
 import { ArrowLeft, X } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
@@ -62,9 +67,17 @@ export default function CreateLeagueScreen() {
           ),
         }}
       />
-      <View flex={1} items="center" bg="$background" px="$8">
-        <CreateLeague />
-      </View>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <View flex={1} items="center" bg="$background" px="$8">
+          <Pressable onPress={() => Keyboard.dismiss()}>
+            <CreateLeague />
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 }
