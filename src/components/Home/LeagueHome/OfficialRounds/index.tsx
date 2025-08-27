@@ -1,5 +1,5 @@
 import { YStack, Text, ScrollView, XStack, Card } from "tamagui";
-import { RoundCard } from "../../LeagueRoundCard";
+import { LeagueRoundCard } from "../../LeagueRoundCard";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 import { League } from "../../../../context/SelectedLeagueContext";
@@ -24,7 +24,7 @@ export function OfficialRounds({ league }: { league: League }) {
         {leagueRounds && leagueRounds.length > 0 ? (
           <XStack>
             {leagueRounds.map((round) => (
-              <RoundCard key={round._id} roundData={round} />
+              <LeagueRoundCard key={round._id} roundData={round} />
             ))}
           </XStack>
         ) : (

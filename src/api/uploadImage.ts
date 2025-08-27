@@ -4,9 +4,9 @@ import * as FileSystem from "expo-file-system";
 
 const compressImage = async (
   uri: string,
-  maxWidth: number = 600,
-  maxHeight: number = 600,
-  quality: number = 0.7
+  maxWidth: number = 1200, // ✅ Larger dimensions
+  maxHeight: number = 1200, // ✅ More reasonable
+  quality: number = 0.9 // ✅ Higher quality
 ): Promise<string> => {
   try {
     const result = await ImageManipulator.manipulateAsync(
@@ -63,19 +63,11 @@ export async function uploadImage(uri: string, path: string) {
 
     console.log("User authenticated:", user.id);
 
+    // Skip compression temporarily to test
     let processedUri = uri;
-    if (uri.startsWith("file://") || uri.startsWith("content://")) {
-      try {
-        console.log("Compressing local image...");
-        processedUri = await compressImage(uri, 800, 0.8);
-        console.log("Image compressed successfully");
-      } catch (compressError) {
-        console.warn(
-          "Failed to compress image, using original:",
-          compressError
-        );
-      }
-    }
+    // if (uri.startsWith("file://") || uri.startsWith("content://")) {
+    //   // Comment out compression for testing
+    // }
 
     if (
       processedUri.startsWith("file://") ||
@@ -88,11 +80,31 @@ export async function uploadImage(uri: string, path: string) {
         });
 
         console.log("Local file read as base64, length:", base64.length);
+        console.log("Base64 first 50 chars:", base64.substring(0, 50));
+        console.log(
+          "Base64 last 50 chars:",
+          base64.substring(base64.length - 50)
+        );
 
-        // Upload base64 directly to Supabase storage
+        // Validate base64 data
+        if (!base64 || base64.length < 100) {
+          console.error("Base64 data too short, likely corrupted");
+          return null;
+        }
+
+        // Convert base64 to binary data for proper upload
+        const binaryString = atob(base64);
+        const uint8Array = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          uint8Array[i] = binaryString.charCodeAt(i);
+        }
+
+        console.log("Converted to Uint8Array, length:", uint8Array.length);
+
+        // Upload Uint8Array instead of base64 string
         const { data, error } = await supabase.storage
           .from("images")
-          .upload(path, base64, {
+          .upload(path, uint8Array, {
             contentType: "image/jpeg",
             upsert: true,
           });
@@ -144,12 +156,13 @@ export async function uploadImage(uri: string, path: string) {
         console.log("Uploading to images bucket...");
         console.log("Upload path:", path);
 
+        // Upload base64 string directly but ensure it's treated as binary
         const { data, error } = await supabase.storage
           .from("images")
-          .upload(path, blob, {
-            cacheControl: "3600",
-            upsert: true,
+          .upload(path, base64, {
             contentType: "image/jpeg",
+            upsert: true,
+            cacheControl: "3600",
           });
 
         if (error) {
