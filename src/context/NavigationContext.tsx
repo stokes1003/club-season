@@ -16,7 +16,8 @@ type NavigationState =
   | { type: "profile" }
   | { type: "changePassword" }
   | { type: "changeEmail" }
-  | { type: "changeName" };
+  | { type: "changeName" }
+  | { type: "inviteFriends" };
 
 type NavigationContextType = {
   currentMyLeaguesState: NavigationState;
@@ -25,13 +26,19 @@ type NavigationContextType = {
     playerIndex?: number;
   }) => void;
   setCurrentProfileState: (
-    state: "profile" | "changePassword" | "changeEmail" | "changeName"
+    state:
+      | "profile"
+      | "changePassword"
+      | "changeEmail"
+      | "changeName"
+      | "inviteFriends"
   ) => void;
   currentProfileState:
     | "profile"
     | "changePassword"
     | "changeEmail"
-    | "changeName";
+    | "changeName"
+    | "inviteFriends";
   navigationHistory: NavigationState[];
   navigateTo: (state: NavigationState) => void;
   navigateBack: () => void;
@@ -69,7 +76,11 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
       type: "dashboard",
     });
   const [currentProfileState, setCurrentProfileState] = useState<
-    "profile" | "changePassword" | "changeEmail" | "changeName"
+    | "profile"
+    | "changePassword"
+    | "changeEmail"
+    | "changeName"
+    | "inviteFriends"
   >("profile");
   const [navigationHistory, setNavigationHistory] = useState<NavigationState[]>(
     []

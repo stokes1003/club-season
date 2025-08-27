@@ -1,5 +1,5 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
-import { PlayerCard } from "../../PlayerHome/PlayerCard";
+import { PlayerCard } from "./PlayerCard";
 import { useGetPlayers } from "src/hooks/useGetPlayers";
 import { useLeaderboard } from "src/context/LeaderboardContext";
 import { League } from "src/context/SelectedLeagueContext";

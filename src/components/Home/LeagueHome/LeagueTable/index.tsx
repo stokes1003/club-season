@@ -29,7 +29,7 @@ export function LeagueTable({
         <Card
           alignItems="center"
           justifyContent="center"
-          backgroundColor="white"
+          backgroundColor="$background02"
           borderWidth={0}
           borderRadius="$6"
           mx="$2"

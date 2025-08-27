@@ -93,12 +93,11 @@ export function SelectGolfCourse({
           <Input
             width="$20"
             borderWidth={2}
-            placeholder="Type to search courses..."
+            placeholder="Type to search courses....."
             value={search}
             onChangeText={setSearch}
             fontSize="$5"
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
           />
           {search.length < 2 && isFocused && leagueCourses.length > 0 && (
             <ScrollView width="$20">

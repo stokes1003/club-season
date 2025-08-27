@@ -6,7 +6,10 @@ export async function getLeagueAndCourses(
 ) {
   // Run both queries in parallel for better performance
   const [leaguesResult, coursesResult] = await Promise.all([
-    supabase.from("leagues").select("id, name").in("id", leagueIds),
+    supabase
+      .from("leagues")
+      .select("id, name, image_url, avatar_color")
+      .in("id", leagueIds),
     supabase
       .from("league_courses")
       .select("id, external_course_id, course_name, photo_url")

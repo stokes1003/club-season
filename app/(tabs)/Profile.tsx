@@ -6,6 +6,7 @@ import { ChangePassword } from "src/components/Profile/ChangePassword";
 import { Profile } from "src/components/Profile";
 import { useNavigation } from "src/context/NavigationContext";
 import { Keyboard, Pressable } from "react-native";
+import { InviteFriends } from "src/components/Profile/InviteFriends";
 
 export default function ProfileScreen() {
   const { user } = useUser();
@@ -28,6 +29,7 @@ export default function ProfileScreen() {
           )}
           {currentProfileState === "changeEmail" && <ChangeEmail user={user} />}
           {currentProfileState === "changeName" && <ChangeName user={user} />}
+          {currentProfileState === "inviteFriends" && <InviteFriends />}
         </Pressable>
       </ScrollView>
     </View>

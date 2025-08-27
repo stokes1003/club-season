@@ -106,17 +106,30 @@ export function Profile({ user }: { user: User }) {
           </XStack>
         </Pressable>
       </YStack>
-
-      <Button
-        onPress={() => supabase.auth.signOut()}
-        bg="$blue10"
-        color="$white1"
-        fontSize="$5"
-        fontWeight="bold"
-        width="100%"
-      >
-        Logout
-      </Button>
+      <YStack gap="$4" width="100%">
+        <Button
+          onPress={() => setCurrentProfileState("inviteFriends")}
+          bg="$white1"
+          borderWidth="$1"
+          borderColor="$blue10"
+          color="$blue10"
+          fontSize="$5"
+          fontWeight="bold"
+          width="100%"
+        >
+          Invite Friends
+        </Button>
+        <Button
+          onPress={() => supabase.auth.signOut()}
+          bg="$blue10"
+          color="$white1"
+          fontSize="$5"
+          fontWeight="bold"
+          width="100%"
+        >
+          Logout
+        </Button>
+      </YStack>
     </YStack>
   );
 }

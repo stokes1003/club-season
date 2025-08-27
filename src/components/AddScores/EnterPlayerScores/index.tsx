@@ -121,9 +121,6 @@ export function EnterPlayerScores({
             autoComplete="off"
             autoCorrect={false}
             autoFocus={false}
-            onBlur={() => {
-              Keyboard.dismiss();
-            }}
           />
           <Input
             placeholder={`${playerName}'s Gross`}
@@ -132,9 +129,6 @@ export function EnterPlayerScores({
             onChangeText={setGrossInput}
             fontSize="$5"
             keyboardType="numeric"
-            onBlur={() => {
-              Keyboard.dismiss();
-            }}
           />
         </YStack>
       </YStack>

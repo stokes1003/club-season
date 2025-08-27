@@ -1,7 +1,7 @@
 import { Card, Text, XStack, YStack, View } from "tamagui";
 import { Medal } from "@tamagui/lucide-icons";
 import { Player } from "src/types/player";
-import { PlayerAvatar } from "../../../UI/PlayerAvatar";
+import { PlayerAvatar } from "../../../../UI/PlayerAvatar";
 
 type PlayerCardProps = {
   playerData: Player;
@@ -32,7 +32,7 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
         pressStyle={{ scale: 0.875 }}
         alignItems="center"
         justifyContent="center"
-        backgroundColor="white"
+        backgroundColor="$background02"
         borderWidth={0}
         borderRadius="$6"
         padding="$6"
@@ -102,8 +102,8 @@ export function PlayerCard({ playerData, index, isNet }: PlayerCardProps) {
                   ? parseFloat(playerData.avg_net.toString()).toFixed(1)
                   : "-"
                 : playerData.avg_gross && playerData.avg_gross > 0
-                ? parseFloat(playerData.avg_gross.toString()).toFixed(1)
-                : "-"}
+                  ? parseFloat(playerData.avg_gross.toString()).toFixed(1)
+                  : "-"}
             </Text>
           </XStack>
 

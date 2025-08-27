@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Avatar, useTheme, YStack, Text, XStack, View } from "tamagui";
+import { Avatar, useTheme, YStack, Text, XStack, View, Card } from "tamagui";
 import {
   ChevronDown,
   House,
@@ -72,11 +72,11 @@ export default function TabLayout() {
             }}
           >
             <Pressable onPress={() => handleSelectLeague(null)}>
-              <View p="$2" style={{ backgroundColor: "#e5e5e5" }}>
+              <Card p="$2" backgroundColor="$background">
                 <Text fontSize="$6" style={{ textAlign: "center" }}>
-                  {currentRoute === "/Stats" ? "My Stats" : "My Career"}
+                  {currentRoute === "/Stats" ? "My Stats" : "Home"}
                 </Text>
-              </View>
+              </Card>
             </Pressable>
 
             {user?.leagues?.map((league, index) => (
@@ -84,16 +84,16 @@ export default function TabLayout() {
                 key={league.id}
                 onPress={() => handleSelectLeague(league)}
               >
-                <View
-                  style={{
-                    backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#e5e5e5",
-                  }}
+                <Card
                   p="$2"
+                  backgroundColor={
+                    index % 2 === 0 ? "$background02" : "$background"
+                  }
                 >
                   <Text fontSize="$6" style={{ textAlign: "center" }}>
                     {league.name}
                   </Text>
-                </View>
+                </Card>
               </Pressable>
             ))}
           </YStack>

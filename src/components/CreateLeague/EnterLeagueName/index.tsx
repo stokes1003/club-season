@@ -110,7 +110,7 @@ export function EnterLeagueName({
   };
 
   return (
-    <View gap="$8">
+    <View gap="$8" px="$4">
       <YStack gap="$4">
         <YStack>
           <Text fontSize="$8" fontWeight="bold" style={{ textAlign: "center" }}>

@@ -1,22 +1,7 @@
 import { useUser } from "../context/UserContext";
-
 import { useState, useEffect } from "react";
 import { getUserRounds } from "../api/userRounds";
-
-type UserRound = {
-  id: string;
-  league_name: string;
-  course_name: string;
-  course_img: string;
-  date: string;
-  is_major: boolean;
-  major_name: string | null;
-  gross_score: number;
-  net_score: number;
-  handicap: number;
-  gross_points: number;
-  net_points: number;
-};
+import { type UserRound } from "../api/userRounds/transformUserRounds";
 
 export function useUserRecentRounds(userId: string, limit: number = 10) {
   const [rounds, setRounds] = useState<UserRound[]>([]);
@@ -40,7 +25,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
         const sortedRounds = data.sort((a, b) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
-        setRounds(sortedRounds);
+        setRounds(sortedRounds as any);
       } catch (err) {
         console.error("Error fetching user rounds:", err);
         setError("Failed to load recent rounds");
@@ -59,7 +44,7 @@ export function useUserRecentRounds(userId: string, limit: number = 10) {
       setLoading(true);
       setError(null);
       const data = await getUserRounds(userId, limit);
-      setRounds(data);
+      setRounds(data as any);
     } catch (err) {
       console.error("Error refreshing user rounds:", err);
       setError("Failed to refresh recent rounds");

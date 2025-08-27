@@ -53,7 +53,6 @@ export function SelectLeague({
           value={search}
           onChangeText={setSearch}
           onFocus={() => setIsSearching(true)}
-          onBlur={() => setIsSearching(false)}
         />
         {isSearching && (
           <ScrollView width="$20">

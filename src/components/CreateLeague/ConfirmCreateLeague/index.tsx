@@ -1,4 +1,12 @@
-import { Text, YStack, XStack, View, Button, Spinner } from "tamagui";
+import {
+  Text,
+  YStack,
+  XStack,
+  View,
+  Button,
+  Spinner,
+  Separator,
+} from "tamagui";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
 
 export function ConfirmCreateLeague({
@@ -19,7 +27,7 @@ export function ConfirmCreateLeague({
   leagueAvatarColor: string;
 }) {
   return (
-    <YStack gap="$8" style={{ alignItems: "center" }}>
+    <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
       <YStack gap="$6" width="100%">
         <YStack style={{ alignItems: "center" }}>
           <Text fontSize="$8" fontWeight="bold">
@@ -31,7 +39,7 @@ export function ConfirmCreateLeague({
           <PlayerAvatar
             name={leagueName}
             avatarUrl={leagueAvatar}
-            size="$6"
+            size="$8"
             color={leagueAvatarColor}
           />
 
@@ -39,42 +47,43 @@ export function ConfirmCreateLeague({
             {leagueName}
           </Text>
         </YStack>
-        <YStack gap="$4" style={{ alignSelf: "flex-start" }}>
+        <YStack gap="$4" px="$4">
           {players.map((player, index) => (
-            <XStack gap="$3" key={index} width="100%">
-              <View
-                width="$1"
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text fontSize="$6">{index + 1}.</Text>
-              </View>
+            <YStack
+              key={index}
+              width="100%"
+              gap="$6"
+              style={{ alignSelf: "flex-start" }}
+            >
+              <XStack gap="$3" width="100%">
+                <View
+                  width="$1"
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text fontSize="$8">{index + 1}.</Text>
+                </View>
 
-              <PlayerAvatar
-                name={player.name}
-                avatarUrl={player.image}
-                size="$4"
-                color={player.color}
-              />
+                <PlayerAvatar
+                  name={player.name}
+                  avatarUrl={player.image}
+                  size="$4"
+                  color={player.color}
+                />
 
-              <Text
-                fontSize="$8"
-                style={{
-                  color: "white",
-                }}
-              >
-                {player.name.charAt(0)}
-              </Text>
-
-              <YStack gap="$1">
-                <Text fontSize="$6" fontWeight="bold">
-                  {player.name}
-                </Text>
-                <Text fontSize="$5">{player.email}</Text>
-              </YStack>
-            </XStack>
+                <YStack gap="$1" width="100%">
+                  <Text fontSize="$6" fontWeight="bold">
+                    {player.name}
+                  </Text>
+                  <Text fontSize="$5">{player.email}</Text>
+                </YStack>
+              </XStack>
+              {index !== players.length - 1 && (
+                <Separator width="100%" borderColor="$black10" />
+              )}
+            </YStack>
           ))}
         </YStack>
       </YStack>
@@ -85,6 +94,7 @@ export function ConfirmCreateLeague({
           borderColor="$blue10"
           color="$blue10"
           fontWeight="bold"
+          width="$12"
           onPress={handleHome}
           disabled={isSubmitting}
         >

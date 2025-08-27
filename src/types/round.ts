@@ -14,4 +14,6 @@ export type Round = {
   isMajor?: boolean;
   majorName?: string;
   scores: Score[];
+  league_id: string;
+  league_img: string;
 };

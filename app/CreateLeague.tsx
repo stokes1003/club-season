@@ -1,4 +1,4 @@
-import { View } from "tamagui";
+import { View, ScrollView } from "tamagui";
 import { Stack } from "expo-router";
 import { CreateLeague } from "src/components/CreateLeague";
 import {
@@ -68,16 +68,17 @@ export default function CreateLeagueScreen() {
         }}
       />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <View flex={1} items="center" bg="$background" px="$8">
-          <Pressable onPress={() => Keyboard.dismiss()}>
+      <View flex={1} items="center" bg="$background">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 0}
+          style={{ flex: 1 }}
+        >
+          <ScrollView showsVerticalScrollIndicator={false} px="$4" pb="$8">
             <CreateLeague />
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
     </>
   );
 }

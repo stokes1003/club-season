@@ -16,4 +16,5 @@ export type User = {
   avatar_url: string | null;
   leagues?: League[];
   player_color: string;
+  created_at: string;
 };

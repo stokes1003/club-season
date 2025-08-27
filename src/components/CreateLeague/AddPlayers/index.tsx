@@ -1,7 +1,7 @@
 import { View, Text, YStack, Button, Input, Label, XStack } from "tamagui";
 import { Image } from "@tamagui/lucide-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Alert, Keyboard } from "react-native";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
 import { uploadImage } from "src/api/uploadImage";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "src/context/UserContext";
@@ -223,7 +223,7 @@ export function AddPlayers({
   };
 
   return (
-    <View gap="$8" width="100%">
+    <View gap="$8" width="100%" px="$4">
       <YStack gap="$4">
         <YStack>
           <Text fontSize="$8" fontWeight="bold" style={{ textAlign: "center" }}>

@@ -1,5 +1,5 @@
 import { YStack, Text, ScrollView, XStack, Card } from "tamagui";
-import { RoundCard } from "../../RoundCard";
+import { RoundCard } from "../../LeagueRoundCard";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useOfficalRounds } from "src/context/OfficalRoundsContext";
 import { League } from "../../../../context/SelectedLeagueContext";

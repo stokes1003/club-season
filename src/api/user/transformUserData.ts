@@ -15,6 +15,7 @@ export type User = {
   avatar_url: string | null;
   player_color: string;
   leagues: League[];
+  created_at: string;
 };
 
 export function transformUserData(authUser: any, leaguePlayers: any[]): User {
@@ -41,5 +42,6 @@ export function transformUserData(authUser: any, leaguePlayers: any[]): User {
       "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
     player_color: firstLeaguePlayer?.player_color || "#6B7280",
     leagues,
+    created_at: authUser.created_at,
   };
 }

@@ -23,7 +23,7 @@ type RoundCardProps = {
   roundData: Round;
 };
 
-export function RoundCard({ roundData }: RoundCardProps) {
+export function LeagueRoundCard({ roundData }: RoundCardProps) {
   // Safety check for roundData
   if (!roundData) {
     return null;
@@ -47,12 +47,12 @@ export function RoundCard({ roundData }: RoundCardProps) {
         hoverStyle={{ scale: 0.925 }}
         pressStyle={{ scale: 0.875 }}
         alignItems="center"
-        backgroundColor="white"
+        backgroundColor="$background02"
         borderWidth={2}
         borderColor="$borderColor"
         borderRadius="$6"
         overflow="hidden"
-        shadowColor="black"
+        shadowColor="$shadowColor"
         shadowOffset={{ width: 0, height: 4 }}
         shadowOpacity={0.15}
         shadowRadius={8}

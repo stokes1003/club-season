@@ -16,6 +16,49 @@ type Player = {
   role: string;
 };
 
+const sendEmailsWithRateLimit = async (
+  players: Player[],
+  leagueName: string,
+  user: any
+) => {
+  const results: Array<{ success: boolean; email: string; error?: string }> =
+    [];
+
+  for (const player of players) {
+    console.log(`Processing player ${player.name} (${player.email})`);
+    try {
+      await sendEmail({
+        to: player.email,
+        subject: `You've been added to ${leagueName}`,
+        html: `
+        <p>You've been added to ${leagueName} by ${user?.name || user?.email}.</p>
+        <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
+        `,
+      });
+      results.push({ success: true, email: player.email });
+      console.log(`Email sent successfully to ${player.email}`);
+
+      // Small delay between emails
+      if (players.indexOf(player) < players.length - 1) {
+        console.log(`Waiting before next email...`);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    } catch (error: any) {
+      console.error(`Failed to send email to ${player.email}:`, error);
+      results.push({
+        success: false,
+        email: player.email,
+        error: error.message || "Unknown error",
+      });
+    }
+  }
+
+  console.log(
+    `Email function completed. Processed ${results.length} players out of ${players.length}`
+  );
+  return results;
+};
+
 export const useCreateLeague = () => {
   const { triggerRefresh: triggerSelectedLeagueRefresh } = useSelectedLeague();
   const { triggerRefresh: triggerLeaderboardRefresh } = useLeaderboard();
@@ -222,55 +265,40 @@ export const useCreateLeague = () => {
           }
         }
       }
-      // Send welcome emails to players
-      const emailResults = await Promise.allSettled(
-        players
-          .filter((player) => player.email)
-          .map(async (player) => {
-            try {
-              await sendEmail({
-                to: player.email,
-                subject: `You've been added to ${leagueName}`,
-                html: `
-                <p>You've been added to ${leagueName} by ${user?.name || user?.email}.</p>
-                <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
-                `,
-              });
-              return { success: true, email: player.email };
-            } catch (error) {
-              console.error(`Failed to send email to ${player.email}:`, error);
-              return {
-                success: false,
-                email: player.email,
-                error: error.message,
-              };
-            }
-          })
+      // Send welcome emails to players with rate limiting
+      console.log(
+        `About to send emails to ${players.filter((player) => player.email).length} players`
       );
+      const emailResults = await sendEmailsWithRateLimit(
+        players.filter((player) => player.email),
+        leagueName,
+        user
+      );
+      console.log(`Email results:`, emailResults);
 
       // Analyze results and provide user feedback
-      const successfulEmails = emailResults.filter(
-        (result) => result.status === "fulfilled" && result.value.success
-      );
-      const failedEmails = emailResults.filter(
-        (result) => result.status === "fulfilled" && !result.value.success
-      );
-
-      // Show appropriate feedback to user
-      if (failedEmails.length > 0) {
-        const failedEmailList = failedEmails
-          .map((result) => (result as PromiseFulfilledResult<any>).value.email)
-          .join(", ");
-
-        Alert.alert(
-          "League Created with Warnings",
-          `League created successfully! However, failed to send invites to: ${failedEmailList}\n\nYou can resend invites later from the league settings.`
+      if (emailResults) {
+        const successfulEmails = emailResults.filter(
+          (result) => result.success
         );
-      } else if (successfulEmails.length > 0) {
-        Alert.alert(
-          "League Created Successfully",
-          `League created and invites sent to ${successfulEmails.length} players!`
-        );
+        const failedEmails = emailResults.filter((result) => !result.success);
+
+        // Show appropriate feedback to user
+        if (failedEmails.length > 0) {
+          const failedEmailList = failedEmails
+            .map((result) => result.email)
+            .join(", ");
+
+          Alert.alert(
+            "League Created with Warnings",
+            `League created successfully! However, failed to send invites to: ${failedEmailList}\n\nYou can resend invites later from the league settings.`
+          );
+        } else if (successfulEmails.length > 0) {
+          Alert.alert(
+            "League Created Successfully",
+            `League created and invites sent to ${successfulEmails.length} players!`
+          );
+        }
       }
 
       setPlayers([]);

@@ -17,6 +17,8 @@ export type Round = {
 export type League = {
   id: string;
   name: string;
+  image_url: string;
+  avatar_color: string;
 };
 export type Course = {
   id: string;
@@ -38,6 +40,9 @@ export type UserRound = {
   handicap: number;
   gross_points: number;
   net_points: number;
+  league_id: string;
+  league_img: string;
+  league_color: string;
 };
 
 export function transformUserRounds(
@@ -77,6 +82,9 @@ export function transformUserRounds(
         handicap: score.handicap,
         gross_points: 0,
         net_points: 0,
+        league_id: round.league_id,
+        league_img: league?.image_url || "",
+        league_color: league?.avatar_color || "",
       };
     })
     .filter(Boolean) as UserRound[];
