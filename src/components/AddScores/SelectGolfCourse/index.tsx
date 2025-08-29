@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert, Pressable, View } from "react-native";
+import { Alert, Pressable } from "react-native";
 import { Button, Input, ScrollView, Text, YStack } from "tamagui";
 import { searchCourses } from "../../../api/getGolfCourses";
 import { GolfCourse } from "../../../types/golfCourse";
@@ -7,9 +7,9 @@ import { getLeagueCourses } from "../../../api/getLeagueCourses";
 import { CourseSelection, LeagueCourse } from "src/types/courseSelection";
 import { SelectDate } from "./SelectDate";
 import { MajorTournamentSelector } from "./MajorTournamentSelector";
+import { useNavigation } from "src/context/NavigationContext";
 
 export function SelectGolfCourse({
-  setCurrentStep,
   setSelectedCourse,
   selectedCourse,
   isMajor,
@@ -20,7 +20,6 @@ export function SelectGolfCourse({
   date,
   setDate,
 }: {
-  setCurrentStep: (step: string) => void;
   setSelectedCourse: (course: CourseSelection) => void;
   selectedCourse: CourseSelection | null;
   isMajor: string;
@@ -36,7 +35,7 @@ export function SelectGolfCourse({
   const [isSearching, setIsSearching] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [courses, setCourses] = useState<GolfCourse[]>([]);
-
+  const { setAddScoresState } = useNavigation();
   useEffect(() => {
     if (leagueId) {
       getLeagueCourses(leagueId).then((courses) => {
@@ -209,7 +208,10 @@ export function SelectGolfCourse({
             return;
           }
           if (selectedCourse) {
-            setCurrentStep("enter-player-scores");
+            setAddScoresState({
+              step: "enter-player-scores",
+              playerIndex: 0,
+            });
           } else {
             Alert.alert("Please select a course");
           }

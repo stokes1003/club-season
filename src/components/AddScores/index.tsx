@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { ConfirmRoundSubmit } from "./ConfirmRoundSubmit";
 import { useRouter } from "expo-router";
 import { getAddScoresData } from "../../api/getAddScoresData";
-import { ScoresFormHeader } from "./ScoresFormHeader";
 import { SelectLeague } from "./SelectLeague";
 import { CourseSelection } from "src/types/courseSelection";
 import { useSubmitScores } from "../../hooks/useSubmitScores";
@@ -14,6 +13,8 @@ import { useOfficalRounds } from "../../context/OfficalRoundsContext";
 import { useSelectedLeague } from "../../context/SelectedLeagueContext";
 import { getLeagueById } from "../../api/getLeagueById";
 import { useUser } from "../../context/UserContext";
+import { useNavigation } from "../../context/NavigationContext";
+import { Text } from "tamagui";
 
 type AddScoresData = {
   courses: {
@@ -29,12 +30,22 @@ type AddScoresData = {
 };
 
 export function AddScores() {
+  console.log("AddScores component starting");
   const router = useRouter();
   const { refreshUser } = useUser();
   const { setSelectedLeague } = useSelectedLeague();
   const { submitRound, isSubmitting } = useSubmitScores();
-  const [currentStep, setCurrentStep] = useState("select-league");
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  let addScoresState, setAddScoresState;
+
+  try {
+    const navigation = useNavigation();
+    addScoresState = navigation.addScoresState;
+    setAddScoresState = navigation.setAddScoresState;
+    console.log("Navigation hook successful");
+  } catch (error) {
+    console.error("Navigation hook failed:", error);
+    return <Text>Navigation Error</Text>;
+  }
   const [leagueId, setLeagueId] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [addScoresData, setAddScoresData] = useState<AddScoresData | null>(
@@ -72,8 +83,7 @@ export function AddScores() {
   }, [leagueId]);
   const handleHome = () => {
     router.push("/");
-    setCurrentStep("select-league");
-    setCurrentPlayerIndex(0);
+    setAddScoresState({ step: "select-league", playerIndex: 0 });
     setIsMajor("no");
     setMajorName("");
     setDate(new Date());
@@ -122,27 +132,21 @@ export function AddScores() {
     }
   }, [selectedCourse]);
 
+  console.log("addScoresState:", addScoresState);
+  console.log("addScoresState?.step:", addScoresState?.step);
+
+  const currentStep = addScoresState?.step || "select-league";
+  const currentPlayerIndex = addScoresState?.playerIndex || 0;
+
   return (
     <YStack gap="$8" style={{ alignItems: "center" }} width="100%">
       <YStack gap="$8" width="100%">
-        <ScoresFormHeader
-          currentStep={currentStep}
-          handleHome={handleHome}
-          currentPlayerIndex={currentPlayerIndex}
-          setCurrentStep={setCurrentStep}
-          setCurrentPlayerIndex={setCurrentPlayerIndex}
-        />
-        {currentStep === "select-league" && (
-          <SelectLeague
-            setLeagueId={setLeagueId}
-            leagueId={leagueId}
-            setCurrentStep={setCurrentStep}
-          />
+        {addScoresState?.step === "select-league" && (
+          <SelectLeague setLeagueId={setLeagueId} leagueId={leagueId} />
         )}
 
-        {currentStep === "select-golf-course" && (
+        {addScoresState?.step === "select-golf-course" && (
           <SelectGolfCourse
-            setCurrentStep={setCurrentStep}
             setSelectedCourse={setSelectedCourse}
             selectedCourse={selectedCourse}
             isMajor={isMajor}
@@ -154,18 +158,15 @@ export function AddScores() {
             setDate={setDate}
           />
         )}
-        {currentStep === "enter-player-scores" && addScoresData && (
+        {addScoresState?.step === "enter-player-scores" && addScoresData && (
           <EnterPlayerScores
-            setCurrentStep={setCurrentStep}
-            currentPlayerIndex={currentPlayerIndex}
-            setCurrentPlayerIndex={setCurrentPlayerIndex}
             addScoresData={addScoresData}
             setScoresByPlayer={setScoresByPlayer}
             scoresByPlayer={scoresByPlayer}
             isMajor={isMajor}
           />
         )}
-        {currentStep === "confirm-round-submit" && selectedCourse && (
+        {addScoresState?.step === "confirm-round-submit" && selectedCourse && (
           <ConfirmRoundSubmit
             isSubmitting={isSubmitting}
             handleHome={handleHome}

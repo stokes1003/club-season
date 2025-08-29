@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Keyboard } from "react-native";
 import { Button, Input, Text, XStack, YStack } from "tamagui";
 import { PlayerAvatar } from "../../UI/PlayerAvatar";
+import { useNavigation } from "src/context/NavigationContext";
 
 type AddScoresData = {
   players: {
@@ -13,17 +13,11 @@ type AddScoresData = {
 };
 
 export function EnterPlayerScores({
-  setCurrentStep,
-  currentPlayerIndex,
-  setCurrentPlayerIndex,
   addScoresData,
   setScoresByPlayer,
   scoresByPlayer,
   isMajor,
 }: {
-  setCurrentStep: (step: string) => void;
-  currentPlayerIndex: number;
-  setCurrentPlayerIndex: (index: number) => void;
   addScoresData: AddScoresData;
   setScoresByPlayer: (scores: {
     [key: string]: {
@@ -47,7 +41,7 @@ export function EnterPlayerScores({
 }) {
   const [handicapInput, setHandicapInput] = useState("");
   const [grossInput, setGrossInput] = useState("");
-
+  const { addScoresState, setAddScoresState } = useNavigation();
   const handleSubmitScores = () => {
     // Safety check to ensure currentPlayer exists and has an id
     if (!currentPlayer || !currentPlayer.id) {
@@ -61,12 +55,18 @@ export function EnterPlayerScores({
     // Clean up any existing "undefined" entries
     const cleanScoresByPlayer = { ...scoresByPlayer };
     delete cleanScoresByPlayer["undefined"];
+    const currentPlayerIndex = addScoresState.playerIndex || 0;
 
     if (currentPlayerIndex === addScoresData.players.length - 1) {
-      setCurrentStep("confirm-round-submit");
-      setCurrentPlayerIndex(0);
+      setAddScoresState({
+        step: "confirm-round-submit",
+        playerIndex: addScoresState.playerIndex || 0,
+      });
     } else {
-      setCurrentPlayerIndex(currentPlayerIndex + 1);
+      setAddScoresState({
+        step: "enter-player-scores",
+        playerIndex: currentPlayerIndex + 1,
+      });
       setHandicapInput("");
       setGrossInput("");
     }
@@ -83,7 +83,7 @@ export function EnterPlayerScores({
   };
 
   // Safety check for current player data
-  const currentPlayer = addScoresData.players[currentPlayerIndex];
+  const currentPlayer = addScoresData.players[addScoresState.playerIndex || 0];
   const playerName = currentPlayer?.display_name || "Unknown Player";
   const playerAvatarUrl = currentPlayer?.avatar_url || "";
   const playerAvatarColor = currentPlayer?.player_color || "";
@@ -141,7 +141,7 @@ export function EnterPlayerScores({
         width="$20"
         onPress={handleSubmitScores}
       >
-        {currentPlayerIndex === addScoresData.players.length - 1
+        {addScoresState.playerIndex === addScoresData.players.length - 1
           ? "Submit Scores"
           : "Next Player"}
       </Button>

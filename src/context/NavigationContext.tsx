@@ -10,6 +10,15 @@ type NavigationState =
       step: "league-name" | "add-players" | "confirm-create-league";
       playerIndex?: number;
     }
+  | {
+      type: "addScores";
+      step:
+        | "select-league"
+        | "select-golf-course"
+        | "enter-player-scores"
+        | "confirm-round-submit";
+      playerIndex?: number;
+    }
   | { type: "league"; league: League }
   | { type: "player"; player: Player; league: League }
   | { type: "course"; course: any; league: League }
@@ -20,6 +29,22 @@ type NavigationState =
   | { type: "inviteFriends" };
 
 type NavigationContextType = {
+  addScoresState: {
+    step:
+      | "select-league"
+      | "select-golf-course"
+      | "enter-player-scores"
+      | "confirm-round-submit";
+    playerIndex?: number;
+  };
+  setAddScoresState: (state: {
+    step:
+      | "select-league"
+      | "select-golf-course"
+      | "enter-player-scores"
+      | "confirm-round-submit";
+    playerIndex?: number;
+  }) => void;
   currentMyLeaguesState: NavigationState;
   setCreateLeagueState: (state: {
     step: "league-name" | "add-players" | "confirm-create-league";
@@ -71,6 +96,17 @@ export const useNavigation = () => {
 
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
+  const [addScoresState, setAddScoresState] = useState<{
+    step:
+      | "select-league"
+      | "select-golf-course"
+      | "enter-player-scores"
+      | "confirm-round-submit";
+    playerIndex?: number;
+  }>({
+    step: "select-league",
+    playerIndex: 0,
+  });
   const [currentMyLeaguesState, setCurrentMyLeaguesState] =
     useState<NavigationState>({
       type: "dashboard",
@@ -131,6 +167,8 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const value = {
+    addScoresState,
+    setAddScoresState,
     createLeagueState,
     setCreateLeagueState,
     navigateToCreateLeague,

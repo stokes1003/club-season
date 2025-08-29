@@ -9,6 +9,7 @@ import {
   ChevronUp,
   ChartNoAxesCombined,
   ArrowLeft,
+  CircleUserRound,
 } from "@tamagui/lucide-icons";
 import { useUser } from "../../src/context/UserContext";
 import { useState } from "react";
@@ -81,6 +82,8 @@ export default function TabLayout() {
 
             {user?.leagues?.map((league, index) => (
               <Pressable
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ padding: 4 }}
                 key={league.id}
                 onPress={() => handleSelectLeague(league)}
               >
@@ -118,6 +121,8 @@ export default function TabLayout() {
           options={{
             headerTitle: () => (
               <Pressable
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ padding: 4 }}
                 onPress={() => {
                   setIsOpen(!isOpen);
                 }}
@@ -132,9 +137,9 @@ export default function TabLayout() {
                       {selectedLeague?.name || "Home"}
                     </Text>
                     {isOpen ? (
-                      <ChevronUp size={22} />
+                      <ChevronUp size={24} />
                     ) : (
-                      <ChevronDown size={22} />
+                      <ChevronDown size={24} />
                     )}
                   </XStack>
                 </YStack>
@@ -150,6 +155,8 @@ export default function TabLayout() {
           options={{
             headerTitle: () => (
               <Pressable
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ padding: 4 }}
                 onPress={() => {
                   setIsOpen(!isOpen);
                 }}
@@ -164,9 +171,9 @@ export default function TabLayout() {
                       {selectedLeague?.name || "My Stats"}
                     </Text>
                     {isOpen ? (
-                      <ChevronUp size={22} />
+                      <ChevronUp size={24} />
                     ) : (
-                      <ChevronDown size={22} />
+                      <ChevronDown size={24} />
                     )}
                   </XStack>
                 </YStack>
@@ -196,11 +203,13 @@ export default function TabLayout() {
                 ? () => (
                     <View pl="$7">
                       <Pressable
+                        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                        style={{ padding: 4 }}
                         onPress={() => {
                           navigateBack();
                         }}
                       >
-                        <ArrowLeft size={22} />
+                        <ArrowLeft size={24} />
                       </Pressable>
                     </View>
                   )
@@ -219,7 +228,7 @@ export default function TabLayout() {
                 Profile
               </Text>
             ),
-            tabBarLabel: "",
+            tabBarLabel: "Account",
             headerLeft:
               currentProfileState !== "profile"
                 ? () => (
@@ -235,17 +244,7 @@ export default function TabLayout() {
                   )
                 : undefined,
 
-            tabBarIcon: ({ color }) =>
-              user ? (
-                <Avatar circular size="$3" mt="$3">
-                  <Avatar.Image
-                    src={user.avatar_url ?? "https://via.placeholder.com/40"}
-                    accessibilityLabel="User avatar"
-                  />
-                </Avatar>
-              ) : (
-                <User color={color as any} />
-              ),
+            tabBarIcon: ({ color }) => <CircleUserRound color={color as any} />,
           }}
         />
       </Tabs>

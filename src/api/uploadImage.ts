@@ -65,9 +65,9 @@ export async function uploadImage(uri: string, path: string) {
 
     // Skip compression temporarily to test
     let processedUri = uri;
-    // if (uri.startsWith("file://") || uri.startsWith("content://")) {
-    //   // Comment out compression for testing
-    // }
+    if (uri.startsWith("file://") || uri.startsWith("content://")) {
+      // Comment out compression for testing
+    }
 
     if (
       processedUri.startsWith("file://") ||
@@ -159,7 +159,7 @@ export async function uploadImage(uri: string, path: string) {
         // Upload base64 string directly but ensure it's treated as binary
         const { data, error } = await supabase.storage
           .from("images")
-          .upload(path, base64, {
+          .upload(path, blob, {
             contentType: "image/jpeg",
             upsert: true,
             cacheControl: "3600",

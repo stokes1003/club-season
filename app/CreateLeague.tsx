@@ -1,21 +1,14 @@
 import { View, ScrollView } from "tamagui";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { CreateLeague } from "src/components/CreateLeague";
-import {
-  Keyboard,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "src/context/NavigationContext";
 import { ArrowLeft, X } from "@tamagui/lucide-icons";
-import { router } from "expo-router";
 
 export default function CreateLeagueScreen() {
   const { createLeagueState, setCreateLeagueState } = useNavigation();
 
   const handleBack = () => {
-    console.log("handleBack called, current step:", createLeagueState.step);
     if (createLeagueState.step === "confirm-create-league") {
       setCreateLeagueState({
         step: "add-players",
@@ -38,7 +31,6 @@ export default function CreateLeagueScreen() {
       router.push("/(tabs)/My Leagues");
     }
   };
-  console.log("createLeagueState", createLeagueState);
 
   return (
     <>
@@ -57,7 +49,6 @@ export default function CreateLeagueScreen() {
             <View pl="$2">
               <Pressable
                 onPress={() => {
-                  console.log("Pressable pressed");
                   handleBack();
                 }}
               >

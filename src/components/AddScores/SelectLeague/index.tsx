@@ -2,17 +2,17 @@ import { YStack, Text, Button, Input, ScrollView } from "tamagui";
 import { Alert, Pressable } from "react-native";
 import { useUser } from "../../../context/UserContext";
 import { useMemo, useState } from "react";
+import { useNavigation } from "src/context/NavigationContext";
 
 export function SelectLeague({
   setLeagueId,
-  setCurrentStep,
   leagueId,
 }: {
   setLeagueId: (id: string) => void;
-  setCurrentStep: (step: string) => void;
   leagueId: string;
 }) {
   const { user } = useUser();
+  const { setAddScoresState } = useNavigation();
   const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState("");
   const filteredLeagues = useMemo(
@@ -32,8 +32,9 @@ export function SelectLeague({
       Alert.alert("You are not the commissioner of this league");
       return;
     }
-    if (leagueId) {
-      setCurrentStep("select-golf-course");
+    if (leagueId && leagueId.trim() !== "") {
+      // Check for non-empty string
+      setAddScoresState({ step: "select-golf-course", playerIndex: 0 });
     } else {
       Alert.alert("Please select a league");
     }
