@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { League } from "../components/MyLeagues/index";
 import { Player } from "src/types/player";
-import { useRouter } from "expo-router";
 
 type NavigationState =
   | { type: "dashboard" }
@@ -95,7 +94,6 @@ export const useNavigation = () => {
 };
 
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
   const [addScoresState, setAddScoresState] = useState<{
     step:
       | "select-league"
