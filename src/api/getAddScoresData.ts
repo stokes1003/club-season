@@ -32,8 +32,6 @@ export async function getAddScoresData(
       return null;
     }
 
-    console.log("Raw players data from DB:", playersData);
-
     // Transform players data to match the expected format and remove duplicates
     const uniquePlayers = (playersData || []).filter(
       (player: any, index: number, self: any[]) =>

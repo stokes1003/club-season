@@ -19,7 +19,7 @@ export function InviteFriends() {
           <p>You can view the league and manage your settings by downloading the Club Season app in the app store.</p>
           `,
       });
-      console.log(`Email sent successfully to ${email}`);
+
       setEmail("");
       Alert.alert("Invite sent successfully");
     } catch (error: any) {

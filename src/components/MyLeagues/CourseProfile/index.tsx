@@ -12,7 +12,7 @@ export function CourseProfile({
   setSelectedCourse: (course: any) => void;
 }) {
   const [courseImage, setCourseImage] = useState(selectedCourse.photo_url);
-  console.log(selectedCourse.id);
+
   const { pickImage } = useUploadImage();
 
   const handleImageUpload = async () => {
@@ -28,7 +28,6 @@ export function CourseProfile({
         console.error("Database update error:", error);
         Alert.alert("Error", "Failed to save to database");
       } else {
-        console.log("Database updated successfully");
         setCourseImage(uploadedUrl);
         setSelectedCourse({
           ...selectedCourse,

@@ -29,7 +29,6 @@ export function LeagueDetails({
         console.error("Database update error:", error);
         Alert.alert("Error", "Failed to save to database");
       } else {
-        console.log("Database updated successfully");
         setLeagueAvatar(uploadedUrl);
         setSelectedLeague({
           ...selectedLeague,

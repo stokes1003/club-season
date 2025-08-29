@@ -64,9 +64,7 @@ export function EnterLeagueName({
         const uploadedUrl = await uploadImage(localUri, path);
 
         if (uploadedUrl) {
-          console.log("Image uploaded successfully:", uploadedUrl);
         } else {
-          console.log("Upload failed, keeping local URI");
         }
       } catch (error) {
         console.error("Upload error:", error);

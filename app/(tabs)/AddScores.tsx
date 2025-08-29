@@ -6,7 +6,6 @@ import { router, Stack } from "expo-router";
 import { useNavigation } from "src/context/NavigationContext";
 
 export default function AddScoresScreen() {
-  console.log("AddScoresScreen rendering");
   const { addScoresState, setAddScoresState } = useNavigation();
 
   if (!addScoresState) {

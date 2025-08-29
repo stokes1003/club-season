@@ -11,16 +11,12 @@ export async function checkLeagueCourse(
       ? golfCourse.external_course_id
       : golfCourse.id;
 
-  console.log("Checking league course:", { leagueId, externalCourseId });
-
   const { data, error } = await supabase
     .from("league_courses")
     .select("id, external_course_id, times_played")
     .eq("league_id", leagueId)
     .eq("external_course_id", externalCourseId)
     .maybeSingle();
-
-  console.log("Course lookup result:", { data, error, exists: !!data });
 
   if (error && error.code !== "PGRST116") {
     console.error("Error checking league course:", error);

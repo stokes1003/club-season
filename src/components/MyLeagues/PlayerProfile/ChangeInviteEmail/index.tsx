@@ -1,6 +1,5 @@
-import { YStack, Text, Input, XStack, Spinner, Button } from "tamagui";
-import { Alert, Pressable } from "react-native";
-import { ArrowLeft } from "@tamagui/lucide-icons";
+import { YStack, Text, Input, Spinner, Button } from "tamagui";
+import { Alert } from "react-native";
 import { Player } from "src/types/player";
 import { League } from "../..";
 import { useState } from "react";

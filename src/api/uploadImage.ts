@@ -51,17 +51,13 @@ export async function uploadImage(uri: string, path: string) {
       session?.expires_at &&
       new Date(session.expires_at * 1000) < new Date()
     ) {
-      console.log("Token expired, refreshing...");
       const { data: refreshData, error: refreshError } =
         await supabase.auth.refreshSession();
       if (refreshError) {
         console.error("Failed to refresh token:", refreshError);
         return null;
       }
-      console.log("Token refreshed successfully");
     }
-
-    console.log("User authenticated:", user.id);
 
     // Skip compression temporarily to test
     let processedUri = uri;
@@ -79,13 +75,6 @@ export async function uploadImage(uri: string, path: string) {
           encoding: FileSystem.EncodingType.Base64,
         });
 
-        console.log("Local file read as base64, length:", base64.length);
-        console.log("Base64 first 50 chars:", base64.substring(0, 50));
-        console.log(
-          "Base64 last 50 chars:",
-          base64.substring(base64.length - 50)
-        );
-
         // Validate base64 data
         if (!base64 || base64.length < 100) {
           console.error("Base64 data too short, likely corrupted");
@@ -99,8 +88,6 @@ export async function uploadImage(uri: string, path: string) {
           uint8Array[i] = binaryString.charCodeAt(i);
         }
 
-        console.log("Converted to Uint8Array, length:", uint8Array.length);
-
         // Upload Uint8Array instead of base64 string
         const { data, error } = await supabase.storage
           .from("images")
@@ -113,8 +100,6 @@ export async function uploadImage(uri: string, path: string) {
           console.error("Base64 upload failed:", error);
           return null;
         }
-
-        console.log("Base64 upload successful:", data);
 
         // Get the public URL
         const { data: urlData } = supabase.storage
@@ -142,8 +127,6 @@ export async function uploadImage(uri: string, path: string) {
           return null;
         }
 
-        console.log("Blob created successfully, size:", blob.size, "bytes");
-
         // Warn about large file sizes
         if (blob.size > 5 * 1024 * 1024) {
           // 5MB
@@ -153,8 +136,6 @@ export async function uploadImage(uri: string, path: string) {
         }
 
         // Upload to Supabase storage
-        console.log("Uploading to images bucket...");
-        console.log("Upload path:", path);
 
         // Upload base64 string directly but ensure it's treated as binary
         const { data, error } = await supabase.storage
@@ -215,14 +196,11 @@ export async function uploadImage(uri: string, path: string) {
           return null;
         }
 
-        console.log("Upload successful:", data);
-
         // Get the public URL (no expiration)
         const { data: urlData } = supabase.storage
           .from("images")
           .getPublicUrl(path);
 
-        console.log("Public URL generated:", urlData.publicUrl);
         return urlData.publicUrl;
       } catch (fetchError) {
         console.error("Failed to fetch remote image:", fetchError);

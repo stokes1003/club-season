@@ -25,7 +25,6 @@ const sendEmailsWithRateLimit = async (
     [];
 
   for (const player of players) {
-    console.log(`Processing player ${player.name} (${player.email})`);
     try {
       await sendEmail({
         to: player.email,
@@ -36,11 +35,9 @@ const sendEmailsWithRateLimit = async (
         `,
       });
       results.push({ success: true, email: player.email });
-      console.log(`Email sent successfully to ${player.email}`);
 
       // Small delay between emails
       if (players.indexOf(player) < players.length - 1) {
-        console.log(`Waiting before next email...`);
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
     } catch (error: any) {
@@ -53,9 +50,6 @@ const sendEmailsWithRateLimit = async (
     }
   }
 
-  console.log(
-    `Email function completed. Processed ${results.length} players out of ${players.length}`
-  );
   return results;
 };
 
@@ -266,15 +260,11 @@ export const useCreateLeague = () => {
         }
       }
       // Send welcome emails to players with rate limiting
-      console.log(
-        `About to send emails to ${players.filter((player) => player.email).length} players`
-      );
       const emailResults = await sendEmailsWithRateLimit(
         players.filter((player) => player.email),
         leagueName,
         user
       );
-      console.log(`Email results:`, emailResults);
 
       // Analyze results and provide user feedback
       if (emailResults) {

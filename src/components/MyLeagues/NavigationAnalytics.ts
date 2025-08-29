@@ -20,7 +20,6 @@ class NavigationAnalytics {
     };
 
     this.events.push(event);
-    console.log(`Navigation: ${from} → ${to}`, data);
   }
 
   getNavigationHistory() {

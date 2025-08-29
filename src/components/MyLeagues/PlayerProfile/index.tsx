@@ -5,7 +5,6 @@ import { ChangeDisplayName } from "./ChangeDisplayName";
 import { ChangeInviteEmail } from "./ChangeInviteEmail";
 import { ChangePlayerRole } from "./ChangePlayerRole";
 import { useState } from "react";
-import { useNavigation } from "../../../context/NavigationContext";
 
 type PlayerProfileMode =
   | "profile"
@@ -23,7 +22,6 @@ export function PlayerProfile({
   selectedLeague: League;
 }) {
   const [mode, setMode] = useState<PlayerProfileMode>("profile");
-  const { canGoBack, navigateBack } = useNavigation();
 
   const renderCurrentMode = () => {
     switch (mode) {

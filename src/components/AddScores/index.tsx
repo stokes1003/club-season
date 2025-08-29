@@ -30,7 +30,6 @@ type AddScoresData = {
 };
 
 export function AddScores() {
-  console.log("AddScores component starting");
   const router = useRouter();
   const { refreshUser } = useUser();
   const { setSelectedLeague } = useSelectedLeague();
@@ -41,7 +40,6 @@ export function AddScores() {
     const navigation = useNavigation();
     addScoresState = navigation.addScoresState;
     setAddScoresState = navigation.setAddScoresState;
-    console.log("Navigation hook successful");
   } catch (error) {
     console.error("Navigation hook failed:", error);
     return <Text>Navigation Error</Text>;
@@ -131,9 +129,6 @@ export function AddScores() {
       );
     }
   }, [selectedCourse]);
-
-  console.log("addScoresState:", addScoresState);
-  console.log("addScoresState?.step:", addScoresState?.step);
 
   const currentStep = addScoresState?.step || "select-league";
   const currentPlayerIndex = addScoresState?.playerIndex || 0;

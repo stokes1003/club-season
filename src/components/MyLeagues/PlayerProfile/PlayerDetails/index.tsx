@@ -37,7 +37,6 @@ export function PlayerDetails({
   const [playerAvatar, setPlayerAvatar] = useState(selectedPlayer.avatar_url);
 
   const playerRole = useGetPlayerRole(user?.id || "", selectedLeague.id);
-  console.log(playerRole);
 
   const handleResendInvite = async () => {
     setLoading(true);
@@ -100,7 +99,6 @@ export function PlayerDetails({
         console.error("Database update error:", error);
         Alert.alert("Error", "Failed to save to database");
       } else {
-        console.log("Database updated successfully");
         setPlayerAvatar(uploadedUrl);
         setSelectedPlayer({
           ...selectedPlayer,

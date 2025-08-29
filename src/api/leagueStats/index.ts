@@ -90,16 +90,7 @@ export async function getLeagueStats(leagueId: string) {
     players[0]
   );
 
-  // Debug major wins calculation
-  console.log(
-    "Players with major wins:",
-    players.map((p) => ({ name: p.name, major_wins: p.major_wins }))
-  );
-
   const mostMajorWins = players.reduce((most, current) => {
-    console.log(
-      `Comparing ${current.name} (${current.major_wins}) vs ${most.name} (${most.major_wins})`
-    );
     return current.major_wins > most.major_wins ? current : most;
   }, players[0]);
 
@@ -107,14 +98,6 @@ export async function getLeagueStats(leagueId: string) {
     (most, current) =>
       current.net_major_wins > most.net_major_wins ? current : most,
     players[0]
-  );
-
-  console.log(
-    "Most major wins player:",
-    mostMajorWins.name,
-    "with",
-    mostMajorWins.major_wins,
-    "wins"
   );
 
   return {

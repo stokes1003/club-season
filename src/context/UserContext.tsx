@@ -50,7 +50,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           try {
             const inviteResult = await linkUserToInvites(user.email, user.id);
             if (inviteResult.claimedCount > 0) {
-              console.log(`Claimed ${inviteResult.claimedCount} invites`);
               // Increment trigger to notify other contexts
               setRefreshTrigger((prev) => prev + 1);
             }

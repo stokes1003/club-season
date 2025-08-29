@@ -25,13 +25,9 @@ function MyLeaguesContent() {
     navigateToPlayer,
     navigateToCourse,
     navigateBack,
-    canGoBack,
   } = useNavigation();
-  console.log("currentMyLeaguesState", currentMyLeaguesState);
 
   const renderCurrentScreen = () => {
-    const fromScreen = currentMyLeaguesState.type;
-
     switch (currentMyLeaguesState.type) {
       case "dashboard":
         navigationAnalytics.trackNavigation("previous", "dashboard");

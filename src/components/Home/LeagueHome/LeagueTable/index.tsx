@@ -17,7 +17,7 @@ export function LeagueTable({
     return b.gross_points - a.gross_points;
   });
   const playerDisplayNames = getPlayerDisplayNames(players);
-  console.log(players);
+
   return (
     <YStack gap="$4" style={{ alignItems: "center" }}>
       <YStack>
