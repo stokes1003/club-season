@@ -21,7 +21,7 @@ export default function ProfileScreen() {
   }
   return (
     <View flex={1} items="center" bg="$background">
-      <ScrollView showsVerticalScrollIndicator={false} py="$10" px="$4">
+      <ScrollView showsVerticalScrollIndicator={false} py="$8" px="$4">
         <Pressable onPress={() => Keyboard.dismiss()}>
           {currentProfileState === "profile" && <Profile user={user} />}
           {currentProfileState === "changePassword" && (

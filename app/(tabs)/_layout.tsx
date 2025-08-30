@@ -69,7 +69,7 @@ export default function TabLayout() {
               top: 100,
               left: "19.5%",
               transform: [{ translateX: -80 }],
-              backgroundColor: theme?.background?.val || "$background",
+              backgroundColor: theme?.background?.val || "$backgound",
             }}
           >
             <Pressable onPress={() => handleSelectLeague(null)}>
@@ -89,9 +89,7 @@ export default function TabLayout() {
               >
                 <Card
                   p="$2"
-                  backgroundColor={
-                    index % 2 === 0 ? "$background02" : "$background"
-                  }
+                  backgroundColor={index % 2 === 0 ? "$black11" : "$background"}
                 >
                   <Text fontSize="$6" style={{ textAlign: "center" }}>
                     {league.name}
@@ -201,7 +199,7 @@ export default function TabLayout() {
             headerLeft:
               currentMyLeaguesState.type !== "dashboard"
                 ? () => (
-                    <View pl="$7">
+                    <View pl="$2">
                       <Pressable
                         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                         style={{ padding: 4 }}
@@ -234,11 +232,13 @@ export default function TabLayout() {
                 ? () => (
                     <View pl="$2">
                       <Pressable
+                        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                        style={{ padding: 4 }}
                         onPress={() => {
                           setCurrentProfileState("profile");
                         }}
                       >
-                        <ArrowLeft size={22} />
+                        <ArrowLeft size={24} />
                       </Pressable>
                     </View>
                   )

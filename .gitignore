@@ -147,6 +147,6 @@ expo-env.d.ts
 # Expo
 .expo/
 
-# Native folders (remove these if using CNG/Prebuild)
-# ios/
-# android/
+# Native folders (using Prebuild)
+ios/
+android/

@@ -2,6 +2,8 @@ import { YStack, XStack, View, Text, Spinner } from "tamagui";
 import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 import { User } from "src/types/user";
 import { useGetUserStats } from "src/hooks/useGetUserStats";
+import { Pressable } from "react-native";
+import { router } from "expo-router";
 
 type UserBasicStatsProps = {
   user: User | null;
@@ -29,12 +31,18 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
     <>
       <YStack gap="$6" style={{ alignItems: "center" }}>
         <YStack gap="$2" style={{ alignItems: "center" }}>
-          <PlayerAvatar
-            name={user?.name || "Unknown Player"}
-            avatarUrl={user?.avatar_url || ""}
-            size="$10"
-            color={user?.player_color || "#6B7280"}
-          />
+          <Pressable
+            onPress={() => {
+              router.push("/(tabs)/Profile");
+            }}
+          >
+            <PlayerAvatar
+              name={user?.name || "Unknown Player"}
+              avatarUrl={user?.avatar_url || ""}
+              size="$10"
+              color={user?.player_color || "#6B7280"}
+            />
+          </Pressable>
           <Text fontSize="$8" fontWeight="bold">
             {user?.name || "Unknown Player"}
           </Text>
@@ -52,7 +60,7 @@ export function UserBasicStats({ user }: UserBasicStatsProps) {
             <View
               width="$4"
               height="$4"
-              borderColor="$black10"
+              borderColor="$black11"
               borderWidth="$0.25"
               style={{
                 alignItems: "center",

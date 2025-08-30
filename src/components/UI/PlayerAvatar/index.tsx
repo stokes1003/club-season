@@ -26,7 +26,6 @@ export function PlayerAvatar({
   gap = "$3",
   color,
 }: PlayerAvatarProps) {
-  // Handle undefined or null names
   const safeName = name || "";
   let nameToDisplay = safeName;
   const nameParts = safeName.split(" ").filter((part) => part.length > 0);
@@ -35,6 +34,7 @@ export function PlayerAvatar({
   } else {
     nameToDisplay = safeName.substring(0, 2).toUpperCase();
   }
+
   return (
     <XStack style={{ alignItems: "center" }} gap={gap}>
       <Avatar circular size={size}>

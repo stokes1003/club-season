@@ -4,6 +4,8 @@ import { useSelectedLeague } from "src/context/SelectedLeagueContext";
 import { useUser } from "src/context/UserContext";
 import { useGetOfficalRounds } from "src/hooks/useGetOfficalRounds";
 import { useGetLeagueCourses } from "src/hooks/useGetLeagueCourses";
+import { Pressable } from "react-native";
+import { useRouter } from "expo-router";
 
 export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
   const { selectedLeague } = useSelectedLeague();
@@ -12,26 +14,35 @@ export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
   const rounds = useGetOfficalRounds(selectedLeague?.id || "");
   const majorRounds = rounds?.filter((round) => round.isMajor);
   const courses = useGetLeagueCourses(selectedLeague?.id || "");
+  const router = useRouter();
 
   return (
     <YStack gap="$6" width="100%" style={{ alignItems: "center" }}>
-      <PlayerAvatar
-        avatarUrl={
-          leagues?.find((league) => league.id === selectedLeague?.id)?.image_url
-        }
-        size="$10"
-        name={selectedLeague?.name}
-        color={
-          leagues?.find((league) => league.id === selectedLeague?.id)
-            ?.avatar_color
-        }
-      />
+      <Pressable
+        onPress={() => {
+          router.push("/(tabs)/My Leagues");
+        }}
+      >
+        <PlayerAvatar
+          avatarUrl={
+            leagues?.find((league) => league.id === selectedLeague?.id)
+              ?.image_url
+          }
+          size="$10"
+          name={selectedLeague?.name}
+          color={
+            leagues?.find((league) => league.id === selectedLeague?.id)
+              ?.avatar_color
+          }
+        />
+      </Pressable>
+
       <XStack gap="$4">
         <YStack gap="$3" style={{ alignItems: "center" }} width="$8">
           <View
             width="$4"
             height="$4"
-            borderColor="$black10"
+            borderColor="$black11"
             borderWidth="$0.25"
             style={{
               alignItems: "center",
@@ -54,7 +65,7 @@ export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
           <View
             width="$4"
             height="$4"
-            borderColor="$black10"
+            borderColor="$black11"
             borderWidth="$0.25"
             style={{
               alignItems: "center",
@@ -77,7 +88,7 @@ export function LeagueSummaryStats({ loading }: { loading?: boolean }) {
           <View
             width="$4"
             height="$4"
-            borderColor="$black10"
+            borderColor="$black11"
             borderWidth="$0.25"
             style={{
               alignItems: "center",

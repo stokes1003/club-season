@@ -2,6 +2,8 @@ import { YStack, Text, XStack, View, Spinner } from "tamagui";
 import { useUser } from "src/context/UserContext";
 import { PlayerAvatar } from "../../../UI/PlayerAvatar";
 import { useGetUserStats } from "src/hooks/useGetUserStats";
+import { Pressable } from "react-native";
+import { router } from "expo-router";
 
 export function UserDetails() {
   const { user } = useUser();
@@ -17,22 +19,25 @@ export function UserDetails() {
         width: "100%",
       }}
     >
-      <XStack gap="$4" style={{ alignItems: "center" }}>
-        <PlayerAvatar
-          name={user?.name || "Unknown Player"}
-          avatarUrl={user?.avatar_url || ""}
-          size="$6"
-          color={user?.player_color || "#6B7280"}
-        />
-        <YStack>
-          <Text fontSize="$6" fontWeight="bold">
-            {user?.name || "Unknown Player"}
-          </Text>
-          <Text fontSize="$4" fontWeight="400" color="$black11">
-            Est. {user?.created_at.split("-")[0]}
-          </Text>
-        </YStack>
-      </XStack>
+      <Pressable onPress={() => router.push("/(tabs)/Profile")}>
+        <XStack gap="$4" style={{ alignItems: "center" }}>
+          <PlayerAvatar
+            name={user?.name || "Unknown Player"}
+            avatarUrl={user?.avatar_url || ""}
+            size="$6"
+            color={user?.player_color || "#6B7280"}
+          />
+
+          <YStack>
+            <Text fontSize="$6" fontWeight="bold">
+              {user?.name || "Unknown Player"}
+            </Text>
+            <Text fontSize="$4" fontWeight="400" color="$black11">
+              Est. {user?.created_at.split("-")[0]}
+            </Text>
+          </YStack>
+        </XStack>
+      </Pressable>
       <XStack gap="$4">
         <YStack gap="$2" style={{ alignItems: "center" }}>
           <View

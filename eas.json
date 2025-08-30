@@ -11,5 +11,8 @@
         "resourceClass": "m-medium"
       }
     }
+  },
+  "cli": {
+    "appVersionSource": "remote"
   }
 }

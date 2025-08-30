@@ -14,7 +14,6 @@ import { useSelectedLeague } from "../../context/SelectedLeagueContext";
 import { getLeagueById } from "../../api/getLeagueById";
 import { useUser } from "../../context/UserContext";
 import { useNavigation } from "../../context/NavigationContext";
-import { Text } from "tamagui";
 
 type AddScoresData = {
   courses: {
@@ -34,16 +33,9 @@ export function AddScores() {
   const { refreshUser } = useUser();
   const { setSelectedLeague } = useSelectedLeague();
   const { submitRound, isSubmitting } = useSubmitScores();
-  let addScoresState, setAddScoresState;
+  const navigation = useNavigation();
+  const { addScoresState, setAddScoresState } = navigation;
 
-  try {
-    const navigation = useNavigation();
-    addScoresState = navigation.addScoresState;
-    setAddScoresState = navigation.setAddScoresState;
-  } catch (error) {
-    console.error("Navigation hook failed:", error);
-    return <Text>Navigation Error</Text>;
-  }
   const [leagueId, setLeagueId] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [addScoresData, setAddScoresData] = useState<AddScoresData | null>(

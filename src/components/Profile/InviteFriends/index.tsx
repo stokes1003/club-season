@@ -47,8 +47,12 @@ export function InviteFriends() {
         width="100%"
         borderWidth="$1"
         borderColor="$borderColor"
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
         value={email}
         onChangeText={setEmail}
+        spellCheck={false}
       />
       <Button
         bg="$blue10"

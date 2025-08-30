@@ -44,7 +44,7 @@ export function LeagueBasicStats({
           <View
             width="$4"
             height="$4"
-            borderColor="$black10"
+            borderColor="$black11"
             borderWidth="$0.25"
             style={{
               alignItems: "center",
