@@ -38,7 +38,7 @@ export function PlayerAvatar({
   return (
     <XStack style={{ alignItems: "center" }} gap={gap}>
       <Avatar circular size={size}>
-        <Avatar.Image src={avatarUrl || ""} />
+        {avatarUrl ? <Avatar.Image src={avatarUrl} /> : null}
         <Avatar.Fallback
           backgroundColor={color as any}
           style={{

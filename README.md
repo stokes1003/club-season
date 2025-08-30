@@ -1,4 +1,4 @@
-# Fairway Fleas - Golf Club Season App
+# Club Season - Golf League Management App
 
 A React Native mobile application built with Expo and Tamagui for managing golf club seasons, tracking player scores, and displaying leaderboards.
 
@@ -63,9 +63,9 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React Native with Expo
-- **UI Library**: Tamagui
-- **Navigation**: Expo Router v3
+- **Framework**: React Native with Expo SDK 53
+- **UI Library**: Tamagui v1.130.7
+- **Navigation**: Expo Router v5
 - **Backend**: Supabase (PostgreSQL)
 - **Edge Functions**: Supabase Edge Functions for secure API handling
 - **Icons**: Lucide Icons
@@ -73,15 +73,18 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
 - **State Management**: React Context + Custom Hooks
 - **Styling**: Tamagui with responsive design
 - **Database**: PostgreSQL with Row Level Security (RLS)
+- **Build System**: EAS Build for production builds
+- **Package Manager**: Yarn 4.5.0
 
 ## 🔒 Security Features
 
 - **Secure API Integration**: Golf course API calls handled through Supabase Edge Functions
 - **No Client-Side Secrets**: API keys stored securely on Supabase servers
 - **Row Level Security**: Database-level security with Supabase RLS policies
-- **Environment Variables**: Secure configuration management
+- **Environment Variables**: Secure configuration management with EAS secrets
 - **User Authentication**: Supabase Auth with proper session management
 - **Data Validation**: Server-side validation for all data operations
+- **Production Builds**: EAS Build with proper environment configuration
 
 ## 📱 Screenshots
 
@@ -111,10 +114,11 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- Yarn package manager
+- Yarn 4.5.0 package manager
 - Expo CLI
 - Supabase CLI
 - iOS Simulator or Android Emulator (optional)
+- EAS CLI for production builds
 
 ### Installation
 
@@ -131,7 +135,13 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
    yarn install
    ```
 
-3. **Set up Supabase**
+3. **Install EAS CLI (for production builds)**
+
+   ```bash
+   npm install -g @expo/eas-cli
+   ```
+
+4. **Set up Supabase**
 
    ```bash
    # Install Supabase CLI (if not already installed)
@@ -147,7 +157,7 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
    supabase functions deploy search-courses
    ```
 
-4. **Configure Supabase**
+5. **Configure Supabase**
 
    Create a `src/lib/supabase.ts` file with your project credentials:
 
@@ -160,13 +170,13 @@ A React Native mobile application built with Expo and Tamagui for managing golf 
    export const supabase = createClient(supabaseUrl, supabaseAnonKey);
    ```
 
-5. **Start the development server**
+6. **Start the development server**
 
    ```bash
    yarn start
    ```
 
-6. **Run on device/simulator**
+7. **Run on device/simulator**
    - Press `i` for iOS Simulator
    - Press `a` for Android Emulator
    - Scan QR code with Expo Go app on your phone
@@ -324,6 +334,8 @@ type League = {
 - `yarn ios` - Run on iOS
 - `yarn web` - Run on web
 - `yarn tamagui check` - Check Tamagui configuration
+- `npx expo-doctor` - Check project configuration and dependencies
+- `eas build --platform ios --profile preview` - Build for internal testing
 
 ### Edge Functions
 
@@ -362,16 +374,38 @@ supabase db reset
 
 ## 🚀 Deployment
 
-### Expo Build
+### Production Readiness
+
+The app is configured for production deployment with:
+
+- **EAS Build profiles** for development, preview, and production
+- **Environment variable management** through EAS secrets
+- **Proper dependency management** with Yarn 4.5.0
+- **TypeScript configuration** for production builds
+- **Optimized bundle sizes** and performance
+
+### EAS Build (Recommended)
 
 ```bash
 # Build for production
-expo build:android
-expo build:ios
+eas build --platform ios --profile production
+eas build --platform android --profile production
 
-# EAS Build (recommended)
-eas build --platform ios
-eas build --platform android
+# Build for internal testing
+eas build --platform ios --profile preview
+eas build --platform android --profile preview
+
+# Build for development
+eas build --platform ios --profile development
+eas build --platform android --profile development
+```
+
+### Legacy Expo Build (Deprecated)
+
+```bash
+# These commands are deprecated, use EAS Build instead
+# expo build:android
+# expo build:ios
 ```
 
 ### Supabase Deployment
@@ -433,9 +467,10 @@ For support and questions:
 
 ## 🚧 Known Issues & Limitations
 
-- Splash screen configuration in `app.json`
 - Some edge cases in score calculation for tied scores
 - Course image loading may be slow on slower connections
+- Tamagui Avatar components may require key props for proper re-rendering
+- EAS Build requires proper environment variable configuration
 
 ## 🔮 Future Enhancements
 
@@ -444,9 +479,12 @@ For support and questions:
 - Advanced statistics and analytics
 - Social features and player interactions
 - Course rating and review system
+- Error boundaries for better crash handling
+- Performance monitoring and crash reporting
+- Enhanced accessibility features
 
 ---
 
-**Built with ❤️ for the Fairway Fleas Golf Club**
+**Built with ❤️ for Golf League Management**
 
-_Last updated: December 2024_
+_Last updated: January 2025_
